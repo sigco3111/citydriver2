@@ -673,7 +673,7 @@ async function boot() {
       // (the title screen is silent: sound begins with the drive)
       audio.setPaused(paused || !started);
       pauseOverlay.hidden = !paused; $('#pause').setAttribute('aria-pressed', String(paused)); $('#pause').setAttribute('aria-label', paused ? "계속하기" : "일시 정지");
-      $('#pause .control-label').textContent = paused ? 'resume' : 'pause';
+      $('#pause .control-label').textContent = paused ? '계속하기' : '일시 정지';
       // (the menu opens at the top, wherever it was last scrolled)
       if (paused) { renderGoals(); renderCareer(); pauseOverlay.scrollTop = 0; $('#resume').focus(); } else $('#pause').blur();
       if (refused) toast(GRAPHICS_LOST);
@@ -878,7 +878,7 @@ async function boot() {
         // (and what the Drift button says when it has no drift to show: see renderRunHud)
         if (hint) { const small = button.querySelector('small'); small.textContent = hint; small.dataset.idle = hint; }
       });
-      $('.controls .control-label').textContent = mode === 'walking' ? 'walk' : mode === 'flying' ? 'fly' : 'drive';
+      $('.controls .control-label').textContent = mode === 'walking' ? '걷기' : mode === 'flying' ? '비행' : '운전';
     }
     // Getting out, and into the car within reach: the button beside Jump and
     // Sprint, which is E's and Y's prompt too, says which (see OnFoot.offer)
