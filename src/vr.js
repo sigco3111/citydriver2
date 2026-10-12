@@ -21,8 +21,8 @@ export class BrowserVR {
       button.hidden = !this.supported;
       button.disabled = this.pending;
       // Buttons that carry an icon keep it: only their label span is rewritten.
-      (button.querySelector?.('.vr-entry-label') ?? button).textContent = this.active ? 'Exit VR' : 'Enter VR';
-      button.setAttribute('aria-label', this.active ? 'Exit virtual reality' : 'Enter virtual reality');
+      (button.querySelector?.('.vr-entry-label') ?? button).textContent = this.active ? "VR 종료" : "VR 시작";
+      button.setAttribute('aria-label', this.active ? "가상현실 종료" : "가상현실 시작");
     }
   }
   async detect() {

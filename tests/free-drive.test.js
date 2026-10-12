@@ -25,7 +25,7 @@ test('a cab on standby shows its fares with no clock, and the first one aboard s
   assert.equal(run.status, 'driving'); assert.equal(run.fare.id, fare.id);
   assert.equal(run.timeLeft, SHIFT_SECONDS + pickupSeconds(fare.passengers));
   const [pickup] = run.drainEvents();
-  assert.equal(pickup.kind, 'pickup'); assert.equal(pickup.first, true); assert.match(pickup.text, /aboard/);
+  assert.equal(pickup.kind, 'pickup'); assert.equal(pickup.first, true); assert.match(pickup.text, /탑승/);
   assert.equal(run.goals.length, 3, 'the shift draws its goals as it begins');
   assert.ok(!run.customers.includes(fare), 'the fare aboard no longer waits');
 });
@@ -87,7 +87,7 @@ test('stunts pay by what they are: drift stages, jumps, flying stunts and smashe
   stunts.jumped({ landing: 'spun', air: 1, turns: 0 });
   assert.equal(stunts.chain, 0, 'a spin out loses the chain');
   step(stunts, car, 1);
-  assert.equal(stunts.flew({ kind: 'stunt', text: 'Barrel roll' }), STUNTS.flight['Barrel roll']);
+  assert.equal(stunts.flew({ kind: 'stunt', text: "배럴 롤" }), STUNTS.flight["배럴 롤"]);
   assert.equal(stunts.smashed(['lamp']), Math.round(PRICES.lamp * SMASH_SHARE) * stunts.multiplier);
   assert.equal(stunts.smashed(['nothing-priced']), 0);
   const parked = { spec: { name: 'sedan' }, parked: true, generation: 1 };
@@ -163,17 +163,17 @@ test('free drive\'s card shows the chain, then a fare by the cab, and otherwise 
   const fare = run.customers.find(customer => customer.id !== run.blockedPickup?.id);
   Object.assign(car, { s: fare.s + 20, u: fare.u });
   let model = freeHudModel(stunts, car, { taxi: run });
-  assert.equal(model.task, true); assert.equal(model.stage, 'Fare'); assert.equal(model.title, `To ${fare.destination.name}`);
+  assert.equal(model.task, true); assert.equal(model.stage, "운임"); assert.equal(model.title, `목적지: ${fare.destination.name}`);
   assert.equal(model.running, false, 'no clock or shift money');
-  stunts.add(10, 'Near miss');
+  stunts.add(10, "아슬아슬한 추월");
   model = freeHudModel(stunts, car, { taxi: run });
-  assert.equal(model.stage, 'Chain ×1'); assert.equal(model.title, 'Near miss'); assert.equal(model.timer.tone, 'chain');
-  const headset = headsetHudModel(model, { heading: 'N', place: 'Harbor', cash: '$40' });
-  assert.equal(headset.free, true); assert.equal(headset.cash, '$40'); assert.match(headset.stage, /^Chain/);
+  assert.equal(model.stage, '연속 기록 ×1'); assert.equal(model.title, "아슬아슬한 추월"); assert.equal(model.timer.tone, 'chain');
+  const headset = headsetHudModel(model, { heading: 'N', place: "항구", cash: '$40' });
+  assert.equal(headset.free, true); assert.equal(headset.cash, '$40'); assert.match(headset.stage, /^연속 기록/);
   // With no fare near, the cab's card still says what starts the shift (it was a one-off tip, then nothing)
   const waiting = freeHudModel(new StuntChain(), player(), { taxi: { waiting: true, customers: [], boarding: null, timeLeft: SHIFT_SECONDS } });
-  assert.equal(waiting.task, true); assert.equal(waiting.stage, 'Taxi shift'); assert.equal(waiting.title, 'Find a passenger');
-  assert.equal(waiting.fareStatus, `Clock ${SHIFT_SECONDS} s`); assert.match(waiting.party, /clock starts/);
+  assert.equal(waiting.task, true); assert.equal(waiting.stage, "택시 영업"); assert.equal(waiting.title, "승객을 찾으세요");
+  assert.equal(waiting.fareStatus, `남은 시간 ${SHIFT_SECONDS}초`); assert.match(waiting.party, /시간 시작/);
 });
 
 test('the demolition truck on standby says what starts its run, and which contracts it holds', () => {
@@ -182,18 +182,18 @@ test('the demolition truck on standby says what starts its run, and which contra
   run.standby();
   const card = freeHudModel(new StuntChain(), player(), { demolition: run });
   assert.equal(card.task, true); assert.equal(card.running, false, 'no clock yet');
-  assert.equal(card.stage, 'Demolition'); assert.equal(card.title, 'Hit anything to start'); assert.equal(card.fareStatus, 'Clock 60 s');
-  assert.equal(card.party, `Contracts · ${run.contracts.map(contract => contract.short).join(', ')}`);
-  const chain = new StuntChain(); chain.add(10, 'Near miss');
+  assert.equal(card.stage, "철거"); assert.equal(card.title, "무언가에 부딪히면 시작"); assert.equal(card.fareStatus, '남은 시간 60초');
+  assert.equal(card.party, `계약 · ${run.contracts.map(contract => contract.short).join(', ')}`);
+  const chain = new StuntChain(); chain.add(10, "아슬아슬한 추월");
   assert.equal(freeHudModel(chain, player(), { demolition: run }).status, 'chain', 'a stunt chain going comes first');
-  assert.equal(headsetHudModel(card, { heading: 'N', place: 'Harbor', cash: '$40' }).title, 'Hit anything to start');
+  assert.equal(headsetHudModel(card, { heading: 'N', place: "항구", cash: '$40' }).title, "무언가에 부딪히면 시작");
 });
 
 test('money earned anywhere counts toward the rank, and a promotion says what it unlocked', () => {
   const career = new TaxiCareer();
   assert.equal(career.earn(1500), null);
   const promotion = career.earn(600);
-  assert.equal(promotion.after.id, 'cabbie'); assert.match(promotion.text, /Cabbie.*Checker Cream/);
+  assert.equal(promotion.after.id, 'cabbie'); assert.match(promotion.text, /택시 기사.*체커 크림/);
   assert.equal(career.earn(-5), null); assert.equal(career.earn(1.5), null);
   assert.equal(career.earnings, 2100);
 });
@@ -236,10 +236,10 @@ test('a test drive warns before its end, then waits for the car to stop or land 
   assert.equal(drive.update(TEST_DRIVE_ENDING, here), 'done', 'swapped wherever it is if it takes too long');
   drive.start('bus', 30);
   assert.equal(drive.update(31, { inCar: false, still: true }), 'gone', 'left parked, it goes back to the garage');
-  const card = freeHudModel(new StuntChain(), player(), { test: { label: 'Plane', clock: '1:40', left: 100, fraction: .8, over: false, price: '$140,000', note: '$139,000 to go · Garage' } });
-  assert.equal(card.stage, 'Test drive'); assert.equal(card.title, 'Plane'); assert.equal(card.timer.text, '1:40'); assert.equal(card.party, '$139,000 to go · Garage');
-  const chain = new StuntChain(); chain.add(10, 'Near miss');
-  assert.equal(freeHudModel(chain, player(), { test: { label: 'Plane', clock: '1:40', left: 100, fraction: .8, over: false } }).status, 'chain', 'a chain going comes first');
-  const ending = freeHudModel(chain, player(), { test: { label: 'Plane', clock: '0:00', left: 0, fraction: 0, over: true, landing: true, own: 'Taxi' } });
-  assert.equal(ending.title, 'Landing…'); assert.equal(ending.party, 'Back to your Taxi', 'but not over the end of a test drive');
+  const card = freeHudModel(new StuntChain(), player(), { test: { label: "비행기", clock: '1:40', left: 100, fraction: .8, over: false, price: '$140,000', note: '$139,000 to go · Garage' } });
+  assert.equal(card.stage, "시승"); assert.equal(card.title, "비행기"); assert.equal(card.timer.text, '1:40'); assert.equal(card.party, '$139,000 to go · Garage');
+  const chain = new StuntChain(); chain.add(10, "아슬아슬한 추월");
+  assert.equal(freeHudModel(chain, player(), { test: { label: "비행기", clock: '1:40', left: 100, fraction: .8, over: false } }).status, 'chain', 'a chain going comes first');
+  const ending = freeHudModel(chain, player(), { test: { label: "비행기", clock: '0:00', left: 0, fraction: 0, over: true, landing: true, own: "택시" } });
+  assert.equal(ending.title, "착륙 중…"); assert.equal(ending.party, '내 택시 복귀', 'but not over the end of a test drive');
 });

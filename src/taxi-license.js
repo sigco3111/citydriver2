@@ -3,14 +3,14 @@
 // with skill: a first shift lands around Class E, a strong one in Class A,
 // and only a shift that keeps its clock alive for many minutes reaches the top.
 export const TAXI_LICENSES = [
-  { id: 'none', badge: '–', name: 'No license', min: 0 },
-  { id: 'e', badge: 'E', name: 'Class E', min: 250 },
-  { id: 'd', badge: 'D', name: 'Class D', min: 500 },
-  { id: 'c', badge: 'C', name: 'Class C', min: 1000 },
-  { id: 'b', badge: 'B', name: 'Class B', min: 2000 },
-  { id: 'a', badge: 'A', name: 'Class A', min: 4000 },
-  { id: 's', badge: 'S', name: 'Class S', min: 8000 },
-  { id: 'legend', badge: '★', name: 'Legend', min: 16000 },
+  { id: 'none', badge: '–', name: "면허 없음", min: 0 },
+  { id: 'e', badge: 'E', name: "E급", min: 250 },
+  { id: 'd', badge: 'D', name: "D급", min: 500 },
+  { id: 'c', badge: 'C', name: "C급", min: 1000 },
+  { id: 'b', badge: 'B', name: "B급", min: 2000 },
+  { id: 'a', badge: 'A', name: "A급", min: 4000 },
+  { id: 's', badge: 'S', name: "S급", min: 8000 },
+  { id: 'legend', badge: '★', name: "전설", min: 16000 },
 ];
 
 export function taxiLicense(cash = 0) {

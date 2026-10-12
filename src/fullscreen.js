@@ -16,7 +16,7 @@ export function createFullscreen({ button, state, pause, toast, window = globalT
     if (pending || on === active()) return;
     // F11 and an installed app's fullscreen belong to the browser.
     if (!desktop && !on && !element()) {
-      if (!quiet) toast(window.matchMedia('(any-pointer: fine)').matches ? 'Press F11 to leave fullscreen' : 'Fullscreen is set by the browser');
+      if (!quiet) toast(window.matchMedia('(any-pointer: fine)').matches ? "F11을 눌러 전체 화면을 종료하세요" : "전체 화면은 브라우저에서 설정합니다");
       return;
     }
     const gesture = navigator.userActivation?.isActive ?? true;
@@ -29,14 +29,14 @@ export function createFullscreen({ button, state, pause, toast, window = globalT
         await (document.exitFullscreen ?? document.webkitExitFullscreen).call(document);
       } else {
         const request = document.documentElement.requestFullscreen ?? document.documentElement.webkitRequestFullscreen;
-        if (!request) { if (!quiet) toast('Fullscreen unavailable'); return; }
-        if (!gesture) { if (!quiet) { awaitGesture(true); toast('Click or press any key for fullscreen'); } return; }
+        if (!request) { if (!quiet) toast("전체 화면 사용 불가"); return; }
+        if (!gesture) { if (!quiet) { awaitGesture(true); toast("클릭하거나 아무 키나 누르면 전체 화면으로 전환합니다"); } return; }
         await request.call(document.documentElement);
       }
     } catch {
       leaving = false;
       leftAt = -Infinity;
-      if (!quiet) toast('Fullscreen unavailable');
+      if (!quiet) toast("전체 화면 사용 불가");
     } finally { pending = false; update(); }
   }
   // A controller press has no browser gesture. Give the next click or key 10 s.

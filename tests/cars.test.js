@@ -318,7 +318,7 @@ test('a chosen car keeps its own paint and kit on every route', () => {
 
 test('the demolition truck is the Truck in orange, found in the traffic and never sold', () => {
   const truck = CARS.demolition;
-  assert.equal(truck.name, 'Demolition truck'); assert.equal(truck.job, 'demolition');
+  assert.equal(truck.name, "철거 트럭"); assert.equal(truck.job, 'demolition');
   assert.equal(truck.shape, CARS.rig.shape); assert.deepEqual(carStats('demolition'), carStats('rig')); assert.equal(truck.mass, CARS.rig.mass);
   assert.ok(!GARAGE_IDS.includes('demolition') && !CAR_IDS.includes('demolition'));
 });
@@ -339,7 +339,7 @@ test('the racers and specials stay in the chooser, and traffic keeps its own fiv
   // everything that is still an ordinary tourer, and no bar sits at either stop.
   const [, , , looseMeter] = carMeters('formula');
   assert.ok(carMeters('formula').slice(0, 3).every(({ level }) => level === 100));
-  assert.ok(looseMeter.label === 'Off road' && looseMeter.level < 80);
+  assert.ok(looseMeter.label === "험로 주행" && looseMeter.level < 80);
   for (const [index, meter] of carMeters('sports').entries()) {
     const road = CAR_IDS.filter(id => !['exotic', 'formula', ...TAXIS, ...SPECIALS].includes(id));
     assert.ok(road.every(id => carMeters(id)[index].level <= meter.level), `${meter.label} should top out at the coupe`);

@@ -9,7 +9,7 @@ import { SoundDirector } from '../src/audio/director.js';
 test('new cities default to automatic weather, starting in golden hour before cycling', () => {
   const weather = new CityWeather(new THREE.Scene());
   assert.equal(weather.mode, 'auto');
-  assert.equal(weather.state.label, 'Golden hour');
+  assert.equal(weather.state.label, "노을");
   weather.update(WEATHER_INTERVAL);
   assert.equal(weather.state.id, WEATHER_CYCLE[1]);
   weather.update(WEATHER_INTERVAL * (WEATHER_CYCLE.length - 1));

@@ -7,9 +7,9 @@ export const FLEET_KEY = 'citydriver-taxi-fleet';
 // jetpack's once-only hint, told to anyone who has been on foot
 const CAR_KEY = 'citydriver-car', JETPACK_HINT_KEY = 'citydriver-jetpack-hint';
 export const TAXI_FLEET = [
-  { id: 'taxi', title: 'The original', description: 'A dependable city cab. Plenty of pace to get your fleet started.' },
-  { id: 'taxiGT', title: 'The fast lane', description: 'A sports coupe with quicker launches, sharper turns and stronger brakes.' },
-  { id: 'taxiFormula', title: 'The ultimate fare', description: 'Open wheels and formula power, with the best grip in the fleet.' },
+  { id: 'taxi', title: "원조 택시", description: "믿음직한 시내 택시. 차량 수집을 시작하기에 충분한 속도를 갖췄습니다." },
+  { id: 'taxiGT', title: "빠른 차선", description: "빠른 출발, 날카로운 회전, 강한 제동력을 갖춘 스포츠 쿠페입니다." },
+  { id: 'taxiFormula', title: "최고의 운행", description: "오픈 휠과 포뮬러의 힘, 보유 차량 중 최고의 접지력입니다." },
 ].map(cab => ({ ...cab, price: carPrice(cab.id) }));
 const validMoney = value => Number.isSafeInteger(value) && value >= 0;
 const isCab = id => typeof id === 'string' && Object.hasOwn(CARS, id) && Boolean(CARS[id].taxi);
@@ -80,7 +80,7 @@ export class TaxiFleet {
   }
   save() {
     try {
-      if (!this.storage) throw new Error('Storage unavailable');
+      if (!this.storage) throw new Error("저장소 사용 불가");
       const text = JSON.stringify({ version: 2, balance: this.balance, owned: [...this.owned], selected: this.selected,
         livery: this.livery, tried: [...this.tried], goal: this.goal, paint: this.paint, konami: this.konami });
       this.storage.setItem(FLEET_KEY, text);

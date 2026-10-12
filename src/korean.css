@@ -1,0 +1,9 @@
+@font-face { font-family: 'Noto Sans KR'; font-weight: 100 900; font-style: normal; font-display: swap; src: url('./fonts/noto-sans-kr-subset.woff2') format('woff2'); }
+html[lang=ko] { word-break: keep-all; overflow-wrap: anywhere; }
+html[lang=ko] :is(button, select, input, .loading, .error) { font-family: 'Noto Sans KR', sans-serif; }
+html[lang=ko] :is(.start-button span, .panel-button-label, .taxi-task-title) { line-height: 1.45; }
+html[lang=ko] :is(.panel-button-label, .car-name, .chooser-card-title) { min-width: 0; white-space: normal; }
+html[lang=ko] .taxi-clock-box { min-width: 84px; }
+html[lang=ko] #taxi-clock-label { letter-spacing: 0; font-size: 12px; }
+html[lang=ko] .controller-hint { letter-spacing: 0; line-height: 1.6; }
+html[lang=ko] .graphics-levels button { padding-inline: 7px; }

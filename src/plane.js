@@ -298,7 +298,7 @@ export class Plane {
       if (loop) this.endStunt(true);
       this.y = Math.max(this.ceiling, this.y - DUCKING * dt); this.vy = Math.min(0, this.vy); this.pitch = Math.min(this.pitch, 0);
     }
-    if (this.wasBridged && !this.bridged && dt && !this.unmanned) this.events.push({ kind: 'stunt', text: 'Under the bridge' });
+    if (this.wasBridged && !this.bridged && dt && !this.unmanned) this.events.push({ kind: 'stunt', text: "다리 아래 통과" });
     this.wasBridged = this.bridged;
     // Down on the floor: over land it lands, unless it came down too hard or
     // too far over on a wing, and bounces; over the water it only skims
@@ -317,15 +317,15 @@ export class Plane {
         // A bounce: back up off the ground a little, shaken
         this.strike(0, 0, 0, sink + TOUCH); this.speed *= .8; this.bank *= .3;
         this.pitch = Math.asin(clamp(Math.min(3, sink * .35) / Math.max(this.speed, 3), 0, .4));
-        if (dt && !this.unmanned) this.events.push({ kind: 'bounce', text: 'Hard landing' });
+        if (dt && !this.unmanned) this.events.push({ kind: 'bounce', text: "거친 착륙" });
       } else {
         this.landed = true; this.vy = 0; this.pitch = 0; this.stunt = null; this.roll = 0;
         if (dt && sink > .4) { telemetry.bump = Math.min(.5, sink * .08); telemetry.bumpSerial++; v.jolt.pitchRate -= sink * .03; }
         // (a landing worth a word: gentle, or on a roof)
         if (dt && this.aloft > 3 && !this.unmanned) {
           const roof = floor > this.ground + 1;
-          if (roof) this.events.push({ kind: 'landing', text: 'Rooftop landing' });
-          else if (sink < 1.3) this.events.push({ kind: 'landing', text: 'Smooth landing' });
+          if (roof) this.events.push({ kind: 'landing', text: "옥상 착륙" });
+          else if (sink < 1.3) this.events.push({ kind: 'landing', text: "부드러운 착륙" });
         }
       }
     }
@@ -382,10 +382,10 @@ export class Plane {
       // pitch eases back: set level at once, it flipped over in a frame)
       const turns = Math.round((this.pitch - (cut ? 0 : stunt.from)) / TWO_PI) * TWO_PI;
       this.pitch -= turns; v.previousPose.bodyPitch -= turns;
-      if (!cut && !this.unmanned) this.events.push({ kind: 'stunt', text: 'Loop the loop' });
+      if (!cut && !this.unmanned) this.events.push({ kind: 'stunt', text: "공중 루프" });
     } else {
       this.roll = 0; v.previousPose.bodyRoll += stunt.side * TWO_PI;
-      if (!cut && !this.unmanned) this.events.push({ kind: 'stunt', text: 'Barrel roll' });
+      if (!cut && !this.unmanned) this.events.push({ kind: 'stunt', text: "배럴 롤" });
     }
   }
   // The wings against the buildings: the span, less as it banks, across the

@@ -38,10 +38,10 @@ export const DROP_OFF_CLEARANCE = 60;
 // As in Crazy Taxi, a waiting fare's color says how far the whole job goes:
 // red is a hop around the corner, green a long haul that pays the most.
 export const FARE_BANDS = [
-  { id: 'hop', label: 'Quick hop', color: '#ff5a4a', below: 550 },
-  { id: 'short', label: 'Short ride', color: '#ff9c33', below: 800 },
-  { id: 'medium', label: 'Medium ride', color: '#ffe03d', below: 1100 },
-  { id: 'long', label: 'Long ride', color: '#5fe06a', below: Infinity },
+  { id: 'hop', label: "초단거리", color: '#ff5a4a', below: 550 },
+  { id: 'short', label: "단거리", color: '#ff9c33', below: 800 },
+  { id: 'medium', label: "중거리", color: '#ffe03d', below: 1100 },
+  { id: 'long', label: "장거리", color: '#5fe06a', below: Infinity },
 ];
 export const fareBand = length => FARE_BANDS.find(band => length < band.below);
 // Crazy Taxi's arrival ratings. Every rider has their own clock, and its
@@ -49,9 +49,9 @@ export const fareBand = length => FARE_BANDS.find(band => length < band.below);
 // A rider who steps out before the end of a group's route adds only
 // `riderSeconds`: the group's travel time is paid at the last stop.
 export const RATINGS = [
-  { id: 'speedy', label: 'Speedy', remaining: .5, seconds: 10, riderSeconds: 2 },
-  { id: 'normal', label: 'Normal', remaining: .25, seconds: 6, riderSeconds: 1 },
-  { id: 'slow', label: 'Slow', remaining: 0, seconds: 1, riderSeconds: 0 },
+  { id: 'speedy', label: "빠름", remaining: .5, seconds: 10, riderSeconds: 2 },
+  { id: 'normal', label: "보통", remaining: .25, seconds: 6, riderSeconds: 1 },
+  { id: 'slow', label: "느림", remaining: 0, seconds: 1, riderSeconds: 0 },
 ];
 export const arrivalRating = remaining => RATINGS.find(rating => remaining >= rating.remaining);
 export const legLimit = length => Math.ceil(18 + length / 14);
@@ -86,8 +86,9 @@ export const COMBO_MAX = 10;
 export const COMBO_SECONDS = 4;
 export const TIPS = { drift: 2, superDrift: 4, ultraDrift: 7, nearMiss: 5, crazyStop: 5, jump: 3, spin: 6 };
 // (a drift tips as its sparks change: blue, orange, pink, see Drift)
-const DRIFT_TIPS = [['Drift', TIPS.drift], ['Super drift', TIPS.superDrift], ['Ultra drift', TIPS.ultraDrift]];
+const DRIFT_TIPS = [["드리프트", TIPS.drift], ["슈퍼 드리프트", TIPS.superDrift], ["울트라 드리프트", TIPS.ultraDrift]];
 const STUNT_STATS = { Drift: 'drifts', 'Super drift': 'drifts', 'Ultra drift': 'drifts', 'Near miss': 'nearMisses', 'Crazy stop': 'crazyStops' };
+Object.assign(STUNT_STATS, { '드리프트': 'drifts', '슈퍼 드리프트': 'drifts', '울트라 드리프트': 'drifts', '아슬아슬한 추월': 'nearMisses', '굉장한 정차': 'crazyStops' });
 // Every tip also tops up the boost, so stunts feed speed.
 export const STUNT_BOOST = .08;
 // Coming into the ring this fast or more and drifting or handbraking to a
@@ -126,13 +127,13 @@ export const turnCosine = (from, via, to) => {
   return (ax * bx + ay * by) / (Math.hypot(ax, ay) * Math.hypot(bx, by) || 1);
 };
 const PASSENGERS = {
-  clock: 'Sightseer', market: 'Market shopper', garden: 'Garden visitor', depot: 'Tram driver', art: 'Art student',
-  cinema: 'Moviegoer', hotel: 'Hotel guest', museum: 'Museum visitor', station: 'Rail commuter', library: 'Reader',
-  hospital: 'Hospital visitor', observatory: 'Stargazer', music: 'Jazz fan', sports: 'Club member', firehouse: 'Firefighter',
-  park: 'Park visitor', plaza: 'Cafe regular',
-  postoffice: 'Postal worker', bathhouse: 'Morning swimmer', farmersmarket: 'Market gardener',
-  donut: 'Coffee regular',
-  cityhall: 'City clerk',
+  clock: "관광객", market: "시장 손님", garden: "정원 방문객", depot: "트램 기사", art: "미술 학생",
+  cinema: "영화 관객", hotel: "호텔 투숙객", museum: "박물관 방문객", station: "철도 통근객", library: "독서가",
+  hospital: "병원 방문객", observatory: "별 관측객", music: "재즈 팬", sports: "클럽 회원", firehouse: "소방관",
+  park: "공원 방문객", plaza: "카페 단골",
+  postoffice: "우편 직원", bathhouse: "아침 수영객", farmersmarket: "채소 재배자",
+  donut: "커피 단골",
+  cityhall: "시청 직원",
 };
 const PASSENGER_TYPES = Object.keys(PASSENGERS);
 
@@ -149,9 +150,9 @@ export function partySize(seed) {
 // pay for arriving early), thrill seekers (double stunt tips) or nervous
 // (half the fare again for no crashes).
 export const MOODS = {
-  hurry: { label: 'In a hurry', rule: 'Double pay for arriving early', clock: .7, early: 1 },
-  thrill: { label: 'Thrill seeker', rule: 'Stunt tips count double', tips: 2 },
-  nervous: { label: 'Nervous', rule: 'Pays half again for no crashes', smooth: .5 },
+  hurry: { label: "서두르는 승객", rule: "일찍 도착하면 운임 두 배", clock: .7, early: 1 },
+  thrill: { label: "스릴을 즐기는 승객", rule: "묘기 팁 두 배", tips: 2 },
+  nervous: { label: "긴장한 승객", rule: "충돌 없이 도착하면 운임 50% 추가", smooth: .5 },
 };
 // Whether a special rider was satisfied: Speedy, a stunt tip, or no crash
 export const pleased = (mood, { rating, tips, shaken }) => mood === 'hurry' ? rating === 'speedy' : mood === 'thrill' ? tips > 0 : mood === 'nervous' ? !shaken : false;
@@ -331,7 +332,7 @@ function partyFor(stop) {
         if (off < miss) { route = { destination, length }; miss = off; }
       }
     }
-    const destination = route?.destination ?? placeStop({ s: CITY.downtown.s, u: CITY.downtown.u, name: 'Downtown', type: 'plaza', district: 'Downtown' });
+    const destination = route?.destination ?? placeStop({ s: CITY.downtown.s, u: CITY.downtown.u, name: "도심", type: 'plaza', district: "도심" });
     const length = route?.length ?? routeDistance(taxiRoute(stop, destination));
     const party = partyOffer(stop, destination, length, wanted), mood = riderMood(stop.fareSeed, party.passengers);
     if (MOODS[mood]?.clock) party.stops[0].limit = Math.ceil(party.stops[0].limit * MOODS[mood].clock);
@@ -427,7 +428,7 @@ export class TaxiRun {
       // Derive the entire offer from this pickup, not the driver's approach
       // or trip history, so unloading and revisiting recreates the same fare.
       const { party, mood } = offerFor(stop);
-      return { ...stop, name: PASSENGERS[party.destination.type] ?? 'Passenger', ...party, mood };
+      return { ...stop, name: PASSENGERS[party.destination.type] ?? "승객", ...party, mood };
     });
     this.customerCenter = { s: player.s, u: player.u };
     this.nextCustomerRefresh = this.elapsed + 1;
@@ -495,15 +496,15 @@ export class TaxiRun {
   jumped(event, player) {
     if (this.status !== 'driving' || !this.fare) return;
     if (event.landing === 'spun' || event.landing === 'splash') {
-      if (this.combo > 1) this.events.push({ kind: 'crash', text: `Spun out · ×${this.combo} combo lost` });
+      if (this.combo > 1) this.events.push({ kind: 'crash', text: `회전 실패 · 콤보 ×${this.combo} 상실` });
       this.combo = 1; this.comboTime = 0;
       return;
     }
-    if (event.landing === 'hard' && this.fare.mood === 'nervous' && !this.shaken) { this.shaken = true; this.events.push({ kind: 'shaken', tone: 'slow', text: 'Hard landing · no smooth-ride bonus' }); }
+    if (event.landing === 'hard' && this.fare.mood === 'nervous' && !this.shaken) { this.shaken = true; this.events.push({ kind: 'shaken', tone: 'slow', text: "거친 착륙 · 안전 주행 보너스 상실" }); }
     if (this.crashCooldown > 0 || !this.onTheWay(player)) return;
     const turns = Math.abs(event.turns ?? 0);
     this.jumps++;
-    this.reward(turns ? `Crazy ${turns * 360}` : 'Crazy jump', Math.max(TIPS.jump, Math.round(TIPS.jump * 2 * event.air)) + turns * TIPS.spin);
+    this.reward(turns ? `굉장한 ${turns * 360}도 회전` : "굉장한 점프", Math.max(TIPS.jump, Math.round(TIPS.jump * 2 * event.air)) + turns * TIPS.spin);
   }
   // The shift so far, in the terms the goals and career records use.
   get stats() {
@@ -521,7 +522,7 @@ export class TaxiRun {
       goal.progress = goalProgress(goal, stats);
       if (goal.progress < goal.target) continue;
       goal.done = true; this.goalCash += goal.bonus; this.bank(goal.bonus);
-      this.events.push({ kind: 'goal', text: `Goal · ${goal.text} · +$${goal.bonus}`, goal, bonus: goal.bonus });
+      this.events.push({ kind: 'goal', text: `목표 · ${goal.text} · +$${goal.bonus}`, goal, bonus: goal.bonus });
     }
   }
   // Pay goes into the balance and toward the rank at once, so it counts even
@@ -552,10 +553,10 @@ export class TaxiRun {
     const last = passenger.stops.at(-1).destination, stretch = last.stretch ?? [last];
     this.lookAround({ s: last.s, u: last.u }, CUSTOMER_RANGE + STOP_RADIUS + Math.max(...stretch.map(p => distance(p, last))));
     // A Crazy stop is the fare's first trick and starts its chain.
-    const stunt = this.crazyStop ? this.reward('Crazy stop', TIPS.crazyStop, false) : 0; this.ring = null;
-    const who = passenger.passengers > 1 ? `${passenger.passengers} riders aboard` : `${passenger.name} aboard`;
+    const stunt = this.crazyStop ? this.reward("굉장한 정차", TIPS.crazyStop, false) : 0; this.ring = null;
+    const who = passenger.passengers > 1 ? `승객 ${passenger.passengers}명 탑승` : `${passenger.name} 탑승`;
     // (`brief` is what the labels over the cab leave unsaid: see TaxiView.pop)
-    this.events.push({ kind: 'pickup', seconds, stunt, first, text: `${stunt ? `Crazy stop +$${stunt} · ` : ''}${who} · +${seconds}s`, brief: who });
+    this.events.push({ kind: 'pickup', seconds, stunt, first, text: `${stunt ? `굉장한 정차 +$${stunt} · ` : ''}${who} · +${seconds}s`, brief: who });
   }
   // Standby's step: the pickup half of a shift with no clock. Stopping in a
   // ring begins the shift, keeping the fares that were waiting.
@@ -586,7 +587,7 @@ export class TaxiRun {
       // With riders aboard when time runs out, the shift ends after their ride
       if (this.status !== 'driving') { this.finish(); return; }
       this.overtime = true; this.revision++;
-      this.events.push({ kind: 'overtime', tone: 'slow', text: 'Time up · last ride' });
+      this.events.push({ kind: 'overtime', tone: 'slow', text: "시간 종료 · 마지막 운행" });
     }
     this.comboTime -= dt; if (this.comboTime <= 0) this.combo = 1;
     this.crashCooldown = Math.max(0, this.crashCooldown - dt);
@@ -600,8 +601,8 @@ export class TaxiRun {
       // A crash breaks the stunt chain but keeps the tips already earned, as
       // in Crazy Taxi. A pileup can report crashes every tick, so stunts stay
       // suspended until the cab is clear.
-      if (this.crashCooldown === 0 && this.combo > 1) this.events.push({ kind: 'crash', text: `Crash · ×${this.combo} combo lost` });
-      if (this.fare.mood === 'nervous' && !this.shaken) { this.shaken = true; this.events.push({ kind: 'shaken', tone: 'slow', text: 'Crash · no smooth-ride bonus' }); }
+      if (this.crashCooldown === 0 && this.combo > 1) this.events.push({ kind: 'crash', text: `충돌 · 콤보 ×${this.combo} 상실` });
+      if (this.fare.mood === 'nervous' && !this.shaken) { this.shaken = true; this.events.push({ kind: 'shaken', tone: 'slow', text: "충돌 · 안전 주행 보너스 상실" }); }
       this.combo = 1; this.comboTime = 0; this.crashCooldown = .8;
     }
     this.lookAhead();
@@ -630,15 +631,15 @@ export class TaxiRun {
       this.failed++; this.status = 'pickup'; this.fare = null; this.hold = 0; this.onboard = 0; this.stopIndex = 0; this.tips = 0; this.held = 0; this.combo = 1;
       this.streak = 0; this.ring = null; this.revision++; this.makeCustomers(player);
       this.blockedPickup = this.customerAt(player);
-      const who = riders === 1 ? 'Rider' : `${riders} riders`;
-      this.events.push({ kind: 'missed', tone: 'slow', text: `Too slow · ${who} jumped out · $${lost} lost`, lost });
+      const who = riders === 1 ? "승객" : `승객 ${riders}명`;
+      this.events.push({ kind: 'missed', tone: 'slow', text: `너무 늦음 · ${who} 내림 · $${lost} 상실`, lost });
       if (this.overtime) this.finish();
       return;
     }
     if (!collided && this.crashCooldown === 0) {
       for (const car of traffic) {
         if (passedBefore(this.passed, car) || !nearMiss(player, car)) continue;
-        this.passed.set(car, car.generation); if (this.onTheWay(player)) this.reward('Near miss', TIPS.nearMiss);
+        this.passed.set(car, car.generation); if (this.onTheWay(player)) this.reward("아슬아슬한 추월", TIPS.nearMiss);
       }
     }
     const atStop = insideStop(this.target, player);
@@ -648,7 +649,7 @@ export class TaxiRun {
       const stop = this.currentStop, last = this.stopIndex === this.fare.stops.length - 1;
       const remaining = this.legRemaining, rating = arrivalRating(remaining);
       // Tipped while this rider is still aboard, so it counts every rider.
-      const stunt = this.crazyStop ? this.reward('Crazy stop', TIPS.crazyStop, false) : 0; this.ring = null;
+      const stunt = this.crazyStop ? this.reward("굉장한 정차", TIPS.crazyStop, false) : 0; this.ring = null;
       this.streak = rating.id === 'speedy' ? this.streak + 1 : 0; this.bestStreak = Math.max(this.bestStreak, this.streak);
       // Crazy Taxi's three kinds of money: the base fare for the distance, a
       // time bonus fare for the clock left, and tips. A group's fare is held
@@ -673,10 +674,10 @@ export class TaxiRun {
         if (this.fare.band === 'long') this.longRides++;
         if (pleased(this.fare.mood, { rating: rating.id, tips: this.tips, shaken: this.shaken })) this.pleased++;
       }
-      const lead = !group ? '' : last ? 'Group complete · ' : `Stop ${this.stopIndex + 1} of ${this.fare.passengers} · `;
+      const lead = !group ? '' : last ? "단체 운행 완료 · " : `하차 ${this.stopIndex + 1} / ${this.fare.passengers} · `;
       const verdict = rating.id === 'speedy' ? `${rating.label}!` : rating.label;
-      const text = [`${lead}${verdict}`, streak && `Streak ${this.streak}`, stunt && `Crazy stop +$${stunt}`, smooth && `Smooth ride +$${smooth}`, paid && `+$${paid}`, seconds && `+${seconds}s`];
-      const brief = [lead.slice(0, -3), streak && `Streak ${this.streak}`, smooth && `Smooth ride +$${smooth}`].filter(Boolean).join(' · ');
+      const text = [`${lead}${verdict}`, streak && `연속 성공 ${this.streak}`, stunt && `굉장한 정차 +$${stunt}`, smooth && `안전 주행 +$${smooth}`, paid && `+$${paid}`, seconds && `+${seconds}s`];
+      const brief = [lead.slice(0, -3), streak && `연속 성공 ${this.streak}`, smooth && `안전 주행 +$${smooth}`].filter(Boolean).join(' · ');
       this.events.push({ kind: last ? 'paid' : 'dropoff', text: text.filter(Boolean).join(' · '), brief, paid, bonus, seconds, streak, stunt,
         rating: rating.id, passengers: stop.passengers, destination: stop.destination, groupComplete: last && group });
       if (group) this.boost = Math.min(1, this.boost + .25);

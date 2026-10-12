@@ -14,10 +14,10 @@ export function setupCameraControls(rendering, { action, chooseView, changed, in
     const chase = rendering.chaseView, firstPerson = rendering.firstPersonView, perspective = rendering.camera.isPerspectiveCamera;
     view.value = String(rendering.viewIndex);
     $('camera-summary').textContent = rendering.viewLabel;
-    $('camera-profile-note').textContent = `View and distance are saved separately for driving and walking. Now: ${rendering.cameraMode === 'walking' ? 'walking' : 'driving'}.`;
+    $('camera-profile-note').textContent = `운전과 도보의 시점·거리는 따로 저장됩니다. 현재: ${rendering.cameraMode === 'walking' ? '도보' : '운전'}.`;
     distance.value = String(Math.round(rendering.zoomLevel * 100)); distance.disabled = !chase;
     $('camera-distance-value').textContent = `${rendering.zoomLevel.toFixed(2).replace(/0$/, '')}×`;
-    distance.setAttribute('aria-valuetext', `${rendering.zoomLevel.toFixed(2)} times the standard distance`);
+    distance.setAttribute('aria-valuetext', `기본 거리의 ${rendering.zoomLevel.toFixed(2)}배`);
     distance.style.setProperty('--control-level', `${(rendering.zoomLevel - CAMERA_ZOOM_MIN) / (CAMERA_ZOOM_MAX - CAMERA_ZOOM_MIN) * 100}%`);
     $('camera-recenter').disabled = !perspective;
     $('camera-recenter').querySelector('.panel-button-value').textContent = inputSource() === 'touch' ? '' : inputSource() === 'controller' ? 'R3' : 'Q';
@@ -28,8 +28,8 @@ export function setupCameraControls(rendering, { action, chooseView, changed, in
       button.disabled = name === 'zoomIn' ? firstPerson
         : name === 'zoomOut' ? !firstPerson && rendering.zoomLevel >= CAMERA_ZOOM_MAX - 1e-6 : false;
       if (name === 'zoomIn' || name === 'zoomOut') {
-        const label = name === 'zoomOut' ? firstPerson ? 'Switch to third-person view' : 'Move camera farther away'
-          : rendering.zoomLevel <= CAMERA_ZOOM_MIN + 1e-6 ? 'Switch to first-person view' : 'Move camera closer';
+        const label = name === 'zoomOut' ? firstPerson ? "3인칭 시점으로 전환" : "카메라 멀리 이동"
+          : rendering.zoomLevel <= CAMERA_ZOOM_MIN + 1e-6 ? "1인칭 시점으로 전환" : "카메라 가까이 이동";
         button.title = label; button.setAttribute('aria-label', label);
       }
     }
@@ -37,7 +37,7 @@ export function setupCameraControls(rendering, { action, chooseView, changed, in
     sensitivity.value = String(percent);
     sensitivity.style.setProperty('--control-level', `${(percent - 25) / 175 * 100}%`);
     sensitivity.setAttribute('aria-valuetext', `${percent}%${percent === 100 ? ', default' : ''}`);
-    $('look-sensitivity-value').textContent = `${percent}%${percent === 100 ? ' · Default' : ''}`;
+    $('look-sensitivity-value').textContent = `${percent}%${percent === 100 ? " · 기본값" : ''}`;
     $('invert-look').setAttribute('aria-pressed', String(settings.invertY));
     $('reset-look').disabled = settings.sensitivity === 1 && !settings.invertY;
   }

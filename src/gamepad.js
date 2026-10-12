@@ -102,7 +102,7 @@ export class GamepadInput {
     else {
       const presses = buttons.flatMap((down, index) => down && pressed(index) && index < 17 ? [index] : []);
       if (presses.length > 1) this.konami.reset();
-      else if (presses.length === 1 && this.konami.press(CODE_BUTTONS[presses[0]] ?? 'Other')) {
+      else if (presses.length === 1 && this.konami.press(CODE_BUTTONS[presses[0]] ?? "기타")) {
         this.previousButtons = buttons; this.clear(); this.onKonami();
         return;
       }

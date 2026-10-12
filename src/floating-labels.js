@@ -10,7 +10,7 @@ import * as THREE from 'three';
 const LABELS = 12, LABEL_LIFE = 1.8, LABEL_RISE = 2, LABEL_HEIGHT = 2.4, FIRST_PERSON = 3, AHEAD = 7;
 // PITCH is the stack's spacing in canvas heights. A captioned label's drawn rows take about .9 of one.
 const PIXEL_HEIGHT = 80, WORLD_HEIGHT = 1, PITCH = 1.06;
-const AMOUNT_FONT = "700 104px Oswald, 'Arial Narrow', Arial, sans-serif", CAPTION_FONT = "600 44px Oswald, 'Arial Narrow', Arial, sans-serif";
+const AMOUNT_FONT = "700 104px 'Noto Sans KR', Oswald, 'Arial Narrow', Arial, sans-serif", CAPTION_FONT = "600 44px 'Noto Sans KR', Oswald, 'Arial Narrow', Arial, sans-serif";
 const eye = new THREE.Vector3(), base = new THREE.Vector3(), front = new THREE.Vector3(), up = new THREE.Vector3(), depth = new THREE.Vector3(), screen = new THREE.Vector3();
 // Use CSS pixels and the shorter edge so rotating a phone cannot enlarge its rewards.
 const pixelHeight = () => Math.max(52, Math.min(PIXEL_HEIGHT, Math.min(globalThis.innerWidth || 1280, globalThis.innerHeight || 800) * .14));

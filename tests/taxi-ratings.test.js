@@ -22,7 +22,7 @@ function offers() {
 test('the arrival rating follows the rider clock: over half green, over a quarter yellow, then red', () => {
   const at = remaining => arrivalRating(remaining).id;
   assert.deepEqual([1, .5, .4999, .25, .2499, 0].map(at), ['speedy', 'speedy', 'normal', 'normal', 'slow', 'slow']);
-  assert.deepEqual(RATINGS.map(r => [r.label, r.seconds, r.riderSeconds]), [['Speedy', 10, 2], ['Normal', 6, 1], ['Slow', 1, 0]]);
+  assert.deepEqual(RATINGS.map(r => [r.label, r.seconds, r.riderSeconds]), [["빠름", 10, 2], ["보통", 6, 1], ["느림", 1, 0]]);
   for (const length of [100, 400, 700, 1100, 2000]) {
     for (const rating of RATINGS) assert.equal(deliverySeconds(length, rating), Math.round(length / METERS_PER_SECOND_EARNED) + rating.seconds);
     assert.equal(deliverySeconds(length), deliverySeconds(length, RATINGS[2]), 'an unrated delivery earns the base time');
@@ -61,14 +61,14 @@ test('a rider whose clock runs out jumps out, and ratings reset each shift', () 
   board(run, car, solo); run.drainEvents();
   run.fareLeft = .01; run.update(.02, car);
   assert.equal(run.status, 'pickup'); assert.equal(run.failed, 1); assert.equal(run.cash, 0);
-  assert.deepEqual(run.drainEvents().map(e => e.text), [`Too slow · Rider jumped out · $${solo.fare} lost`]);
+  assert.deepEqual(run.drainEvents().map(e => e.text), [`너무 늦음 · 승객 내림 · $${solo.fare} 상실`]);
   const group = run.customers.find(c => c.passengers > 2 && c.id !== run.blockedPickup?.id);
   assert.ok(group, 'a party of three or four waits nearby');
   board(run, car, group);
   Object.assign(car, { s: run.target.s, u: run.target.u }); run.update(STOP_SECONDS, car); run.drainEvents();
   const owed = run.remainingFare + run.tips;
   run.fareLeft = .01; run.update(.02, car);
-  assert.deepEqual(run.drainEvents().map(e => e.text), [`Too slow · ${group.passengers - 1} riders jumped out · $${owed} lost`]);
+  assert.deepEqual(run.drainEvents().map(e => e.text), [`너무 늦음 · 승객 ${group.passengers - 1}명 내림 · $${owed} 상실`]);
   assert.equal(run.cash, 0, 'the rider already dropped off paid into the lost group fare');
   assert.equal(Object.values(run.ratings).reduce((a, b) => a + b, 0), 1);
   run.start(car); assert.deepEqual(run.ratings, { speedy: 0, normal: 0, slow: 0 });
@@ -99,7 +99,7 @@ test('boarding adds time per party, and a little more for every extra rider', ()
   const group = run.customers.find(c => c.passengers > 1 && c.id !== run.blockedPickup?.id);
   board(run, car, group);
   assert.ok(Math.abs(run.timeLeft - (40 - STOP_SECONDS + pickupSeconds(group.passengers))) < 1e-9);
-  assert.deepEqual(run.drainEvents().map(e => e.text), [`${group.passengers} riders aboard · +${pickupSeconds(group.passengers)}s`]);
+  assert.deepEqual(run.drainEvents().map(e => e.text), [`승객 ${group.passengers}명 탑승 · +${pickupSeconds(group.passengers)}s`]);
 });
 
 test('Speedy arrivals in a row add time; a slower arrival or a lost rider ends the streak', () => {
@@ -117,7 +117,7 @@ test('Speedy arrivals in a row add time; a slower arrival or a lost rider ends t
   });
   assert.deepEqual(streaks, [0, 1, 2, 3, 4, 0, 0]);
   const streak = deliver(.9);
-  assert.equal(streak.streak, 1); assert.match(streak.text, /^Speedy! · Streak 2 · (Smooth ride \+\$\d+ · )?\+\$\d+ · \+\d+s$/);
+  assert.equal(streak.streak, 1); assert.match(streak.text, /^빠름! · 연속 성공 2 · (안전 주행 \+\$\d+ · )?\+\$\d+ · \+\d+s$/);
   board(run, car, run.customers.find(c => c.id !== run.blockedPickup?.id));
   run.fareLeft = .01; run.update(.02, car); assert.equal(run.streak, 0, 'a rider who jumps out ends the streak');
 });
@@ -132,7 +132,7 @@ test('a rider aboard when time runs out still gets there, and the shift ends wit
   run.goals = [{ id: 'fares', stat: 'delivered', tier: 0, target: 1, bonus: 150, text: 'Deliver 1 fare', progress: 0, done: false }];
   run.timeLeft = .01; run.update(.02, car);
   assert.equal(run.status, 'driving'); assert.equal(run.overtime, true); assert.equal(run.timeLeft, 0);
-  assert.deepEqual(run.drainEvents().map(e => e.text), ['Time up · last ride']);
+  assert.deepEqual(run.drainEvents().map(e => e.text), ["시간 종료 · 마지막 운행"]);
   // Each stop pays as usual but adds no time; the last ends the shift
   let paid = 0;
   while (run.status === 'driving') {
@@ -177,17 +177,17 @@ test('a lone rider may want something of the ride, and it changes the pay', () =
   const plain = pay(null), hurry = pay('hurry');
   assert.ok(hurry.event.paid > plain.event.paid, 'arriving early pays double for a rider in a hurry');
   // A thrill seeker doubles stunt tips
-  const thrill = pay('thrill', run => run.reward('Near miss', TIPS.nearMiss)), tipped = pay(null, run => run.reward('Near miss', TIPS.nearMiss));
+  const thrill = pay('thrill', run => run.reward("아슬아슬한 추월", TIPS.nearMiss)), tipped = pay(null, run => run.reward("아슬아슬한 추월", TIPS.nearMiss));
   assert.equal(thrill.run.tipsBanked, 2 * tipped.run.tipsBanked);
   // A nervous rider pays half again, unless the cab crashes
   const calm = pay('nervous');
   assert.equal(calm.event.paid - plain.event.paid, Math.round(calm.fare * MOODS.nervous.smooth));
-  assert.match(calm.event.text, /Smooth ride \+\$\d+/);
+  assert.match(calm.event.text, /안전 주행 \+\$\d+/);
   const shaken = pay('nervous', (run, car) => { car.audioTelemetry = { impactSerial: 1, crashSerial: 1, impact: 6 }; run.update(.02, car); });
-  assert.equal(shaken.run.shaken, true); assert.doesNotMatch(shaken.event.text, /Smooth ride/);
+  assert.equal(shaken.run.shaken, true); assert.doesNotMatch(shaken.event.text, /안전 주행/);
   // A scrape or a sideswipe, however loud, is no crash (see CRASH in vehicle.js)
   const scraped = pay('nervous', (run, car) => { car.audioTelemetry = { impactSerial: 1, crashSerial: 0, impact: 9 }; run.update(.02, car); });
-  assert.equal(scraped.run.shaken, false); assert.match(scraped.event.text, /Smooth ride/);
+  assert.equal(scraped.run.shaken, false); assert.match(scraped.event.text, /안전 주행/);
   // Each counts as satisfied for the goals when their wish is met
   assert.deepEqual([plain, hurry, thrill, calm, shaken].map(ride => ride.run.pleased), [0, 1, 1, 1, 0]);
   assert.equal(thrill.run.stats.pleased, 1);
@@ -199,7 +199,7 @@ test('a lone rider may want something of the ride, and it changes the pay', () =
 test('only a crash ends the stunt combo, not a scrape or a sideswipe', () => {
   const run = new TaxiRun(), car = player();
   run.start(car); board(run, car, run.customers.find(c => c.id !== run.blockedPickup?.id)); run.drainEvents();
-  run.reward('Near miss', TIPS.nearMiss); run.reward('Near miss', TIPS.nearMiss);
+  run.reward("아슬아슬한 추월", TIPS.nearMiss); run.reward("아슬아슬한 추월", TIPS.nearMiss);
   car.audioTelemetry = { impactSerial: 1, crashSerial: 0, impact: 9 }; run.update(.02, car);
   assert.equal(run.combo, 3); assert.ok(!run.drainEvents().some(e => e.kind === 'crash'));
   car.audioTelemetry = { impactSerial: 2, crashSerial: 1, impact: 9 }; run.update(.02, car);

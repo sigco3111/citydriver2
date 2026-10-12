@@ -25,8 +25,8 @@
   --city-radius: 7px;
   --city-control-radius: 5px;
   --city-shadow: 0 2px 7px #00000080;
-  --city-font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  --city-display: Oswald, 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
+  --city-font: 'Noto Sans KR', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --city-display: 'Noto Sans KR', Oswald, 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif;
   /* light text pressed into a dark surface, and dark text on a light one */
   --city-engrave: 0 -1px 0 #000000b3;
   --city-emboss: 0 1px 0 #ffffff80;

@@ -267,7 +267,7 @@ function namePlazas(places) {
     if (market < 320) wants.push([place, PLAZA.market, market]);
     if (style === 'Market district') wants.push([place, PLAZA.market, 400]);
     if (style === 'Old town') wants.push([place, PLAZA.oldTown, 400]);
-    if (place.district === 'Harbor') wants.push([place, PLAZA.harbour, 450]);
+    if (place.district === "항구") wants.push([place, PLAZA.harbour, 450]);
     wants.push([place, PLAZA.fountain, 1000], [place, PLAZA.jubilee, 1100]);
   }
   const named = new Set(), taken = new Set();

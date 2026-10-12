@@ -39,7 +39,7 @@ test('closing a shift grows the totals, sets records only when beaten, promotes,
   assert.deepEqual(Object.keys(loaded.records).sort(), RECORDS.map(r => r.id).sort());
   // A shift with a fare beats the fares record and the tips record only if tips were banked.
   run.start(car); const solo = run.customers.find(c => c.passengers === 1 && c.id !== run.blockedPickup?.id);
-  Object.assign(car, { s: solo.s, u: solo.u, speed: 0 }); run.update(STOP_SECONDS, car); run.reward('Drift', 2);
+  Object.assign(car, { s: solo.s, u: solo.u, speed: 0 }); run.update(STOP_SECONDS, car); run.reward("드리프트", 2);
   Object.assign(car, { s: run.target.s, u: run.target.u }); run.update(STOP_SECONDS, car);
   run.timeLeft = .01; run.update(.02, car);
   assert.ok(run.summary.beaten.includes('fares')); assert.ok(run.summary.beaten.includes('tips')); assert.ok(run.summary.beaten.includes('combo'));

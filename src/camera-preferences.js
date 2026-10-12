@@ -1,7 +1,7 @@
 export const CAMERA_VIEWS = [
-  { height: 165, label: 'Far view' }, { height: 75, label: 'Close view' },
-  { height: 115, label: 'Third-person view', thirdPerson: true },
-  { height: 115, label: 'First-person view', firstPerson: true },
+  { height: 165, label: "원거리 시점" }, { height: 75, label: "근거리 시점" },
+  { height: 115, label: "3인칭 시점", thirdPerson: true },
+  { height: 115, label: "1인칭 시점", firstPerson: true },
 ];
 export const CAMERA_ZOOM_MIN = .45, CAMERA_ZOOM_MAX = 6;
 export const CAMERA_INPUTS = ['mouse', 'touch', 'controller'];

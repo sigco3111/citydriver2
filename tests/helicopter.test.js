@@ -157,7 +157,7 @@ test('low over the river it goes under a bridge, and its piers are solid', () =>
     } finally { heli.disposeModel(); }
   };
   const clear = run(0);
-  assert.ok(clear.s > 270 && clear.events.includes('Under the bridge'), `through, to s ${clear.s.toFixed(0)}`);
+  assert.ok(clear.s > 270 && clear.events.includes("다리 아래 통과"), `through, to s ${clear.s.toFixed(0)}`);
   assert.equal(clear.hits, 0, 'the railing on the deck overhead is no wall');
   assert.ok(clear.top <= GROUND - 1.4 + 1e-6, 'its rotor under the deck');
   const pierHit = run(12);
@@ -291,7 +291,7 @@ test('down on a roof after a flight, it says so, as the plane does', () => {
     const said = [];
     for (let i = 0; i < 120 * 12 && !heli.pilot.landed; i++) { heli.update(1 / 120, { descend: 1 }); said.push(...heli.pilot.drain().map(event => event.text)); }
     assert.ok(heli.pilot.landed && height(heli) > 11, `on the roof at ${height(heli).toFixed(1)} m`);
-    assert.deepEqual(said, ['Rooftop landing']);
+    assert.deepEqual(said, ["옥상 착륙"]);
   } finally { heli.disposeModel(); }
 });
 

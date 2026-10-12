@@ -2,20 +2,20 @@ import { CITY_PLACES, SPACE_NAMES } from './city-places.js';
 
 // Display name and short building lettering. No advertising copy.
 export const VENUE_BRANDS = {
-  cinema: [['Rivoli Cinema', 'RIVOLI'], ['Apollo Picturehouse', 'APOLLO'], ['Bijou Cinema', 'BIJOU']],
-  hotel: [['Grand Hotel', 'GRAND HOTEL'], ['Hotel Marigold', 'MARIGOLD'], ['The Wayfarer Hotel', 'WAYFARER']],
-  museum: [['City Museum', 'CITY MUSEUM'], ['Meridian Museum', 'MERIDIAN'], ['The Curiosity Museum', 'CURIOSITY']],
-  station: [['Union Station', 'UNION'], ['Northstar Station', 'NORTHSTAR'], ['Junction Station', 'JUNCTION']],
-  library: [['Central Library', 'CENTRAL LIBRARY'], ['Lantern Library', 'LANTERN LIBRARY'], ['Maple Library', 'MAPLE LIBRARY']],
-  hospital: [['City Hospital', 'CITY HOSPITAL'], ['Mercy Hospital', 'MERCY HOSPITAL'], ['Greenway Hospital', 'GREENWAY']],
-  observatory: [['Star Observatory', 'PLANETARIUM'], ['Orion Observatory', 'ORION'], ['Moonrise Observatory', 'MOONRISE']],
-  music: [['Blue Note Club', 'BLUE NOTE'], ['The Brass Finch', 'BRASS FINCH'], ['Velvet Echo', 'VELVET ECHO']],
-  sports: [['Athletic Club', 'ATHLETIC CLUB'], ['Rally Sports Club', 'RALLY CLUB'], ['Green Court Club', 'GREEN COURT']],
-  firehouse: [['Engine House', 'FIRE STATION'], ['Foundry Firehouse', 'FOUNDRY'], ['Beacon Fire Station', 'BEACON']],
-  postoffice: [['Central Post Office', 'POST OFFICE'], ['Penny Post', 'PENNY POST'], ['Parcel House', 'PARCEL HOUSE']],
-  bathhouse: [['Mosaic Baths', 'MOSAIC BATHS'], ['Stillwater Baths', 'STILLWATER'], ['Juniper Springs', 'JUNIPER SPRINGS']],
-  farmersmarket: [['Harvest Market', 'HARVEST MARKET'], ['Sunpatch Market', 'SUNPATCH MARKET'], ['The Gather Market', 'GATHER MARKET']],
-  donut: [['Lucky Donut', 'LUCKY DONUT'], ['Glaze Days', 'GLAZE DAYS'], ['Dough Si Dough', 'DOUGH SI DOUGH']],
+  cinema: [["리볼리 영화관", "리볼리"], ["아폴로 영화관", "아폴로"], ["비주 영화관", "비주"]],
+  hotel: [["그랜드 호텔", "그랜드 호텔"], ["메리골드 호텔", "메리골드"], ["웨이페어러 호텔", "웨이페어러"]],
+  museum: [["시립 박물관", "시립 박물관"], ["메리디언 박물관", "메리디언"], ["호기심 박물관", "호기심"]],
+  station: [["유니언역", "유니언"], ["북극성역", "북극성"], ["정션역", "정션"]],
+  library: [["중앙 도서관", "중앙 도서관"], ["랜턴 도서관", "랜턴 도서관"], ["단풍 도서관", "단풍 도서관"]],
+  hospital: [["시립 병원", "시립 병원"], ["머시 병원", "머시 병원"], ["그린웨이 병원", "그린웨이"]],
+  observatory: [["별빛 천문대", "천체관"], ["오리온 천문대", "오리온"], ["달맞이 천문대", "달맞이"]],
+  music: [["블루노트 클럽", "블루노트"], ["브라스핀치", "브라스핀치"], ["벨벳에코", "벨벳에코"]],
+  sports: [["체육 클럽", "체육 클럽"], ["랠리 스포츠 클럽", "랠리 클럽"], ["그린코트 클럽", "그린코트"]],
+  firehouse: [["소방서", "소방서"], ["파운드리 소방서", "파운드리"], ["비컨 소방서", "비컨"]],
+  postoffice: [["중앙 우체국", "우체국"], ["페니 우체국", "페니 우체국"], ["소포 우체국", "소포 우체국"]],
+  bathhouse: [["모자이크 목욕탕", "모자이크 목욕탕"], ["고요한 물 목욕탕", "고요한 물"], ["주니퍼 온천", "주니퍼 온천"]],
+  farmersmarket: [["수확 시장", "수확 시장"], ["햇살 시장", "햇살 시장"], ["모임 시장", "모임 시장"]],
+  donut: [["럭키 도넛", "럭키 도넛"], ["글레이즈 데이즈", "글레이즈 데이즈"], ["도시도 도넛", "도시도 도넛"]],
 };
 export function venueBrand(type, variant) {
   const brand = VENUE_BRANDS[type]?.[variant];

@@ -118,11 +118,11 @@ export class OnFoot {
       if (this.leaving) return '';
       this.leaving = true;
       // (nothing flying sets down on the water)
-      return pilot?.water && !pilot.landed ? 'Find somewhere to land' : '';
+      return pilot?.water && !pilot.landed ? "착륙할 곳을 찾으세요" : '';
     }
     if (!v.walker.standing || this.boarding) return '';
     const target = this.target();
-    if (!target) return 'Walk up to a car to get in';
+    if (!target) return "차량 가까이 걸어가 탑승하세요";
     this.approach = null;
     if (this.reached(target, target.gap)) this.board(target);
     else this.approach = { target, since: v.walker.time };
@@ -208,7 +208,7 @@ export class OnFoot {
     if (!built || Math.hypot(motion.s - v.s, motion.u - v.u) > DRONE_FAR) {
       const name = carEntry(car.actor.carId).name;
       this.dropParked();
-      return `${name} · back in the garage`;
+      return `${name} · 차고로 복귀`;
     }
     if (!motion.pilot.settled) return '';
     car.actor.transfer('parked');
@@ -435,7 +435,7 @@ export class OnFoot {
   getOut() {
     const v = this.vehicle, spot = this.exit();
     this.leaving = false;
-    if (!spot) return 'No room to get out here';
+    if (!spot) return "여기에는 내릴 공간이 없습니다";
     const heading = v.heading, seat = this.seatOf(spot), actor = v.stepOut(this.appearance);
     const car = this.leave(actor);
     // (the car rocks on its springs as they climb out)
@@ -467,7 +467,7 @@ export class OnFoot {
   bail() {
     const v = this.vehicle, spot = this.exit();
     this.leaving = false;
-    if (!spot) return 'No room to jump out here';
+    if (!spot) return "여기에는 뛰어내릴 공간이 없습니다";
     const { x: vx, z: vz } = v.velocity, heading = v.heading, actor = v.stepOut(this.appearance);
     const car = this.leave(actor);
     if (car?.loose && car.actor.control !== 'landing') { car.loose.vx = vx; car.loose.vz = vz; car.moved = true; }
@@ -567,7 +567,7 @@ export class OnFoot {
     const motion = this.traffic.motion(car);
     const speed = motion.vx * Math.sin(car.heading) - motion.vz * Math.cos(car.heading);
     v.takeControl(car.actor, { paint: `#${car.paint.color.getHexString()}`, speed });
-    return `${carEntry(car.spec.name).name} · borrowed`;
+    return `${carEntry(car.spec.name).name} · 빌린 차량`;
   }
   // Into a parked car where it stands, in its bay or where it was knocked
   // to, in its own paint
@@ -575,7 +575,7 @@ export class OnFoot {
     const v = this.vehicle, info = collider.parked, actor = this.traffic.takeParked(collider);
     if (!actor) return '';
     v.takeControl(actor, { paint: info.colour, speed: 0 });
-    return `${carEntry(info.model).name} · borrowed`;
+    return `${carEntry(info.model).name} · 빌린 차량`;
   }
 }
 

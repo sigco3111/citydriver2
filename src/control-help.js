@@ -18,7 +18,7 @@ export function setupControlHelp() {
     help.setAttribute('data-control-help', '');
     const close = document.createElement('button');
     close.type = 'button'; close.className = 'dismiss-control-help';
-    close.setAttribute('aria-label', 'Dismiss control help');
+    close.setAttribute('aria-label', "조작 도움말 닫기");
     close.innerHTML = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
     // Don't stop key events here. Space and Enter on a button already skip the
     // driving shortcuts (see Input), and stopping the rest swallowed Escape and P.

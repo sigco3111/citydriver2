@@ -176,7 +176,7 @@ test('a demolition run is told of each piece knocked loose, by kind and where it
   const lamp = nearest('lamp'), run = new DemolitionRun(); run.start();
   const { props, car } = drive(lamp, 'rig', 18, 1, false, world(), (kinds, at) => run.smash(kinds, at));
   try {
-    const smash = run.drainEvents().find(event => event.kind === 'smash' && event.label === 'Lamp post');
+    const smash = run.drainEvents().find(event => event.kind === 'smash' && event.label === "가로등");
     assert.ok(smash, 'the lamp post is paid for');
     assert.equal(smash.price, PRICES.lamp);
     assert.ok(Math.hypot(smash.x - lamp.x, smash.z - lamp.z) < 2, 'where it stood');

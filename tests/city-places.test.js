@@ -195,10 +195,10 @@ test('a fountain square is named for what is round it', () => {
   const near = (place, types) => Math.min(Infinity, ...places.filter(other => types.includes(other.type)).map(other => Math.hypot(other.s - place.s, other.u - place.u)));
   for (const place of places.filter(place => place.type === 'plaza')) {
     const style = cityStyleDistrict(place.s, place.u);
-    if (place.name === 'Station Square') assert.ok(near(place, ['station']) < 320, 'Station Square with no station near');
-    if (place.name === 'Market Square') assert.ok(near(place, ['market', 'farmersmarket']) < 320 || style === 'Market district', 'Market Square with no market near');
-    if (place.name === 'Old Town Square') assert.equal(style, 'Old town');
-    if (place.name === 'Harbor Square') assert.equal(place.district, 'Harbor');
+    if (place.name === "역 광장") assert.ok(near(place, ['station']) < 320, 'Station Square with no station near');
+    if (place.name === "시장 광장") assert.ok(near(place, ['market', 'farmersmarket']) < 320 || style === 'Market district', 'Market Square with no market near');
+    if (place.name === "구시가지 광장") assert.equal(style, 'Old town');
+    if (place.name === "항구 광장") assert.equal(place.district, "항구");
   }
 });
 

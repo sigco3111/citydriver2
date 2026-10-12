@@ -1,3 +1,4 @@
+import { districtName } from './locale-ko.js';
 import { CITY, cityDistrict } from './world/city.js';
 import { CityMapCache, drawParkedCar } from './city-map.js';
 import { CITY_PLACES } from './world/city-places.js';
@@ -32,7 +33,7 @@ export function worldMapLabels(city = CITY, minBlocks = 3) {
     return { name: style, style, x: at.x, y: at.y, blocks: centres.length, ...extra };
   };
   const labels = [...groups.values()].filter(group => group.centres.length >= minBlocks).map(group => place(group));
-  if (core.centres.length) labels.push(place(core, { name: 'Downtown', downtown: true }));
+  if (core.centres.length) labels.push(place(core, { name: "도심", downtown: true }));
   return labels;
 }
 function centre(points) {
@@ -134,8 +135,8 @@ export class WorldMap {
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
     const drawn = [];
     for (const label of [...this.labels].sort((a, b) => Number(Boolean(b.downtown)) - Number(Boolean(a.downtown)))) {
-      const [x, y] = toCanvas(label.x, label.y), lines = label.downtown ? ['DOWNTOWN'] : label.name.toUpperCase().split(' ');
-      ctx.font = `${label.downtown ? 700 : 500} ${label.downtown ? (small ? 12 : 16) : small ? 11 : 14}px Oswald, 'Arial Narrow', Arial, sans-serif`;
+      const [x, y] = toCanvas(label.x, label.y), lines = label.downtown ? ["도심"] : districtName(label.name).split(' ');
+      ctx.font = `${label.downtown ? 700 : 500} ${label.downtown ? (small ? 12 : 16) : small ? 11 : 14}px 'Noto Sans KR', Oswald, 'Arial Narrow', Arial, sans-serif`;
       const lineHeight = label.downtown ? 15 : small ? 11 : 14, top = y - (lines.length - 1) * lineHeight / 2;
       const half = Math.max(...lines.map(line => ctx.measureText(line).width)) / 2 + 2;
       const box = { left: x - half, right: x + half, top: top - lineHeight / 2, bottom: top + (lines.length - .5) * lineHeight };

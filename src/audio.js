@@ -99,7 +99,7 @@ export class DriveAudio {
   ensureContext() {
     if (!this.context) {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (!AudioContext) throw new Error('Web Audio is unavailable');
+      if (!AudioContext) throw new Error("웹 오디오를 사용할 수 없습니다");
       this.attach(new AudioContext({ latencyHint: 'interactive' }));
     }
   }

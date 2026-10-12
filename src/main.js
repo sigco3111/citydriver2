@@ -1,3 +1,4 @@
+import { districtName } from './locale-ko.js';
 import './style.css';
 import './journey.css';
 import './ui.css';
@@ -11,6 +12,7 @@ import './taxi.css';
 import './demolition.css';
 import './city-theme.css';
 import './update-notice.css';
+import './korean.css';
 import { garageModel, savingFor, UNSAVED } from './chooser-model.js';
 import { menuControls, menuModel, WEATHER_CHOICES, cycleChoice } from './menu-model.js';
 import { bindMenuControls, renderMenuControls } from './menu-dom.js';
@@ -72,6 +74,7 @@ import { moveMenuFocus, confirmMenuFocus, scrollMenu, handleMenuKey } from './me
 import { setupMenuIdle } from './menu-idle.js';
 import { OnceHints, readHintFlags } from './hud-dom.js';
 
+await Promise.all([document.fonts.load('600 24px \"Noto Sans KR\"'), document.fonts.ready]);
 setupControlHelp();
 
 const $ = selector => document.querySelector(selector);
@@ -125,7 +128,7 @@ const toast = (message, tone = '') => {
 async function boot() {
   try {
     // Without the fixed app layout, menus and controls are not usable.
-    if (getComputedStyle($('#app')).position !== 'fixed') throw new Error('Game styles could not load');
+    if (getComputedStyle($('#app')).position !== 'fixed') throw new Error("게임 스타일을 불러오지 못했습니다");
     // `?ao=0` turns soft shading off for this visit, whatever was saved or detected.
     const graphics = new Graphics({ ambientOcclusion: new URLSearchParams(window.location.search).get('ao') === '0' ? false : null });
     // How much of the route stays built is a quality setting too, so it has to
@@ -145,7 +148,7 @@ async function boot() {
     const comfortStorageKey = 'citydriver-vr-comfort', comfort = rendering.vrCamera.comfort;
     try { comfort.enabled = localStorage.getItem(comfortStorageKey) !== 'off'; } catch { /* Storage is optional. */ }
     function toggleComfort() {
-      comfort.enabled = !comfort.enabled; toast(`Comfort vignette ${comfort.enabled ? 'on' : 'off'}`);
+      comfort.enabled = !comfort.enabled; toast(`시야 가장자리 가림 ${comfort.enabled ? '켬' : '끔'}`);
       try { localStorage.setItem(comfortStorageKey, comfort.enabled ? 'on' : 'off'); } catch { /* Keep it for this visit. */ }
     }
     const hidden = () => vr?.active ? !vr.visible : document.hidden;
@@ -154,7 +157,7 @@ async function boot() {
     function updateFPS(timestamp, rendered) {
       if (fpsCounter.hidden) return;
       if (paused || document.hidden || changingJourney) {
-        fpsCounter.textContent = 'FPS: paused'; fpsStart = null; fpsFrames = 0; return;
+        fpsCounter.textContent = "FPS: 일시 정지"; fpsStart = null; fpsFrames = 0; return;
       }
       if (fpsStart === null) { fpsStart = timestamp; fpsFrames = 0; return; }
       if (rendered) fpsFrames++;
@@ -167,7 +170,7 @@ async function boot() {
     let needsRender = true;
     // Between the scene's context being lost and restored nothing can be drawn (see setPaused)
     let graphicsLost = false;
-    const GRAPHICS_LOST = 'Graphics lost. Reload to restart.';
+    const GRAPHICS_LOST = "그래픽 연결이 끊겼습니다. 새로 고침하여 다시 시작하세요.";
     window.addEventListener('resize', () => { needsRender = true; });
     document.addEventListener('visibilitychange', () => { if (!document.hidden) needsRender = true; });
     const journey = 'city';
@@ -193,7 +196,7 @@ async function boot() {
     const refreshAudioMixer = setupAudioMixer(audio);
     const showSound = enabled => {
       $('#sound').setAttribute('aria-pressed', String(enabled));
-      $('#sound').setAttribute('aria-label', enabled ? 'Turn sound off' : 'Turn sound on'); $('#sound').title = enabled ? 'Turn sound off' : 'Turn sound on';
+      $('#sound').setAttribute('aria-label', enabled ? "소리 끄기" : "소리 켜기"); $('#sound').title = enabled ? "소리 끄기" : "소리 켜기";
     };
     // Silent until a drive starts. Sound left on last visit is built now and
     // comes back with the first click or key after that.
@@ -354,9 +357,9 @@ async function boot() {
       const goals = gameMode === 'taxi' && taxi.status !== 'idle' ? taxi.goals : [], stats = taxi.stats;
       $('#shift-goals').innerHTML = goals.map(goal => {
         const progress = goal.done ? goal.target : goalProgress(goal, stats);
-        return `<li data-done="${goal.done}"><span class="goal-check" aria-hidden="true">${goal.done ? '✓' : '○'}</span><span class="goal-copy"><strong>${goal.text}</strong><small>${goal.done ? `+$${goal.bonus} banked` : `${progress} / ${goal.target} · $${goal.bonus}`}</small></span></li>`;
+        return `<li data-done="${goal.done}"><span class="goal-check" aria-hidden="true">${goal.done ? '✓' : '○'}</span><span class="goal-copy"><strong>${goal.text}</strong><small>${goal.done ? `+$${goal.bonus} 정산` : `${progress} / ${goal.target} · $${goal.bonus}`}</small></span></li>`;
       }).join('');
-      $('#goals-summary').textContent = goals.length ? `${goals.filter(goal => goal.done).length} of ${goals.length} · Bonuses bank to your fleet` : '';
+      $('#goals-summary').textContent = goals.length ? `${goals.length}개 중 ${goals.filter(goal => goal.done).length}개 완료 · 보너스는 잔액으로 지급` : '';
     }
     // The pause screen's header names the driver's rank (from everything
     // earned, anywhere) and the fleet balance
@@ -366,7 +369,7 @@ async function boot() {
     // prepareWorldMap), drawn again whenever it opens or the window changes size
     let worldMap = null;
     const worldMapCanvas = $('#world-map');
-    const hereText = () => `You are in ${cityDistrict(vehicle.s, vehicle.u)}`;
+    const hereText = () => `현재 위치: ${cityDistrict(vehicle.s, vehicle.u)}`;
     function drawWorldMap(dialog = worldMapDialog) {
       if (!dialog.open) return;
       // as wide as its column, or as tall as the dialog leaves room for once
@@ -382,7 +385,7 @@ async function boot() {
     const mapJumps = () => jumpBook.sites.map(site => ({ u: site.u, s: site.s, heading: site.heading, landed: jumpBook.best.has(site.id), site }));
     const jumpName = ({ site }) => {
       const best = jumpBook.best.get(site.id);
-      return [site.kind === 'river' ? site.name : `${site.name} by ${site.where}`, best === undefined ? '' : `best ${best} m ${starText(jumpBook.stars(site))}`].filter(Boolean).join(' · ');
+      return [site.kind === 'river' ? site.name : `${site.name} · ${site.where} 옆`, best === undefined ? '' : `최고 ${best} m ${starText(jumpBook.stars(site))}`].filter(Boolean).join(' · ');
     };
     function prepareWorldMap() {
       worldMap = new WorldMap(CITY, cityGuide.mapCache);
@@ -511,11 +514,11 @@ async function boot() {
       // and it comes last, well away from Resume)
       renderMenuControls(controls());
       if (run) $('#garage-heading').after($('#restart-run'), $('#end-run')); else $('#drift-tap').after($('#restart-run'));
-      $('#goals-panel').hidden = !run; $('#goals-heading').textContent = gameMode === 'demolition' ? 'Contracts' : 'Shift goals';
+      $('#goals-panel').hidden = !run; $('#goals-heading').textContent = gameMode === 'demolition' ? "계약" : "영업 목표";
       $('#shift-goals').setAttribute('aria-label', $('#goals-heading').textContent);
       $('#scores-panel').hidden = gameMode !== 'demolition';
-      $('#taxi-clock-label').textContent = 'TIME';
-      $('#taxi-clock').setAttribute('aria-label', gameMode === 'demolition' ? 'Seconds remaining' : 'Shift seconds remaining');
+      $('#taxi-clock-label').textContent = "남은 시간";
+      $('#taxi-clock').setAttribute('aria-label', gameMode === 'demolition' ? "남은 초" : "영업 남은 초");
       $('#reset').title = run ? 'Reset car: −5 seconds (R)' : 'Reset car (R)';
       $('#reset').setAttribute('aria-label', $('#reset').title);
       vrStatus.setAccent(gameMode);
@@ -532,7 +535,7 @@ async function boot() {
       // (on foot, stood on the lane: from a roof they were left up at its height, and fell)
       vehicle.pilot?.land(); vehicle.walker?.takeOver(); haltCar();
       const run = demolition.running ? demolition : taxi;
-      if (penalty) { run.timeLeft = Math.max(0, run.timeLeft - 5); toast('Reset −5s'); }
+      if (penalty) { run.timeLeft = Math.max(0, run.timeLeft - 5); toast("차량 복귀 −5초"); }
       taxi.hold = 0;
       world.update(vehicle.s, vehicle.u); vehicle.render(0, world.origin); rendering.snap(); needsRender = true;
     }
@@ -586,10 +589,10 @@ async function boot() {
       if (vehicle.walker || vehicle.carId !== DEMOLITION_CAR) takeCar(DEMOLITION_CAR, DEMOLITION_PAINT);
       demolition.stop(); demolitionView.reset(); driftEffects.reset();
       showFree();
-      toast(`Demolition · ${standbyText('demolition')}`);
+      toast(`철거 · ${standbyText('demolition')}`);
     }
     // What a job on standby asks, said on getting into its car
-    const standbyText = job => job === 'taxi' ? 'Stop in a ring for a fare' : 'Hit anything to start the clock';
+    const standbyText = job => job === 'taxi' ? "원 안에 정차해 승객을 태우세요" : "무언가에 부딪히면 시간이 시작됩니다";
     // Into a cab or the demolition truck off the street: its job
     function tellJob() {
       const job = carEntry(vehicle.carId).taxi ? 'taxi' : vehicle.carId === DEMOLITION_CAR ? 'demolition' : null;
@@ -626,7 +629,7 @@ async function boot() {
     // they are: nothing is swapped or moved. A run ended by getting out
     // (`outAfter`) gets them out now.
     let leaveUntil = -Infinity, outAfter = false;
-    const useKey = () => ({ keys: 'E', pad: 'Y', vr: 'Y', touch: 'Get out' })[inputDevice()];
+    const useKey = () => ({ keys: 'E', pad: 'Y', vr: 'Y', touch: "내리기" })[inputDevice()];
     function keepDriving() {
       if (changingJourney) return;
       leaveRun(); started = true; showFree();
@@ -669,7 +672,7 @@ async function boot() {
       if (paused) { clearTimeout(toastTimer); $('#toast').classList.remove('show'); }
       // (the title screen is silent: sound begins with the drive)
       audio.setPaused(paused || !started);
-      pauseOverlay.hidden = !paused; $('#pause').setAttribute('aria-pressed', String(paused)); $('#pause').setAttribute('aria-label', paused ? 'Resume' : 'Pause');
+      pauseOverlay.hidden = !paused; $('#pause').setAttribute('aria-pressed', String(paused)); $('#pause').setAttribute('aria-label', paused ? "계속하기" : "일시 정지");
       $('#pause .control-label').textContent = paused ? 'resume' : 'pause';
       // (the menu opens at the top, wherever it was last scrolled)
       if (paused) { renderGoals(); renderCareer(); pauseOverlay.scrollTop = 0; $('#resume').focus(); } else $('#pause').blur();
@@ -704,7 +707,7 @@ async function boot() {
             + `<span class="car-meters">${meters}</span>${current}</span></button>`;
         }).join('')}</div>`).join('')
         // (and the gear, the jetpack, under its own heading)
-        + `<h3 id="garage-group-gear" class="garage-subheading" data-group="Gear">Gear</h3><div class="chooser-options car-options" role="group" aria-labelledby="garage-group-gear" data-group="Gear">`
+        + `<h3 id="garage-group-gear" class="garage-subheading" data-group="Gear">장비</h3><div class="chooser-options car-options" role="group" aria-labelledby="garage-group-gear" data-group="Gear">`
         + garageChoices(false).gear.map(({ id, label, about }) => `<button type="button" class="chooser-card car-card gear-card" data-gear="${id}" aria-label="${label}">`
           + '<span class="car-price" hidden></span>' + gearArt(id)
           + `<span class="chooser-card-copy"><span class="chooser-card-title">${label}</span><span class="gear-about">${about}</span></span></button>`).join('') + '</div>';
@@ -730,15 +733,15 @@ async function boot() {
       // (in a shift it shows only the cabs and their liveries: see garageModel)
       carDialog.dataset.shift = String(garage.shift); paintCards();
       $('#garage-wallet').textContent = garage.summary;
-      $('#garage-saving').textContent = garage.shift ? 'Cab changes apply to your next shift' : !saving ? 'Every car in the garage is yours' : saving.short
-        ? `${saving.chosen ? 'Saving for' : 'Next up:'} ${saving.label} · ${money(saving.short)} to go` : `${saving.label} · ready to buy`;
+      $('#garage-saving').textContent = garage.shift ? "택시 변경은 다음 영업에 적용됩니다" : !saving ? "차고의 모든 차량을 보유했습니다" : saving.short
+        ? `${saving.chosen ? "구매 목표" : "다음 목표:"} ${saving.label} · ${money(saving.short)} 남음` : `${saving.label} · 구매 가능`;
       for (const car of [...garage.cars, ...garage.gear]) {
         const card = shopCard(car.id), tag = card?.querySelector('.car-price');
         if (!card) continue;
-        tag.hidden = Boolean(car.current); tag.textContent = car.owned ? car.shiftCab ? 'Shift cab' : 'Owned' : car.goal ? `Saving · ${car.value}` : car.value;
+        tag.hidden = Boolean(car.current); tag.textContent = car.owned ? car.shiftCab ? "영업용 택시" : "보유 중" : car.goal ? `모으는 중 · ${car.value}` : car.value;
         card.dataset.owned = String(car.owned); card.dataset.affordable = String(car.affordable); card.dataset.shiftCab = String(Boolean(car.shiftCab));
-        card.setAttribute('aria-label', car.owned ? `${car.label}${car.shiftCab ? ', shift cab' : ''}` : `${car.label}, ${car.value}${car.affordable ? ', can buy now' : ''}`);
-        if (!car.gear) { card.setAttribute('aria-current', String(car.current)); card.querySelector('.chooser-current').textContent = garage.shift ? 'NEXT SHIFT' : 'CURRENT CAR'; }
+        card.setAttribute('aria-label', car.owned ? `${car.label}${car.shiftCab ? ", 영업용 택시" : ''}` : `${car.label}, ${car.value}${car.affordable ? ", 지금 구매 가능" : ''}`);
+        if (!car.gear) { card.setAttribute('aria-current', String(car.current)); card.querySelector('.chooser-current').textContent = garage.shift ? "다음 영업" : "현재 차량"; }
       }
       $('#garage-liveries').innerHTML = garage.liveries.map(({ id, current, disabled, swatch, accessibilityLabel }) =>
         `<button type="button" class="paint-swatch garage-livery-swatch" role="radio" aria-checked="${current}" data-livery="${id}" data-locked="${disabled}"
@@ -748,7 +751,7 @@ async function boot() {
       renderOffer(garage.offer);
     }
     // (a shift's results end on the balance and the car it is going toward)
-    function renderBank() { $('#taxi-result-bank').textContent = [`Balance ${money(taxi.fleet.balance)}`, savingFor(taxi.fleet)?.text].filter(Boolean).join(' · '); }
+    function renderBank() { $('#taxi-result-bank').textContent = [`잔액 ${money(taxi.fleet.balance)}`, savingFor(taxi.fleet)?.text].filter(Boolean).join(' · '); }
     let offerShown = null;
     function renderOffer(offer) {
       const panel = $('#garage-offer');
@@ -769,7 +772,7 @@ async function boot() {
       const buy = $('#offer-buy'), test = $('#offer-test'), goal = $('#offer-goal');
       buy.textContent = offer.buy; buy.disabled = !offer.canBuy; buy.dataset.primary = String(offer.canBuy);
       test.textContent = `${offer.trying} · ${offer.test}`; test.disabled = !offer.canTest; test.dataset.primary = String(!offer.canBuy && offer.canTest);
-      goal.textContent = offer.goal ? 'Saving for this' : 'Save for this'; goal.setAttribute('aria-pressed', String(offer.goal)); goal.hidden = !offer.canSave;
+      goal.textContent = offer.goal ? "구매 목표 지정됨" : "구매 목표로 지정"; goal.setAttribute('aria-pressed', String(offer.goal)); goal.hidden = !offer.canSave;
       $('#offer-note').textContent = offer.note; $('#offer-earn').textContent = offer.earn; $('#offer-earn').hidden = !offer.earn;
     }
     function openOffer(id) {
@@ -789,7 +792,7 @@ async function boot() {
       if (!taxi.fleet.setGoal(id)) return;
       // (said once when the balance first covers it, unless it already does)
       goalTold = id && taxi.fleet.balance >= carPrice(id) ? id : null;
-      if (id) toast(`Saving for the ${shopName(id)}`);
+      if (id) toast(`구매 목표: ${shopName(id)}`);
       renderGarage(); needsRender = true;
     }
     const paintSwatches = $('#paint-swatches'), paintWell = $('#paint-custom-well'), paintInput = $('#paint-custom');
@@ -842,7 +845,7 @@ async function boot() {
       if (value !== DEFAULT_PAINT && !color) return;
       if (!preview && !taxi.fleet.setPaint(color)) {
         showPaint(taxi.fleet.paint);
-        $('#paint-current').textContent = `A new color is ${money(PAINT_PRICE)}`;
+        $('#paint-current').textContent = `새 색상: ${money(PAINT_PRICE)}`;
         return;
       }
       showPaint(color);
@@ -857,7 +860,7 @@ async function boot() {
     }
     // Free drive's two buttons climb and descend in the helicopter, and jump
     // and sprint on foot (Space and Shift do, see Input), and are named for it
-    const driveButtons = { driving: [['Drift', 'Hold + steer'], ['Boost']], flying: [['Climb', 'Hold'], ['Descend']], walking: [['Jump', 'Hold to fly'], ['Sprint']] };
+    const driveButtons = { driving: [["드리프트", "누른 채 조향"], ["부스트"]], flying: [["상승", "누르기"], ["하강"]], walking: [["점프", "누르면 비행"], ["달리기"]] };
     let driveMode = null, driveMachine = null, driveTap = null, driveJet = null;
     function updateDriveUi() {
       const free = started && gameMode === 'free', mode = free && vehicle.pilot ? 'flying' : free && vehicle.walker ? 'walking' : 'driving';
@@ -870,7 +873,7 @@ async function boot() {
         const button = $(`[data-drive-button="${key}"]`), [label, given] = driveButtons[mode][i];
         // (drifting tapped rather than held, see setDriftMode)
         // (and on foot, the jetpack's Hold to fly only with one)
-        const hint = mode === 'driving' && key === 'handbrake' && vehicle.driftMode === 'tap' ? 'Tap + steer' : mode === 'walking' && key === 'handbrake' && !hasJetpack() ? 'Tap' : given;
+        const hint = mode === 'driving' && key === 'handbrake' && vehicle.driftMode === 'tap' ? "탭 후 조향" : mode === 'walking' && key === 'handbrake' && !hasJetpack() ? "탭" : given;
         button.querySelector('span').textContent = label;
         // (and what the Drift button says when it has no drift to show: see renderRunHud)
         if (hint) { const small = button.querySelector('small'); small.textContent = hint; small.dataset.idle = hint; }
@@ -885,9 +888,9 @@ async function boot() {
       if (useButton.hidden !== !offer) useButton.hidden = !offer;
       if (!offer) return;
       // (stopping fast, or landing high up, a second press jumps out: see OnFoot.bail and jump)
-      const stopping = offer.flying ? 'Landing' : 'Stopping';
-      const own = offer.own && (carEntry(offer.car.actor.carId).flies ? `Your ${offer.name.toLowerCase()}` : 'Your car');
-      const label = offer.out ? offer.bail ? 'Jump out' : offer.stopping ? stopping : 'Get out' : 'Get in', detail = offer.out ? offer.bail ? stopping : '' : own || offer.name;
+      const stopping = offer.flying ? "착륙" : "정차";
+      const own = offer.own && (carEntry(offer.car.actor.carId).flies ? `내 ${offer.name.toLowerCase()}` : "내 차량");
+      const label = offer.out ? offer.bail ? "뛰어내리기" : offer.stopping ? stopping : "내리기" : "탑승", detail = offer.out ? offer.bail ? stopping : '' : own || offer.name;
       if (useButton.querySelector('span').textContent !== label) useButton.querySelector('span').textContent = label;
       if (useButton.querySelector('small').textContent !== detail) useButton.querySelector('small').textContent = detail;
     }
@@ -900,7 +903,7 @@ async function boot() {
       updateDriveUi();
       for (const choice of garageChoices().cars) carDialog.querySelector(`[data-car="${choice.id}"]`)?.setAttribute('aria-current', String(choice.current));
       $('#current-car').textContent = garageValue();
-      $('#change-car').setAttribute('aria-label', `Garage: ${garageValue()}`);
+      $('#change-car').setAttribute('aria-label', `차고: ${garageValue()}`);
       updatePaintUi();
     }
     // One garage car at a time: the new one takes the player where they are,
@@ -917,9 +920,9 @@ async function boot() {
     function flightHelp(id) {
       if (!CARS[id].flies) return '';
       const device = inputDevice();
-      const takeOff = { vr: 'Right trigger', pad: 'RT', touch: 'Push the stick up', keys: 'Hold W' }[device];
-      const climbing = { vr: 'Right stick: climb / descend', pad: 'Right stick or LB / RB: climb / descend', touch: 'Hold Climb or Descend', keys: 'Space / Shift: climb / descend' }[device];
-      return CARS[id].kind === 'plane' ? ` · ${takeOff} to take off · ${climbing}` : ` · ${climbing}`;
+      const takeOff = { vr: "오른쪽 트리거", pad: 'RT', touch: "스틱을 위로 밀기", keys: "W 누르기" }[device];
+      const climbing = { vr: "오른쪽 스틱: 상승 / 하강", pad: "오른쪽 스틱 또는 LB / RB: 상승 / 하강", touch: "상승 또는 하강 누르기", keys: "Space / Shift: 상승 / 하강" }[device];
+      return CARS[id].kind === 'plane' ? ` · ${takeOff}: 이륙 · ${climbing}` : ` · ${climbing}`;
     }
     // Buying or test driving goes straight to the drive, wherever the garage was opened from
     function leaveGarage() {
@@ -942,7 +945,7 @@ async function boot() {
         if (!started && bought) { if (carEntry(id).taxi) beginTaxi(); else beginFree(); }
         updateCarUi(); updateHud();
       }
-      toast(`${carEntry(id).name} ${bought ? 'bought' : 'selected'}${carEntry(id).taxi ? started ? ` · ${standbyText('taxi')}` : ' for shifts' : flightHelp(id)}`, bought ? 'goal' : '');
+      toast(`${carEntry(id).name} ${bought ? '구매함' : '선택함'}${carEntry(id).taxi ? started ? ` · ${standbyText('taxi')}` : ' 영업용' : flightHelp(id)}`, bought ? 'goal' : '');
     }
     // In a taxi shift the garage holds only the cabs (see garageModel): one
     // picked or bought there drives the next shift, and this one carries on in
@@ -951,19 +954,19 @@ async function boot() {
     function chooseCab(id, bought = false) {
       if (!bought && !taxi.fleet.select(id)) return;
       garageOffer = null; carDialog.close(); updateCarUi();
-      toast(`${carEntry(id).name} ${bought ? 'bought' : 'selected'} · ready for your next shift`, bought ? 'goal' : '');
+      toast(`${carEntry(id).name} ${bought ? '구매함' : '선택함'} · 다음 영업 준비됨`, bought ? 'goal' : '');
     }
     function buyCar(id) {
       if ((started && gameMode !== 'free' && !(inShift() && carEntry(id).taxi)) || !taxi.fleet.buy(id)) return;
       audio.cue('goal');
       // (a cab bought is the next shift's: see TaxiFleet.buy)
       if (inShift()) chooseCab(id, true);
-      else if (GEAR[id]) { jetTrial.stop(); leaveGarage(); if (!started) beginFree(); toast(`Jetpack bought · ${jetpackHelp()}`, 'goal'); updateCarUi(); }
+      else if (GEAR[id]) { jetTrial.stop(); leaveGarage(); if (!started) beginFree(); toast(`제트팩 구매함 · ${jetpackHelp()}`, 'goal'); updateCarUi(); }
       else chooseCar(id, true);
     }
     // Owned gear, picked in the garage: how to use it
     function useGear() { leaveGarage(); if (!started) beginFree(); toast(jetpackHelp()); }
-    const jetpackHelp = () => `Get out and hold ${{ keys: 'Space', pad: 'A', vr: 'the left grip', touch: 'Jump' }[inputDevice()]} in the air to fly`;
+    const jetpackHelp = () => `내린 후 공중에서 ${{ keys: 'Space', pad: 'A', vr: '왼쪽 그립', touch: '점프' }[inputDevice()]}을 누르면 비행합니다`;
     // The jetpack, tried: TEST_DRIVE_SECONDS of it, counted only on foot (see
     // TestDrive). It cuts out when they're up; the parachute is still theirs.
     const jetTrial = new TestDrive();
@@ -981,12 +984,12 @@ async function boot() {
       if (!started) beginFree();
       if (GEAR[id]) {
         jetTrial.start(id);
-        toast(`Jetpack · ${jetTrial.clock} on foot${cost ? ` · −${money(cost)}` : ''} · ${jetpackHelp()}`);
+        toast(`제트팩 · 도보 ${jetTrial.clock}${cost ? ` · −${money(cost)}` : ''} · ${jetpackHelp()}`);
         updateCarUi(); return;
       }
       testDrive.start(id);
       swapCar(id);
-      toast(`Test drive · ${carEntry(id).name} · ${testDrive.clock}${cost ? ` · −${money(cost)}` : ''}${flightHelp(id)}`);
+      toast(`시승 · ${carEntry(id).name} · ${testDrive.clock}${cost ? ` · −${money(cost)}` : ''}${flightHelp(id)}`);
     }
     // Once time is up: the car stopped (or landed) and swapped for theirs,
     // through a moment of dark. A car is swapped where it stopped. Something
@@ -1004,9 +1007,9 @@ async function boot() {
       const v = vehicle, still = Math.abs(v.speed) < .8 && (!v.pilot || v.pilot.landed) && !v.aloft;
       const news = testDrive.update(dt, { inCar: inTestCar(), still });
       const name = carEntry(id).name;
-      if (news === 'warn') toast(`Test drive · ${TEST_DRIVE_WARN} seconds left`);
-      else if (news === 'over') { onFoot.leaving = false; toast(`Test drive over · ${v.pilot ? 'landing' : 'stopping'}`, 'slow'); }
-      else if (news === 'gone') { onFoot.dropParked(); toast(`Test drive over · ${name} back in the garage`); changedCar(); }
+      if (news === 'warn') toast(`시승 · ${TEST_DRIVE_WARN}초 남음`);
+      else if (news === 'over') { onFoot.leaving = false; toast(`시승 종료 · ${v.pilot ? '착륙' : '정차'}`, 'slow'); }
+      else if (news === 'gone') { onFoot.dropParked(); toast(`시승 종료 · ${name} 차고로 복귀`); changedCar(); }
       else if (news === 'done') {
         const flew = CARS[id].flies;
         dipToDark();
@@ -1014,7 +1017,7 @@ async function boot() {
         if (flew) recoverCar(); else { vehicle.render(0, world.origin); rendering.snap(); }
         changedCar(); updateHud();
         const short = Math.max(0, carPrice(id) - taxi.fleet.balance);
-        toast(`Back in your ${carEntry(carId).name} · ${name} ${short ? `in ${money(short)}` : 'ready to buy'}`);
+        toast(`내 ${carEntry(carId).name} 복귀 · ${name} ${short ? `${money(short)} 남음` : '구매 가능'}`);
       }
     }
     // A cut through dark, for swapping the car under the player
@@ -1030,21 +1033,21 @@ async function boot() {
     function jetTrialStep(dt) {
       if (taxi.fleet.owned.has('jetpack')) { jetTrial.stop(); return; }
       const news = jetTrial.update(dt, { inCar: true, still: true });
-      if (news === 'warn') toast(`Jetpack · ${TEST_DRIVE_WARN} seconds left`);
-      else if (news === 'over') { toast(`Jetpack try over · ${money(carPrice('jetpack'))} in the Garage`, 'slow'); updateCarUi(); }
+      if (news === 'warn') toast(`제트팩 · ${TEST_DRIVE_WARN}초 남음`);
+      else if (news === 'over') { toast(`제트팩 체험 종료 · 차고에서 ${money(carPrice('jetpack'))}`, 'slow'); updateCarUi(); }
     }
     // The test drive's card in the HUD (see freeHudModel), or the jetpack's on foot
     function testCard() {
       if (jetTrial.active && !jetTrial.over && vehicle.walker) {
         const short = Math.max(0, carPrice('jetpack') - taxi.fleet.balance);
-        return { stage: 'Jetpack try', label: 'Jetpack', clock: jetTrial.clock, left: jetTrial.left, fraction: jetTrial.fraction, over: false, price: money(carPrice('jetpack')),
-          note: short ? `${money(short)} to go · Garage` : 'Yours to buy in the Garage' };
+        return { stage: "제트팩 체험", label: "제트팩", clock: jetTrial.clock, left: jetTrial.left, fraction: jetTrial.fraction, over: false, price: money(carPrice('jetpack')),
+          note: short ? `${money(short)} 남음 · 차고` : "차고에서 구매 가능" };
       }
       if (!testDrive.active) return null;
       const id = testDrive.id, price = carPrice(id), short = Math.max(0, price - taxi.fleet.balance);
       return { label: carEntry(id).name, clock: testDrive.clock, left: testDrive.left, fraction: testDrive.fraction, over: testDrive.over,
         landing: Boolean(vehicle.pilot), own: carEntry(carId).name, price: money(price),
-        note: carEntry(id).taxi ? 'No fares until it\'s yours' : short ? `${money(short)} to go · Garage` : 'Yours to buy in the Garage' };
+        note: carEntry(id).taxi ? "구매 전에는 승객을 태울 수 없습니다" : short ? `${money(short)} 남음 · 차고` : "차고에서 구매 가능" };
     }
     // What the player is holding, for anything that names a button
     const inputDevice = () => vr?.active ? 'vr' : document.body.dataset.controller === 'true' ? 'pad' : matchMedia('(pointer: coarse)').matches ? 'touch' : 'keys';
@@ -1070,7 +1073,7 @@ async function boot() {
     const free = () => started && gameMode === 'free';
     const driving = () => free() && !vehicle.pilot && !vehicle.walker;
     // (the button a car drifts with, which also tricks and spins it in the air)
-    const driftButton = () => ({ keys: 'Space', pad: 'X', vr: 'the left grip', touch: 'Drift' })[inputDevice()];
+    const driftButton = () => ({ keys: 'Space', pad: 'X', vr: "왼쪽 그립", touch: "드리프트" })[inputDevice()];
     // The plane's stunts (see Plane), told once each: the roll after a while
     // up in the air, and the loop after the first roll
     const flightHintKey = 'citydriver-flight-hints';
@@ -1079,11 +1082,11 @@ async function boot() {
     function hintFlight(stunt = null) {
       const pilot = vehicle.pilot;
       if (!pilot || !flying()) return;
-      const which = !flightHints.roll && pilot.aloft > 6 && !pilot.stunt ? 'roll' : !flightHints.loop && stunt === 'Barrel roll' ? 'loop' : null;
+      const which = !flightHints.roll && pilot.aloft > 6 && !pilot.stunt ? 'roll' : !flightHints.loop && stunt === "배럴 롤" ? 'loop' : null;
       if (!which) return;
       const device = inputDevice();
-      const text = which === 'roll' ? { keys: 'Double-tap A or D to barrel roll', pad: 'Flick the left stick twice to barrel roll', vr: 'Flick the left stick twice to barrel roll', touch: 'Flick the stick twice sideways to barrel roll' }[device]
-        : { keys: 'Double-tap Space to loop the loop', pad: 'Double-tap LB to loop the loop', vr: 'Double-tap the left grip to loop the loop', touch: 'Double-tap Climb to loop the loop' }[device];
+      const text = which === 'roll' ? { keys: "A 또는 D를 두 번 눌러 배럴 롤", pad: "왼쪽 스틱을 두 번 튕겨 배럴 롤", vr: "왼쪽 스틱을 두 번 튕겨 배럴 롤", touch: "스틱을 옆으로 두 번 튕겨 배럴 롤" }[device]
+        : { keys: "Space를 두 번 눌러 공중 루프", pad: "LB를 두 번 눌러 공중 루프", vr: "왼쪽 그립을 두 번 눌러 공중 루프", touch: "상승을 두 번 눌러 공중 루프" }[device];
       hint(text, flying, () => {
         flightHints[which] = true;
         try { localStorage.setItem(flightHintKey, JSON.stringify(flightHints)); } catch { /* Told for this visit. */ }
@@ -1104,9 +1107,9 @@ async function boot() {
         : !airHints.book && event.jump?.stars ? 'book' : null;
       if (!which) return;
       // (held from the ground it does not spin: see Drift.spinning)
-      const text = which === 'spin' ? `In the air, press and hold ${driftButton()} and steer to spin`
-        : which === 'trick' ? `Tap ${driftButton()} as you leave a ramp for a trick and a boost`
-        : 'Pause to see the city\'s jumps and your stars';
+      const text = which === 'spin' ? `공중에서 ${driftButton()}을 누른 채 조향하면 회전합니다`
+        : which === 'trick' ? `경사로를 떠날 때 ${driftButton()}을 탭하면 묘기와 부스트`
+        : "일시 정지 메뉴에서 점프 장소와 별 기록을 확인하세요";
       hint(text, () => driving() && !airHints[which], () => toldAir(which));
     }
     // Drifting in free drive, told once each: how to, once the car has been
@@ -1121,7 +1124,7 @@ async function boot() {
       if (event) {
         // (a first turbo past blue, and there is nothing to tell)
         if (event.stage > 1) toldDrift('stages');
-        if (!driftHints.stages) hint('Drift for longer: orange, then pink sparks, bigger boosts', () => driving() && !driftHints.stages, () => toldDrift('stages'));
+        if (!driftHints.stages) hint("드리프트를 길게 유지하면 주황, 분홍 불꽃 순으로 더 강한 부스트를 얻습니다", () => driving() && !driftHints.stages, () => toldDrift('stages'));
         return;
       }
       if (driftHints.drift) return;
@@ -1129,7 +1132,7 @@ async function boot() {
       fastTime += Math.abs(vehicle.speed) > 12 ? dt : 0;
       if (fastTime < 8) return;
       const button = driftButton();
-      hint(vehicle.driftMode === 'tap' ? `Tap ${button} while steering to drift · tap again to boost` : `Hold ${button} and steer to drift · let go to boost`, () => driving() && !driftHints.drift, () => toldDrift('drift'));
+      hint(vehicle.driftMode === 'tap' ? `조향하면서 ${button} 탭: 드리프트 · 다시 탭: 부스트` : `${button}을 누른 채 조향: 드리프트 · 놓으면 부스트`, () => driving() && !driftHints.drift, () => toldDrift('drift'));
     }
     // On foot in free drive, told once after a moment: the jetpack and the
     // parachute are both on jump
@@ -1142,12 +1145,12 @@ async function boot() {
       const walker = vehicle.walker;
       if (free() && walker && !hasJetpack() && !jetAsked && walker.held && !walker.grounded && walker.time - walker.heldAt > .5) {
         jetAsked = true;
-        hint(`The jetpack is in the Garage · ${money(carPrice('jetpack'))}`, () => free() && !hasJetpack(), () => {});
+        hint(`차고에서 제트팩 구매 · ${money(carPrice('jetpack'))}`, () => free() && !hasJetpack(), () => {});
       }
       if (!walkingFree()) { footTime = 0; return; }
       if ((footTime += dt) < 1.5) return;
-      const button = { keys: 'Space', pad: 'A', vr: 'the left grip', touch: 'Jump' }[inputDevice()];
-      hint(`Hold ${button} to fly the jetpack · tap it up high for the parachute`, walkingFree, () => {
+      const button = { keys: 'Space', pad: 'A', vr: "왼쪽 그립", touch: "점프" }[inputDevice()];
+      hint(`${button}을 누르면 제트팩 비행 · 높은 곳에서 탭하면 낙하산`, walkingFree, () => {
         jetHinted = true;
         try { localStorage.setItem('citydriver-jetpack-hint', 'shown'); } catch { /* Told for this visit. */ }
       });
@@ -1161,15 +1164,15 @@ async function boot() {
       if (!free() || vehicle.pilot || working() || !traffic.enabled || autodrive.enabled) return;
       for (const car of traffic.vehicles) {
         if (!car.job || jobHints[car.job] || !car.car.visible || Math.hypot(car.s - vehicle.s, car.u - vehicle.u) > 25) continue;
-        const job = car.job, take = vehicle.walker ? 'get in' : 'get out and take it';
-        hint(job === 'taxi' ? `That's a cab · ${take} to pick up fares` : `That's the demolition truck · ${take} for a run`,
+        const job = car.job, take = vehicle.walker ? '탑승' : '내려서 탑승';
+        hint(job === 'taxi' ? `택시입니다 · ${take}: 승객 운행` : `철거 트럭입니다 · ${take}: 철거 시작`,
           () => free() && !vehicle.pilot && !working() && !jobHints[job], () => { jobHints[job] = true; try { localStorage.setItem(jobHintKey, JSON.stringify(jobHints)); } catch { /* Told for this visit. */ } });
       }
     }
     // (closing it goes back to whatever opened it: the pause screen's row, or the results' button)
     let garageReturnFocus = null;
     function openCars() {
-      if (started && gameMode === 'demolition') { toast('Garage: not in a demolition run'); return; }
+      if (started && gameMode === 'demolition') { toast("철거 중에는 차고를 이용할 수 없습니다"); return; }
       // (pausing focuses Resume, so note the focus first)
       const focus = document.activeElement;
       if (!holdForChooser()) return;
@@ -1180,7 +1183,7 @@ async function boot() {
     }
     // What the pause screen's Garage row says: the car, or in a shift the next shift's cab
     function garageValue() {
-      return inShift() ? `${carEntry(taxi.fleet.selected).name} · next shift` : carEntry(started && gameMode !== 'free' ? vehicle.carId : carId).name;
+      return inShift() ? `${carEntry(taxi.fleet.selected).name} · 다음 영업` : carEntry(started && gameMode !== 'free' ? vehicle.carId : carId).name;
     }
     // Back, from a chooser (Escape, B): out of a car's offer to the garage,
     // else out of the chooser. Its close button always closes it.
@@ -1260,7 +1263,7 @@ async function boot() {
         // and they get out once its results are put away (see keepDriving).
         if (gameMode !== 'free') {
           const shift = gameMode === 'taxi' ? 'shift' : 'run';
-          if (performance.now() > leaveUntil) { leaveUntil = performance.now() + 4000; toast(`Press ${useKey()} again to end the ${shift} and get out`); return; }
+          if (performance.now() > leaveUntil) { leaveUntil = performance.now() + 4000; toast(`${useKey()}을 다시 누르면 ${shift} 종료 후 내립니다`); return; }
           leaveUntil = -Infinity; outAfter = true; endRun();
           return;
         }
@@ -1273,9 +1276,9 @@ async function boot() {
         return;
       }
       if (name === 'autodrive') {
-        if (started && gameMode !== 'free') { toast('Autodrive: free drive only'); return; }
-        if (!autodrive.enabled && (vehicle.pilot || vehicle.walker)) { toast('Autodrive: cars only'); return; }
-        if (!autodrive.enabled && !autodrive.canStart(vehicle)) { toast('Autodrive requires a street'); return; }
+        if (started && gameMode !== 'free') { toast("자동 운전은 자유 주행에서만 가능합니다"); return; }
+        if (!autodrive.enabled && (vehicle.pilot || vehicle.walker)) { toast("자동 운전은 자동차 전용입니다"); return; }
+        if (!autodrive.enabled && !autodrive.canStart(vehicle)) { toast("자동 운전에는 도로가 필요합니다"); return; }
         const enabled = autodrive.toggle();
         revealTouchControls();
         // D-pad Up also begins the hidden code, so this shortcut must keep its progress.
@@ -1283,7 +1286,7 @@ async function boot() {
         $('#autodrive').setAttribute('aria-pressed', String(enabled));
         // (from the title the cruising car drives on into free drive, where autodrive belongs)
         if (enabled && !started) beginFree({ preserveInput: true });
-        toast(`Autodrive ${enabled ? 'on' : 'off'}`);
+        toast(`자동 운전 ${enabled ? '켬' : '끔'}`);
         return;
       }
       if (name === 'drive') {
@@ -1297,7 +1300,7 @@ async function boot() {
       if (name === 'reset') {
         if (taxi.running || demolition.running) { recoverCar(true); return; }
         if (!started || paused) return;
-        recoverCar(); toast(vehicle.walker ? 'Back on the street' : 'Back on the road');
+        recoverCar(); toast(vehicle.walker ? "도로로 복귀" : "도로로 복귀");
         return;
       }
       if (name === 'newCity') {
@@ -1318,24 +1321,24 @@ async function boot() {
       }
       if (name === 'ambientOcclusion') {
         const enabled = rendering.toggleAO();
-        needsRender = true; toast(`Soft shading ${enabled ? 'on' : 'off'}`);
+        needsRender = true; toast(`부드러운 음영 ${enabled ? '켬' : '끔'}`);
         return;
       }
       if (name === 'sound') {
         try {
           const enabled = await audio.toggle(); showSound(enabled);
-          toast(enabled ? JOURNEYS[journey].sound : 'Sound off');
-        } catch { toast('Sound unavailable'); }
+          toast(enabled ? JOURNEYS[journey].sound : "소리 끔");
+        } catch { toast("소리 사용 불가"); }
       }
     }
     const input = new Input(action, connected => {
-      toast(connected ? controlHelpDismissed() ? 'Controller connected' : 'Controller connected · RT / R2 to drive' : 'Controller disconnected');
+      toast(connected ? controlHelpDismissed() ? "컨트롤러 연결됨" : "컨트롤러 연결됨 · RT / R2로 운전" : "컨트롤러 연결 끊김");
       if (connected && openWelcomeMenu() && !$('#welcome').contains(document.activeElement)) $('#start').focus();
       if (!connected && started && !paused) setPaused(true);
     }, () => {
       if (changingJourney) return;
       const paid = taxi.fleet.enterKonami();
-      toast(paid ? `+${money(paid)}` : 'Balance limit reached', 'goal');
+      toast(paid ? `+${money(paid)}` : "잔액 한도 도달", 'goal');
       if (!paid) return;
       audio.cue('goal'); buildPaintSwatches(); renderGarage(); needsRender = true;
       // (entered on the pause screen, its header shows the new balance)
@@ -1376,7 +1379,7 @@ async function boot() {
         needsRender = true;
       },
       onError(error) {
-        const message = error.name === 'NotAllowedError' ? 'VR permission was declined. Select Enter VR to try again.' : 'Could not enter VR. Try again in your headset browser.';
+        const message = error.name === 'NotAllowedError' ? "VR 권한이 거부되었습니다. VR 시작을 눌러 다시 시도하세요." : "VR을 시작하지 못했습니다. 헤드셋 브라우저에서 다시 시도하세요.";
         $('#vr-error').textContent = message; $('#vr-error').hidden = false;
       },
       onSupport: supported => headsetLayout(supported && headsetBrowser()),
@@ -1393,7 +1396,7 @@ async function boot() {
     }
     // WebXR needs a secure page, which a headset opening the dev server over
     // the local network is not; say so rather than hide Enter VR unexplained.
-    if (headsetBrowser() && !window.isSecureContext) { $('#vr-error').textContent = 'VR needs a secure page. Open Citydriver over HTTPS to play in your headset.'; $('#vr-error').hidden = false; }
+    if (headsetBrowser() && !window.isSecureContext) { $('#vr-error').textContent = "VR에는 보안 페이지가 필요합니다. HTTPS로 열어 헤드셋에서 플레이하세요."; $('#vr-error').hidden = false; }
     const fullscreen = createFullscreen({ button: $('#fullscreen'), state: () => ({ started, paused, vr: vr.active }), pause: () => setPaused(true), toast });
     $('#fullscreen').addEventListener('click', () => action('fullscreen'));
     const desktop = window.citydriverDesktop;
@@ -1412,14 +1415,14 @@ async function boot() {
         const notice = document.createElement('div');
         notice.className = 'update-notice';
         notice.innerHTML = '<span role="status"></span><button type="button" title="Opens the download page">Download</button>';
-        notice.firstChild.textContent = `Version ${update.version} available`;
+        notice.firstChild.textContent = `새 버전 ${update.version} 사용 가능`;
         notice.lastChild.addEventListener('click', download);
         $('#welcome').insertBefore(notice, $('#welcome > .controller-hint'));
         const button = document.createElement('button');
         button.type = 'button'; button.className = 'panel-button update-entry';
         button.innerHTML = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v10m-4-4 4 4 4-4M5 16v4h14v-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span></span>';
-        button.lastChild.textContent = `Get version ${update.version}`;
-        button.title = 'Opens the download page';
+        button.lastChild.textContent = `버전 ${update.version} 받기`;
+        button.title = "다운로드 페이지 열기";
         button.addEventListener('click', download);
         $('#enter-vr-pause').after(button);
       };
@@ -1460,7 +1463,7 @@ async function boot() {
       lookHint += dt;
       if (lookHint < 5) return;
       lookHinted = true;
-      hint('Click to look around with the mouse', () => looking() && !mouseLook.locked && !lookKnown, () => {});
+      hint("클릭하여 마우스로 둘러보세요", () => looking() && !mouseLook.locked && !lookKnown, () => {});
     }
     // On foot through their own eyes, movement strafes when the mouse, right
     // stick or second thumb owns the view; keyboard alone turns it.
@@ -1511,7 +1514,7 @@ async function boot() {
     // (only a drive is paused: over results or a chooser, which hold it paused
     // already, pausing again opened the pause screen underneath and focused its Resume)
     $('#scene').addEventListener('webglcontextlost', event => { event.preventDefault(); graphicsLost = true; if (!paused) setPaused(true); toast(GRAPHICS_LOST); });
-    $('#scene').addEventListener('webglcontextrestored', () => { graphicsLost = false; needsRender = true; toast('Graphics restored. Resume when ready.'); });
+    $('#scene').addEventListener('webglcontextrestored', () => { graphicsLost = false; needsRender = true; toast("그래픽이 복구되었습니다. 준비되면 계속하세요."); });
     const qualityButtons = [...document.querySelectorAll('[data-quality]')];
     const graphicsToggle = $('#graphics-toggle'), graphicsPanel = $('#graphics-settings');
     graphicsToggle.addEventListener('click', () => {
@@ -1527,38 +1530,38 @@ async function boot() {
     // What the cap slider says, Auto with what it has worked out (see Graphics.frameCap)
     function frameCapText() {
       const choice = graphics.capChoice, cap = graphics.cap, display = pacer.displayRate;
-      if (choice === null) return cap ? `Auto · ${Math.round(cap)} fps` : display ? `Auto · ${Math.round(display)} fps` : 'Auto';
-      return choice ? `${choice} fps` : 'Uncapped';
+      if (choice === null) return cap ? `자동 · ${Math.round(cap)} fps` : display ? `자동 · ${Math.round(display)} fps` : "자동";
+      return choice ? `${choice} fps` : "제한 없음";
     }
     function updateGraphicsUi(settings = graphics.settings) {
       for (const button of qualityButtons) button.setAttribute('aria-checked', String(button.dataset.quality === graphics.mode));
       softShading.setAttribute('aria-pressed', String(settings.ambientOcclusion));
       const densityPercent = Math.round(settings.density * 100);
-      $('#graphics-summary').textContent = `${graphics.auto ? 'Auto' : settings.label} · ${densityPercent}%`;
+      $('#graphics-summary').textContent = `${graphics.auto ? "자동" : settings.label} · ${densityPercent}%`;
       pixelDensity.value = String(densityPercent);
       pixelDensity.style.setProperty('--control-level', `${(densityPercent - 50) * 2}%`);
-      pixelDensityValue.textContent = `${densityPercent}%${settings.customDensity ? (densityPercent === 100 ? ' · Native' : '') : ' · Preset limit'}`;
-      pixelDensity.setAttribute('aria-valuetext', `${densityPercent}% of native resolution${settings.customDensity ? '' : ', capped by the preset'}`);
+      pixelDensityValue.textContent = `${densityPercent}%${settings.customDensity ? (densityPercent === 100 ? " · 원래 해상도" : '') : " · 프리셋 제한"}`;
+      pixelDensity.setAttribute('aria-valuetext', `${densityPercent}% of native resolution${settings.customDensity ? '' : ", 프리셋에 의해 제한됨"}`);
       const capAt = Math.max(0, FRAME_CAPS.indexOf(graphics.capChoice));
       frameCapInput.value = String(capAt);
       frameCapInput.style.setProperty('--control-level', `${capAt / (FRAME_CAPS.length - 1) * 100}%`);
       frameCapValue.textContent = frameCapText(); frameCapInput.setAttribute('aria-valuetext', frameCapText());
       const fogPercent = Math.round(settings.fogDistance * 100);
-      const fogText = `${fogPercent}%${settings.fogDistance === DEFAULT_FOG_DISTANCE ? ' · Default' : ''}`;
+      const fogText = `${fogPercent}%${settings.fogDistance === DEFAULT_FOG_DISTANCE ? " · 기본값" : ''}`;
       fogDistance.value = String(fogPercent);
       fogDistance.style.setProperty('--control-level', `${fogPercent}%`);
       fogDistanceValue.textContent = fogText; fogDistance.setAttribute('aria-valuetext', fogText);
       // Show the drawing buffer, which is what the quality level changes: it
       // explains a softer picture.
-      graphicsStatus.textContent = `${graphics.auto ? 'Auto · ' : ''}${settings.label} · ${renderer.domElement.width} × ${renderer.domElement.height} · soft shading ${settings.ambientOcclusion ? 'on' : 'off'}`;
+      graphicsStatus.textContent = `${graphics.auto ? "자동 · " : ''}${settings.label} · ${renderer.domElement.width} × ${renderer.domElement.height} · 부드러운 음영 ${settings.ambientOcclusion ? '켬' : '끔'}`;
     }
     graphics.onChange((settings, reason) => {
       // A frozen canvas keeps its old buffer until something asks for a frame.
       needsRender = true;
       updateGraphicsUi(settings);
-      if (reason === 'auto') toast(`Graphics · ${settings.label}${settings.ambientOcclusion ? '' : ' · soft shading off'}`);
+      if (reason === 'auto') toast(`그래픽 · ${settings.label}${settings.ambientOcclusion ? '' : ' · 부드러운 음영 끔'}`);
       // (its download failed. A browser can remember that until the page reloads.)
-      if (reason === 'ambient-occlusion-failed') toast('Soft shading unavailable. Reload to try again.');
+      if (reason === 'ambient-occlusion-failed') toast("부드러운 음영을 사용할 수 없습니다. 새로 고침하여 다시 시도하세요.");
     });
     for (const button of qualityButtons) button.addEventListener('click', () => graphics.setMode(button.dataset.quality));
     softShading.addEventListener('click', () => action('ambientOcclusion'));
@@ -1617,13 +1620,13 @@ async function boot() {
     }
     // Free drive's tips, each shown once in the task card (see freeHudModel)
     const freeTips = new OnceHints({
-      chain: 'Stunts chain up · a crash loses it',
+      chain: "묘기를 이어 가세요 · 충돌하면 연속 기록을 잃습니다",
     }, 'citydriver-free-hints', taxiStorage);
     // The car being saved for is said once, in free drive, when the balance first covers it
     function tellGoal() {
       const goal = taxi.fleet.goal;
       if (!goal || goal === goalTold || taxi.fleet.balance < carPrice(goal) || !started || paused || gameMode !== 'free') return;
-      goalTold = goal; toast(`You can buy the ${shopName(goal)} · open the Garage`, 'goal'); audio.cue('goal');
+      goalTold = goal; toast(`${shopName(goal)} 구매 가능 · 차고를 여세요`, 'goal'); audio.cue('goal');
     }
     function updateHud() {
       const location = locationModel();
@@ -1641,15 +1644,15 @@ async function boot() {
     function updateViewUi() {
       input.touchStick.releaseLook();
       cameraControls?.refresh();
-      $('#view').title = `${rendering.viewLabel} · Change camera (V)`;
-      $('#view').setAttribute('aria-label', `${rendering.viewLabel}. Change camera`);
+      $('#view').title = `${rendering.viewLabel} · 카메라 변경 (V)`;
+      $('#view').setAttribute('aria-label', `${rendering.viewLabel}. 카메라 변경`);
       const thirdPerson = rendering.camera.isPerspectiveCamera, flying = document.body.dataset.flying === 'true', walking = document.body.dataset.walking === 'true';
-      $('.stick-help-copy').firstChild.textContent = walking ? rendering.firstPersonView ? 'Touch anywhere · ↑ Walk · ↔ Step' : 'Drag anywhere to walk' : thirdPerson ? `Touch anywhere · ↑ ${flying ? 'Fly' : 'Drive'} · ↔ ${flying ? 'Turn' : 'Steer'}` : `Drag anywhere to ${flying ? 'fly' : 'drive'}`;
+      $('.stick-help-copy').firstChild.textContent = walking ? rendering.firstPersonView ? "아무 곳이나 터치 · ↑ 걷기 · ↔ 옆걸음" : "아무 곳이나 드래그해 걷기" : thirdPerson ? `아무 곳이나 터치 · ↑ ${flying ? '비행' : '운전'} · ↔ ${flying ? '방향 전환' : '조향'}` : `아무 곳이나 드래그해 ${flying ? '비행' : '운전'}`;
       // (the plane never stops in the air: let go, it cruises)
       const cruising = flying && carEntry(vehicle.carId).kind === 'plane';
-      $('.stick-help-line').textContent = thirdPerson ? 'Second thumb: drag to look' : walking ? 'Push further to run'
-        : cruising ? 'Release to cruise' : flying ? 'Release to hover' : 'Release to stop';
-      $('#touch-stick').setAttribute('aria-label', walking ? 'Virtual joystick: push the way to walk, further to run' : thirdPerson ? 'Virtual joystick: up to accelerate, left and right to steer, down to brake or reverse, release to stop' : 'Virtual joystick');
+      $('.stick-help-line').textContent = thirdPerson ? "다른 엄지로 드래그하여 둘러보기" : walking ? "더 밀면 달리기"
+        : cruising ? "놓으면 순항" : flying ? "놓으면 호버링" : "놓으면 정지";
+      $('#touch-stick').setAttribute('aria-label', walking ? "가상 조이스틱: 원하는 방향으로 밀면 걷기, 더 밀면 달리기" : thirdPerson ? "가상 조이스틱: 위로 가속, 좌우로 조향, 아래로 제동 또는 후진, 놓으면 정지" : "가상 조이스틱");
     }
     const menuActions = {
       start: () => vr.active ? beginTaxi() : start(), taxi: beginTaxi, demolition: beginDemolition, free: beginFree, resume: () => setPaused(false),
@@ -1668,7 +1671,7 @@ async function boot() {
       return { loading: changingJourney, started, paused, mode: gameMode, chooser: chooserName, over: runOver(),
         running: taxi.running || demolition.running, location: locationModel(), carName: garageValue(),
         autodrive: autodrive.enabled, traffic: traffic.enabled, driftTap: vehicle.driftMode === 'tap', vibration, popups,
-        weather: weather.mode, view: rendering.viewLabel, lookSensitivity: cameraPreferences.inputs.controller.sensitivity, comfort: comfort.enabled, graphics: graphics.auto ? 'Auto' : graphics.settings.label,
+        weather: weather.mode, view: rendering.viewLabel, lookSensitivity: cameraPreferences.inputs.controller.sensitivity, comfort: comfort.enabled, graphics: graphics.auto ? "자동" : graphics.settings.label,
         rates: headsetRates(), rateChoice: graphics.rateChoice, frameRate: vr.session?.frameRate, sound: audio.enabled, mix: audio.preset,
         career: careerText(), newCityArmed: performance.now() < newCityUntil, standby: taxi.waiting ? 'taxi' : demolition.waiting ? 'demolition' : null };
     }
@@ -1694,9 +1697,9 @@ async function boot() {
     }
     bindMenuControls(controls);
     function vrHint() {
-      return vrHintTime >= 10 ? '' : vehicle.pilot ? `Triggers: forward, back · Left stick: turn · Right stick or grips: up, down${gameMode === 'free' ? ' · Y: get out' : ''} · B: pause`
-        : vehicle.walker ? 'Left stick: walk · Right stick: look · Left grip: jump · Right grip: sprint · Y: get in · B: pause'
-          : `Right trigger: gas · Left trigger: brake · Left stick: steer · Grips: drift, boost${gameMode === 'free' ? ' · Y: get out' : ''} · B: pause`;
+      return vrHintTime >= 10 ? '' : vehicle.pilot ? `트리거: 전진, 후진 · 왼쪽 스틱: 회전 · 오른쪽 스틱 또는 그립: 상승, 하강${gameMode === 'free' ? ' · Y: 내리기' : ''} · B: 일시 정지`
+        : vehicle.walker ? "왼쪽 스틱: 걷기 · 오른쪽 스틱: 시선 · 왼쪽 그립: 점프 · 오른쪽 그립: 달리기 · Y: 탑승 · B: 일시 정지"
+          : `오른쪽 트리거: 가속 · 왼쪽 트리거: 제동 · 왼쪽 스틱: 조향 · 그립: 드리프트, 부스트${gameMode === 'free' ? ' · Y: 내리기' : ''} · B: 일시 정지`;
     }
     // (what the controls ask of the player on foot, refilled each step)
     const walking = { walk: { x: 0, z: 0 } };
@@ -1804,7 +1807,7 @@ async function boot() {
         } else if (event.kind === 'multiplier') { toast(event.text, 'chain'); audio.cue('multiplier', event); }
         else if (event.kind === 'banked') {
           earn(event.amount); audio.cue('banked');
-          taxiView.labels.pop({ amount: `+$${event.amount.toLocaleString('en-US')}`, caption: 'BANKED', colour: '#ffe07a' });
+          taxiView.labels.pop({ amount: `+$${event.amount.toLocaleString('en-US')}`, caption: "정산 완료", colour: '#ffe07a' });
         } else if (event.kind === 'lost') { toast(event.text, 'slow'); audio.cue('penalty'); }
       }
     }
@@ -1847,7 +1850,7 @@ async function boot() {
         const run = taxi.running || demolition.running, from = event.from, h = from?.heading ?? vehicle.heading;
         const at = from?.jump?.runup ?? (from ? { s: from.s - Math.cos(h) * 30, u: from.u - Math.sin(h) * 30, heading: h } : null);
         recoverCar(run, at);
-        if (!run) toast('Into the river · back for another go');
+        if (!run) toast("강에 빠졌습니다 · 복귀하여 다시 도전");
       }
     }
     // A run's last ten seconds tick away
@@ -1863,7 +1866,7 @@ async function boot() {
       const say = (text, tone, weight) => { if (!news || weight >= news.weight) news = { text, tone, weight }; };
       for (const event of events) {
         // (the first hit from standby: the run begins with it)
-        if (event.kind === 'begin') { startRun('demolition'); say('Wreck everything · Mind the pedestrians', 'goal', 6); audio.cue('goal'); }
+        if (event.kind === 'begin') { startRun('demolition'); say("모든 것을 파괴하세요 · 보행자는 피하세요", 'goal', 6); audio.cue('goal'); }
         else if (event.kind === 'smash' || event.kind === 'dent') { demolitionView.pop(event); audio.cue('smash', event); }
         else if (event.kind === 'wreck') {
           demolitionView.pop(event); audio.cue('wreck');
@@ -1876,7 +1879,7 @@ async function boot() {
           // (the contractor's cut of the damage goes into the fleet balance)
           earn(event.pay);
           // (a new rating is its own news, a moment later, as a taxi goal is)
-          if (event.rank) later = `Rating · ${event.rank.name}`;
+          if (event.rank) later = `평가 · ${event.rank.name}`;
         } else if (event.kind === 'record') later = later ? `${event.text} ${later}` : event.text;
         else if (event.kind === 'penalty') {
           if (!demolitionView.pop(event)) say(event.text, 'slow', 4);
@@ -1955,7 +1958,7 @@ async function boot() {
       // (and a car's jumps, from a ramp's lip to the landing)
       const walker = vehicle.walker, vy = vehicle.pilot ? vehicle.pilot.vy : walker ? Math.max(0, Math.abs(walker.vy) - 8) : vehicle.carAir && Math.abs(vehicle.vy) > 2 ? Math.abs(vehicle.vy) - 2 : null;
       comfort.update(rendering.camera, vy === null ? vehicle.speed : Math.hypot(vehicle.speed, vy), running ? dt : 0, vr.active && running && started);
-      soundScene.interior = rendering.viewLabel === 'First-person view' && !vehicle.walker;
+      soundScene.interior = rendering.viewLabel === "1인칭 시점" && !vehicle.walker;
       soundScene.lightning = weather.flash; soundScene.rain = weather.state.rain; soundScene.wetness = weather.state.wetness;
       soundScene.snow = weather.state.snow; soundScene.night = weather.state.stars;
       // Where the car is, for the soundscape (twice a second, and only with sound on)
@@ -1992,7 +1995,7 @@ async function boot() {
     await loadingStage('skyline');
     world.update(vehicle.s, vehicle.u);
     applyWeather();
-    $('#paint-note').textContent = `Paint applies to all cars. A new color is ${money(PAINT_PRICE)}, and each car's own color is free.`;
+    $('#paint-note').textContent = `도색은 모든 차량에 적용됩니다. 새 색상은 ${money(PAINT_PRICE)}, 차량 기본색은 무료입니다.`;
     buildCarCards(); paintCards(); buildPaintSwatches(); updateCarUi();
     vehicle.render(0, world.origin); traffic.render(1, world.origin); rendering.update(vehicle.car, 1, world.origin); updateHud(); updateJourneyUi(); updateViewUi(); updateGraphicsUi();
     nightLighting.update(world, vehicle, traffic, weather.state.lightLevel);

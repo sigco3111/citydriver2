@@ -8,7 +8,7 @@
     "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview --host",
-    "test": "node --import ./tests/world-seed.js --test tests/*.test.js",
+    "test": "node --max-old-space-size=8192 --import ./tests/world-seed.js --test --test-concurrency=1 tests/*.test.js",
     "test:fleet": "node scripts/taxi-fleet-test.mjs",
     "electron:web": "vite build --outDir dist-electron",
     "electron:dev": "node scripts/electron-launch.mjs",

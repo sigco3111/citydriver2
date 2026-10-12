@@ -28,6 +28,11 @@ export function citydriverPwa() {
     async closeBundle() {
       if (config.command !== 'build') return;
       const outDir = path.resolve(config.root, config.build.outDir);
+      const manifestPath = path.join(outDir, 'manifest.webmanifest');
+      const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+      manifest.id = manifest.start_url = manifest.scope = config.base;
+      for (const asset of [...manifest.icons, ...manifest.screenshots]) asset.src = `${config.base}${asset.src.replace(/^\.\//, '')}`;
+      await writeFile(manifestPath, JSON.stringify(manifest, null, 2));
       const files = [];
       async function walk(directory, prefix = '') {
         for (const entry of await readdir(directory, { withFileTypes: true })) {

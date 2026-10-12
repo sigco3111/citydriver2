@@ -9,7 +9,7 @@ import * as THREE from 'three';
 // Coats and their trim are art-directed pairs; everything else is chosen
 // independently. Linear colors, mapped in the vertex shader.
 export const WALKER_LOOKS = [
-  { name: 'Harbor', coat: '#376f78', trim: '#e9c890' },
+  { name: "항구", coat: '#376f78', trim: '#e9c890' },
   { name: 'Marigold', coat: '#c99438', trim: '#f2dfb8' },
   { name: 'Clay', coat: '#b96753', trim: '#e7cdb3' },
   { name: 'Iris', coat: '#7984b5', trim: '#edc5ac' },

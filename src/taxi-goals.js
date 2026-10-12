@@ -6,18 +6,18 @@ import { randomAt } from './world/route.js';
 // money while the goals bring the next cab closer. Targets step up with the
 // driver's rank, and the third goal is always one tier harder than the rest.
 export const GOALS = [
-  { id: 'fares', stat: 'delivered', targets: [3, 5, 8], bonus: [150, 300, 500], text: n => `Deliver ${n} fares` },
-  { id: 'riders', stat: 'riders', targets: [5, 10, 16], bonus: [150, 300, 500], text: n => `Deliver ${n} riders` },
-  { id: 'groups', stat: 'groups', targets: [1, 2, 4], bonus: [200, 350, 600], text: n => `Complete ${n} group fare${n > 1 ? 's' : ''}` },
-  { id: 'speedy', stat: 'speedy', targets: [3, 6, 10], bonus: [150, 300, 500], text: n => `Land ${n} Speedy arrivals` },
-  { id: 'streak', stat: 'streak', targets: [2, 3, 5], bonus: [200, 350, 600], text: n => `Speedy streak of ${n}` },
-  { id: 'combo', stat: 'combo', targets: [4, 6, 10], bonus: [150, 300, 500], text: n => `Chain a ×${n} stunt combo` },
-  { id: 'tips', stat: 'tips', targets: [40, 150, 400], bonus: [150, 300, 500], text: n => `Bank $${n} in tips` },
-  { id: 'nearMiss', stat: 'nearMisses', targets: [4, 10, 20], bonus: [150, 300, 500], text: n => `Pull off ${n} near misses` },
-  { id: 'crazyStop', stat: 'crazyStops', targets: [1, 3, 6], bonus: [150, 300, 500], text: n => `${n} Crazy stop${n > 1 ? 's' : ''}` },
-  { id: 'long', stat: 'longRides', targets: [1, 2, 3], bonus: [200, 350, 600], text: n => `Complete ${n} long ride${n > 1 ? 's' : ''} (green ring)` },
-  { id: 'fullCab', stat: 'fullCabs', targets: [1, 1, 2], bonus: [300, 300, 600], text: n => n > 1 ? `Deliver ${n} full cabs of four` : 'Deliver a full cab of four' },
-  { id: 'pleased', stat: 'pleased', targets: [1, 2, 4], bonus: [200, 350, 600], text: n => `Satisfy ${n} special rider${n > 1 ? 's' : ''}` },
+  { id: 'fares', stat: 'delivered', targets: [3, 5, 8], bonus: [150, 300, 500], text: n => `운행 ${n}회 완료` },
+  { id: 'riders', stat: 'riders', targets: [5, 10, 16], bonus: [150, 300, 500], text: n => `승객 ${n}명 운송` },
+  { id: 'groups', stat: 'groups', targets: [1, 2, 4], bonus: [200, 350, 600], text: n => `단체 운행 ${n}회 완료` },
+  { id: 'speedy', stat: 'speedy', targets: [3, 6, 10], bonus: [150, 300, 500], text: n => `빠른 도착 ${n}회 달성` },
+  { id: 'streak', stat: 'streak', targets: [2, 3, 5], bonus: [200, 350, 600], text: n => `빠른 도착 ${n}회 연속` },
+  { id: 'combo', stat: 'combo', targets: [4, 6, 10], bonus: [150, 300, 500], text: n => `묘기 콤보 ×${n} 달성` },
+  { id: 'tips', stat: 'tips', targets: [40, 150, 400], bonus: [150, 300, 500], text: n => `팁 $${n} 정산` },
+  { id: 'nearMiss', stat: 'nearMisses', targets: [4, 10, 20], bonus: [150, 300, 500], text: n => `아슬아슬한 추월 ${n}회` },
+  { id: 'crazyStop', stat: 'crazyStops', targets: [1, 3, 6], bonus: [150, 300, 500], text: n => `굉장한 정차 ${n}회` },
+  { id: 'long', stat: 'longRides', targets: [1, 2, 3], bonus: [200, 350, 600], text: n => `장거리 운행 ${n}회 완료 (초록 원)` },
+  { id: 'fullCab', stat: 'fullCabs', targets: [1, 1, 2], bonus: [300, 300, 600], text: n => n > 1 ? `4명 만석 운행 ${n}회 완료` : "4명 만석 택시 운행 완료" },
+  { id: 'pleased', stat: 'pleased', targets: [1, 2, 4], bonus: [200, 350, 600], text: n => `특별 승객 ${n}명 만족시키기` },
 ];
 export const GOALS_PER_SHIFT = 3;
 export const goalTier = rankIndex => Math.min(2, Math.floor(rankIndex / 2));

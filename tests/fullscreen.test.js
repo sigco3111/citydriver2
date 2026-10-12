@@ -96,7 +96,7 @@ test('a controller request waits for one trusted click or key, then removes the 
   const f = fixture(); f.navigator.userActivation.isActive = false;
   await f.fullscreen.toggle();
   assert.equal(f.calls.requests, 0);
-  assert.equal(f.messages.at(-1), 'Click or press any key for fullscreen');
+  assert.equal(f.messages.at(-1), "클릭하거나 아무 키나 누르면 전체 화면으로 전환합니다");
   f.window.fire('keydown', { key: 'W', isTrusted: false });
   f.window.fire('keydown', { key: 'W', repeat: true });
   for (const key of ['Escape', 'Shift', 'Control', 'Alt', 'Meta']) f.window.fire('keydown', { key });
@@ -127,7 +127,7 @@ test('browser-owned fullscreen updates the switch and explains why the page cann
   f.display.matches = true; f.display.fire('change');
   assert.equal(f.fullscreen.active, true); assert.equal(f.button.pressed, 'true');
   await f.fullscreen.toggle();
-  assert.equal(f.calls.exits, 0); assert.equal(f.messages.at(-1), 'Press F11 to leave fullscreen');
+  assert.equal(f.calls.exits, 0); assert.equal(f.messages.at(-1), "F11을 눌러 전체 화면을 종료하세요");
   f.display.matches = false; f.display.fire('change');
   assert.equal(f.button.pressed, 'false');
 });
@@ -136,7 +136,7 @@ test('unsupported fullscreen is hidden and WebKit uses its prefixed entry and ex
   const unsupported = fixture({ supported: false });
   assert.equal(unsupported.button.hidden, true);
   await unsupported.fullscreen.toggle();
-  assert.equal(unsupported.messages.at(-1), 'Fullscreen unavailable');
+  assert.equal(unsupported.messages.at(-1), "전체 화면 사용 불가");
   const f = fixture({ webkit: true });
   assert.equal(f.button.hidden, false);
   await f.fullscreen.toggle(); assert.equal(f.fullscreen.active, true);
@@ -153,7 +153,7 @@ test('pending and rejected fullscreen requests do not duplicate entry or prevent
   const exit = f.document.exitFullscreen;
   f.document.exitFullscreen = async () => { throw new Error('denied'); };
   await f.fullscreen.toggle();
-  assert.equal(f.fullscreen.active, true); assert.equal(f.messages.at(-1), 'Fullscreen unavailable');
+  assert.equal(f.fullscreen.active, true); assert.equal(f.messages.at(-1), "전체 화면 사용 불가");
   f.document.exitFullscreen = exit;
   await f.fullscreen.toggle(); assert.equal(f.fullscreen.active, false);
   f.document.documentElement.requestFullscreen = async () => { throw new Error('denied'); };

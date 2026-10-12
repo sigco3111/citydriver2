@@ -1,201 +1,65 @@
-# Citydriver 2
+# 시티드라이버 2 한국어판
 
-Taxi driving game built with [Three.js](https://threejs.org/). Uses a port of [MapGenerator](https://github.com/ProbableTrain/MapGenerator) to generate a new island city every time the game loads.
+Three.js로 만든 절차 생성 도시의 3D 택시 운전 게임입니다. 원작은 [jarvisar/citydriver2](https://github.com/jarvisar/citydriver2)입니다. 매번 새로 만든 섬 도시에서 택시 영업, 철거, 자유 주행을 즐길 수 있습니다. 차고에서 자동차, 항공기, 제트팩을 구매하고 도색과 등급을 해제합니다.
 
-Visit the [GitHub Pages site](https://citydriver2.jarvisar.com/) to access the latest deployment. Desktop builds for Windows, Linux and macOS are available under [Releases](https://github.com/jarvisar/citydriver2/releases).
+## 실행
 
-This is the sequel to [Citydriver](https://github.com/jarvisar/citydriver). The endless grid from the first game is replaced by a generated city. The driving, cars, garage, weather, audio and taxi mode carry over from Citydriver.
-
-![Main menu](docs/images/downtown.png)
-
-## Features
-
-- Island city with a harbor, a river, parks, boulevards and a ring road
-- Six districts: Old town, Garden quarter, Warehouse district, Market district, Civic quarter and Midtown
-- Buildings shaped to fit their lots
-- Traffic that follows signals, stop signs and give-way signs
-- Traffic that changes lanes on the boulevards and drives around crashed and stopped cars
-- A bus that comes by now and then and stops at the bus shelters to let people on and off
-- Mario Kart style drifting with a drift boost that charges in three stages
-- Ramps and jumps, including a half-built bridge to jump the river
-- Landmarks and shops that passengers can ask to go to
-- Taxi mode with group fares, shift goals, driver ranks and cabs to buy
-- Start a shift from any street in your cab
-- One balance for every mode, spent on the garage's cars, specials and aircraft, with a test drive of each
-- Demolition mode with a truck, damage chains, contracts, ratings and high scores
-- Get out and walk around in free drive, chase pigeons and borrow cars from traffic
-- Weather and night driving
-- Keyboard, controller and touch screen support
-- VR headsets such as Meta Quest, through WebXR
-- Can be installed and played offline
-
-## How to Play
-
-Choose Taxi shift to drive your cab into the city. Passengers wait in rings all around it, and the shift starts when you stop in one to pick them up. Then follow the arrow and stop in the yellow drop-off zone before the fare clock runs out. Buildings have a short zone outside the entrance. Parks and squares let passengers out anywhere along their side of the street. Some passengers are in a hurry, want stunts or are nervous. An icon on their ring shows which. Drifts, jumps and near misses earn tips. If time runs out with passengers aboard, the shift ends after the last one gets out. End shift in the pause menu ends it early. Earnings go into one balance that buys faster cabs and everything else in the garage. See [progression and balance](docs/taxi-progression.md) and [taxi fleet](docs/taxi-fleet.md) for more details.
-
-Demolition puts you in the orange demolition truck with one minute to cause as much property damage as possible. The clock starts with the first thing you hit. Lamp posts, benches, signs, trees, bus shelters and cars all have a price, and cars in traffic are worth the most. Hits in quick succession build a chain. Every fourth hit raises the chain's multiplier, up to ×5, and the chain's damage is added to the total when it ends. Each run has three contracts, like felling five trees, and each one finished adds 10 seconds to the clock. Wrecking a moving car adds 3. A jump doesn't break the chain, and landing on a car does a lot of damage. If time runs out mid-chain, the chain keeps going until it ends. Pedestrians dive out of the way if you give them the chance. Running one over costs a $10,000 fine and the chain in progress. Each run gets a rating, and the best five runs are kept as high scores. See [demolition](docs/demolition.md) for the prices, contracts and ratings.
-
-Free drive has no timer. You start with the Surf Wagon for free drive and the Taxi for shifts, and the garage sells everything else: more cabs, ordinary cars, specials like the monster truck and the city bus, a helicopter and a plane for seeing the city from the air, and a jetpack for getting about on foot. Pick a car you don't own to buy it or test drive it for two minutes. The first test drive of each one is free. Weather settings and the places you've found are in the pause menu. Driving past a landmark or dropping a passenger at one marks it as found, and found places show up on the city map. Press forward on the main menu to enter free drive.
-
-The modes all happen in the same city. In a cab you own, passengers wait around you in free drive too, so stopping in a ring starts a shift wherever you are. Cabs and the demolition truck also come by in the traffic now and then, and the street map shows where they are. Get out and take one to start its job on the spot: a cab has passengers waiting around it, and the truck's run starts with the first thing it hits. While you work as a cab the other cabs stay off the road, and the same goes for the truck. In a shift or a run, press E twice to end it and get out. When a shift or a demolition run ends, Free drive carries on from the same spot in the same vehicle. In free drive, drifts, jumps, near misses, smashes and flying stunts chain together like demolition hits, and when the chain runs out it's paid into your fleet balance. Crashing or running someone over loses it. New places and jump stars pay too, and so does demolition, so everything counts toward the next car and the next driver rank. See [money and the garage](docs/economy.md) for what each mode pays and what things cost.
-
-R puts the car back on the road. New city is in the pause menu, and it has to be pressed twice since the places you've found and your jump stars are only kept for the current city.
-
-Hold Space and steer to drift. The car hops and then slides round the corner until you let go. Steer into the corner to tighten the drift or away from it to widen it, and brake to tighten it more. Keep drifting and the sparks at the back wheels turn blue, then orange, then pink. Let go to get a speed boost, bigger for each color. Steering hard into the drift charges it faster. Crashing or slowing right down loses the charge. Below about 18 mph, Space is a handbrake.
-
-There are jumps around the city. Loading ramps sit in parking spaces in the Warehouse district, parks have dirt mounds, and a half-built bridge reaches out over the river. The river jump needs a fast car and a long run up. Fall short and you're put back at the start of the run up. In a run that also costs 5 seconds. In the air, steer to turn the nose. Press Space just as you leave a ramp to do a trick, or press and hold Space and steer to spin. Land a trick or a spin and you get a boost like a drift's. Land roughly straight or the car spins out. You can also land on other cars. The ramps and the river jump get up to three stars for distance, and the pause menu lists them with your best for the current city. They're marked on both maps.
-
-In free drive, press E to get out of the car and walk around. Press E near your car, a car in traffic or a car parked along the street to get in. A marker shows which car. If it's a few meters away you walk over to it on your own, and a car in traffic stops to wait for you. Moving the stick or pressing a movement key cancels it. A car taken from traffic drives off on its own when you get out. A parked car stays where you leave it and goes back to its space once you are far away. Your own car stays where you left it and is marked on both maps. Picking a car in the garage puts you in it. If the car is still going fast, press E a second time to jump out while it slows down.
-
-The helicopter and the plane land by themselves when you press E, and you get out once they're down. Any flying control takes over again. Press E a second time while you're still up high to jump out, and the empty helicopter or plane lands on its own nearby. If you get out on a roof you can walk around up there and step off the edge.
-
-The plane needs a run up. Hold W and it takes off at about 25 m/s, or sooner if you hold Space. Once it's up it cruises by itself and holds its height. W and S speed it up and slow it down, A and D bank it into a turn, and Space and Shift pull up and dive. Near the ground it levels out on its own, so holding Shift sets it down on a street, a park or a big flat roof. Neither aircraft can land on the water, but both can fly low along the river and under the bridges. Double-tap A or D in the plane to barrel roll, and Space to loop the loop. Landmarks you fly close to count as found, the same as on foot.
-
-Tap Space to hop, and press it again in the air to flip. Once you have the jetpack from the garage, hold Space to fly with it, and let go to drop. Hold Shift to fly faster. Up high, tap Space to open your parachute and tap it again to put it away. Steer the parachute with the movement keys. On foot, landmarks count as found from anywhere near them, including inside parks and squares. Pigeons gather around some of the benches and scatter if you run at them or drive past fast.
-
-In first-person view on foot, A and D turn you. Once you click the view to look around with the mouse, A and D step sideways instead, like the left stick on a controller.
-
-Every visit generates a new city. Add `?seed=4817` to the URL to load the same city again.
-
-## Controls
-
-The controller layout is the one most driving games use (Need for Speed Heat, Burnout Paradise, GTA V): the triggers drive, A boosts, X drifts and Y gets in and out. The shoulder buttons do what Space and Shift do on a keyboard, so LB drifts, climbs and jumps, and RB boosts, descends and sprints.
-
-| Action | Keyboard | Controller |
-| --- | --- | --- |
-| Accelerate | W / Up | RT / R2 |
-| Brake / reverse | S / Down | LT / L2 |
-| Steer | A D / Left Right | Left stick |
-| Boost | Shift | A / Cross, or RB / R1 |
-| Drift (hold and steer), handbrake when slow | Space | X / Square, or LB / L1 |
-| Trick / spin (in the air) | Space as you take off / hold Space and steer | X / Square as you take off / hold X / Square and steer |
-| Climb / descend (helicopter, plane) | Space / Shift | Right stick, or LB / L1 and RB / R1 |
-| Barrel roll / loop (plane) | Double-tap A or D / double-tap Space | Flick the left stick twice / double-tap LB / L1 |
-| Camera | V | B / Circle |
-| Pause | P / Escape (Escape also frees the mouse) | Start / Menu |
-| Reset car (−5 seconds in a run) | R | D-pad Down |
-| Garage (cars, cabs and liveries) | C / G | Pause menu |
-| Autodrive (free drive) | H | D-pad Up |
-| Get out / get in (free drive), end a shift or run (press twice) | E, then E again to jump out | Y / Triangle, then again to jump out |
-| Walk (on foot) | W A S D / arrows | Left stick |
-| Sprint (on foot) | Shift | RT / R2 or RB / R1 |
-| Jump / jetpack (hold) / parachute (tap up high) (on foot) | Space | A / Cross or LB / L1 |
-| Fullscreen | F, or Fullscreen in the pause menu | Fullscreen in the pause menu |
-| Look around (chase and first-person view) | Mouse, after a click on the view (at once in fullscreen) | Right stick (sideways only when flying) |
-| Camera distance (third and first person) | Mouse wheel or [ / ] | D-pad left / right |
-| Recenter camera | Q | R3 / right stick click |
-| Sound | Pause menu | Pause menu |
-| City map | M, or City map on the street map | View / Share |
-| Street map (show / hide) | N, or its arrow button | |
-| Menus | Tab, Enter | D-pad or left stick to choose, A / Cross to select, B / Circle to go back |
-
-On touch screens, drag anywhere with one thumb to drive and use Boost and Drift at the bottom right with the other. Hold Drift while steering to drift in chase view. The Drift button shows the spark color and a bar that fills toward the next one. Press and hold Drift in the air and steer to spin. Release the stick to stop. In first or third person, keep one thumb on the stick and drag a second thumb across the scene to look around. In the helicopter and the plane, hold Climb or Descend. On foot, drag the stick the way to walk and push it further to run. Tap Jump to hop or hold it to fly, hold Sprint, and tap Get out or Get in.
-
-Zoom all the way in to enter first person. Zoom out to return to a close third-person view. This works while driving or walking, with the mouse wheel, [ / ], D-pad left / right or the tablet camera buttons.
-
-V or B / Circle cycles through Far, Close, Third person and First person.
-
-On tablets, the camera buttons under the pause button zoom and recenter the view. Phones leave them out to keep the screen clear, and the camera recenters by itself after you look around. On phones the reset button appears after the car has been stopped for three seconds, in free drive or a run. Pause → Display → Camera has view, distance, sensitivity and vertical inversion settings. Mouse, touch and controller each keep their own look settings; driving and walking remember separate views and distances. Recenter keeps the chosen distance. F3 toggles the FPS counter.
-
-If holding Drift gets tiring, turn on Tap to drift in the pause menu. Then one tap starts holding the button and the next one lets go. Controllers, VR controllers and Android phones vibrate for drift sparks, boosts, crashes and hard landings. Vibration in the pause menu turns it off.
-
-### VR
-
-In a headset's browser, such as the Meta Quest Browser, select `Enter VR` on the main menu or the pause menu. VR starts on a menu with the car standing still. Menus open in front of the player and the HUD sits below the car. Point at a menu with either controller and pull the trigger, or use a thumbstick and A.
-
-| Action | Quest controllers |
-| --- | --- |
-| Accelerate | Right trigger |
-| Brake / reverse | Left trigger |
-| Steer | Left thumbstick |
-| Boost | Right grip |
-| Drift (hold and steer), handbrake when slow | Left grip |
-| Trick / spin (in the air) | Left grip as you take off / hold left grip and steer |
-| Climb / descend (helicopter, plane) | Right thumbstick, or left and right grip |
-| Get out / get in (free drive) | Y |
-| Walk (on foot) | Left thumbstick |
-| Jump / jetpack (hold) / sprint (on foot) | Left grip / right grip or right trigger |
-| Look around | Right thumbstick (left and right) |
-| Camera | A |
-| Pause | B or left thumbstick click, and Y in a run |
-| Reset car | X |
-| Recenter view | Right thumbstick click |
-| Menus | Point and pull the trigger, or a thumbstick to choose and A / X to select. B / Y to go back |
-
-The pause menu has a comfort vignette that darkens the edges of the view in sharp turns. It is on by default. VR needs an HTTPS page. See [VR](docs/vr.md) for more details.
-
-## Local Installation
-
-Requires [Node.js](https://nodejs.org/) 22.12 or newer.
-
-To install and run this app on a local machine, follow these steps:
-
-1. Clone the repository:
-
-   `git clone https://github.com/jarvisar/citydriver2.git`
-
-2. Navigate to the project directory:
-
-   `cd citydriver2`
-
-3. Install the dependencies:
-
-   `npm install`
-
-4. Start the dev server:
-
-   `npm run dev`
-
-5. Open `http://localhost:5173` in a web browser.
-
-Run `npm run build` for a production build. See [ELECTRON.md](ELECTRON.md) for the desktop app and [PWA.md](PWA.md) for offline installation.
-
-## Tests
+GitHub Pages 배포는 저장소의 Actions에서 확인합니다. Node.js 24를 권장합니다.
 
 ```sh
+npm ci
+npm run dev
 npm test
-npm run test:smoke
+npm run build -- --base=/citydriver2/
 ```
 
-`npm test` runs the unit tests for the city generator, navigation, handling, audio, garage, taxi and demolition rules. It builds the city for seed 4817. Set `TEST_WORLD_SEED` to test a different city.
+`dist`는 정적 웹사이트입니다. GitHub Pages 소스는 **GitHub Actions**로 설정하고, `.github/workflows/main.yml`은 테스트, 빌드, Pages 배포를 수행합니다. 도시 생성 테스트는 메모리를 많이 사용하므로 테스트 프로세스 힙은 8GB, 병렬 실행은 1개로 설정했습니다.
 
-`npm run test:smoke` drives through the city in a headless browser and reports any console errors. Start the dev server first. Set `CHROME_PATH` to use a different Chrome.
+## 플레이
 
-To draw a city as an SVG map, run `npm run city:svg -- 4817 city.svg`.
+- 택시 영업: 승객 원 안에 정차하여 태우고 화살표를 따라 시간 안에 내려 줍니다. 단체 승객은 각각 목적지가 있으며 마지막 하차 후 정산합니다.
+- 철거: 시설과 차량을 연달아 파괴하여 배율을 올리고, 잠시 멈춰 정산합니다. 계약을 완료하면 시간이 늘어납니다. 보행자를 치면 벌금과 연속 기록 손실이 발생합니다.
+- 자유 주행: 도시 탐험, 장소 발견, 경사로 점프, 차량 시승, 항공기와 제트팩을 이용할 수 있습니다.
+- 차고: 게임 내 수입으로 차량과 장비를 구매합니다. 택시 변경은 다음 영업에 적용됩니다. 실제 결제 기능은 없습니다.
 
-To try VR without a headset, add `?xr` to the dev server's URL. This emulates a Meta Quest 3 in the browser. `node scripts/vr-review.mjs` enters VR this way, steps through every headset menu and saves screenshots to `.artifacts/vr-review`.
+## 기본 조작
 
-## Deployment
+| 기능 | 키 |
+|---|---|
+| 가속·제동·조향 | WASD / 방향키 |
+| 부스트 | Shift |
+| 드리프트 | Space + 조향 |
+| 탑승·내리기 | E |
+| 카메라 변경 | V |
+| 카메라 중앙으로 | Q |
+| 차량 복귀 | R |
+| 일시 정지 | P / Escape |
+| 도시 지도 | M |
+| 차고 | G |
+| 전체 화면 | F |
 
-Pushes to `main` are tested and deployed to GitHub Pages at `citydriver2.jarvisar.com` by GitHub Actions, served from the root. A fork served from `<user>.github.io/citydriver2/` needs `--base=/citydriver2/` added to the build step in `main.yml`. When setting up a fork, open the repository's Pages settings and set `Source` to `GitHub Actions`.
+모바일은 화면의 가상 조이스틱과 버튼을 사용합니다. 컨트롤러와 WebXR 헤드셋도 원작에서 지원합니다. VR에는 HTTPS 및 호환 브라우저가 필요합니다.
 
-## Documentation
+## 한국어판 변경
 
-- [City generation](docs/city-generation.md)
-- [Map generator changes](src/mapgen/README.md)
-- [Handling](docs/handling.md)
-- [Taxi progression](docs/taxi-progression.md)
-- [Taxi fleet](docs/taxi-fleet.md)
-- [Money and the garage](docs/economy.md)
-- [Demolition](docs/demolition.md)
-- [Driving HUD](docs/driving-hud.md)
-- [UI styles](docs/ui-style.md)
-- [VR](docs/vr.md)
-- [Audio](docs/audio.md)
-- [Performance](docs/performance.md)
+메뉴, HUD, 차고, 영업·철거·묘기·점프 안내, 목표, 결과, 장소 설명과 시설 간판, VR UI, PWA 설치·업데이트 안내를 한국어로 바꾸었습니다. 생성 로직의 지구 키와 저장 키는 영어로 유지하고 표시되는 지구 이름만 번역합니다. 거리·속도·운임의 계산과 게임 밸런스는 원작 그대로이며 mph, mi, m, km, USD 단위도 유지합니다.
 
-## Screenshots
+Noto Sans KR 가변 폰트를 한국어판 문구에 필요한 글리프로 서브셋하여 번들에 포함합니다. 기존 Oswald 폰트와 원작 에셋을 보존합니다. 원본 이미지 간판 아틀라스(`src/world/sign-sheet.png`)의 영문은 이미지에 포함되어 그대로 남습니다. 한국어 폰트는 canvas 텍스트 생성 전에 로드합니다.
 
-| Blocks from above | Street |
-| --- | --- |
-| ![Blocks of terraces around their yards, seen from above](docs/images/courtyards.png) | ![Driving down a street lined with parked cars](docs/images/street.png) |
+PWA manifest의 시작 URL, scope, id, 아이콘·스크린샷 경로는 빌드의 base에 맞춰 생성됩니다. 서비스 워커는 해당 하위 경로에서 등록되며 기존 업데이트 동작을 유지합니다.
 
-| Park | Boulevard |
-| --- | --- |
-| ![A park with walks leading to a bandstand, seen from above](docs/images/park.png) | ![Driving down a boulevard with trees in the median](docs/images/boulevard.png) |
+## 출처와 라이선스 주의
 
-## License
+이 저장소의 원작에는 최상위 LICENSE가 없습니다. 이 한국어판은 원작 전체의 이용·변경·재배포 허락을 새로 부여하지 않습니다. 저작권은 각각의 원저작자에게 있으며 공개된 코드라고 해서 자유 이용이 허용되는 것은 아닙니다. 원저작자가 요청하면 게시를 중단해야 할 수 있습니다.
 
-The map generator in `src/mapgen/` is a port of MapGenerator by ProbableTrain and is licensed under the GNU Lesser General Public License v3.0. See `src/mapgen/COPYING.LESSER`.
+- 원작: jarvisar, [원작 사이트](https://citydriver2.jarvisar.com/)
+- MapGenerator 포트: `src/mapgen`의 기존 LGPL v3 고지를 그대로 유지합니다.
+- Oswald: `src/fonts/OFL.txt`의 SIL Open Font License 1.1 고지를 유지합니다.
+- Noto Sans KR: Noto 프로젝트, SIL Open Font License 1.1. `src/fonts/NotoSansKR-OFL.txt` 참조. 한국어판용 글리프 서브셋입니다.
+- 원본 영어 README는 `README.en.md`에 내용 변경 없이 보존합니다. 원본의 출처·라이선스 고지는 삭제하지 않습니다.
 
-The Oswald font in `src/fonts/` is by The Oswald Project Authors and is licensed under the SIL Open Font License 1.1. See `src/fonts/OFL.txt`.
+## 저장·성능
+
+진행 상황은 브라우저의 로컬 저장소를 사용합니다. 브라우저 데이터 삭제, 시크릿 모드, 저장소 제한으로 기록이 지워지거나 저장되지 않을 수 있습니다. 저장 실패는 화면에 표시됩니다. 이 한국어판의 저장 공간은 원작 사이트와 분리됩니다.
+
+3D 게임은 WebGL 2와 하드웨어 가속이 필요합니다. 기기 성능이 부족하면 일시 정지의 그래픽 설정에서 품질, 픽셀 밀도, 안개 거리를 낮추세요. VR 기기·오디오·컨트롤러와 모든 기기의 성능을 자동 테스트가 보증하지는 않습니다.

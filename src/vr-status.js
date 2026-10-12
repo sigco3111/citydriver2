@@ -11,7 +11,7 @@ const UI = {
   recessed: '#12181c', edge: '#080b0d', shine: '#ffffff2b',
   text: '#f4f1e6', muted: '#b9c4cb', switchLine: '#ffffff40', gold: '#f3d899', onAccent: '#17262f',
   urgent: ['#ffd8cf', '#ff8a7a'], onUrgent: '#721e15',
-  font: "'Helvetica Neue', Helvetica, Arial, sans-serif", display: "Oswald, 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif",
+  font: "'Noto Sans KR', 'Helvetica Neue', Helvetica, Arial, sans-serif", display: "'Noto Sans KR', Oswald, 'Arial Narrow', 'Helvetica Neue', Arial, sans-serif",
 };
 // Each mode's accent, as city-theme.css sets it (taxi yellow, demolition orange,
 // free-drive teal): flat, hover, the gloss's top, bottom and edge, and soft
@@ -226,8 +226,8 @@ export class VRStatus {
     this.pages = Math.max(1, this.flowPages?.length ?? 1);
     // The page buttons join the list, so the stick reaches them as well.
     this.entries = this.pages > 1 ? [...model.items,
-      { label: '‹ Previous', footer: true, page: -1, activate: () => this.page(-1) },
-      { label: 'Next ›', footer: true, page: 1, activate: () => this.page(1) }] : model.items;
+      { label: "‹ 이전", footer: true, page: -1, activate: () => this.page(-1) },
+      { label: "다음 ›", footer: true, page: 1, activate: () => this.page(1) }] : model.items;
     this.selected = Math.min(this.selected, this.entries.length - 1);
     const at = this.flowPages?.findIndex(page => page.rows.some(row => row.index === this.selected)) ?? -1;
     if (at >= 0) this.pageIndex = at;
@@ -358,7 +358,7 @@ export class VRStatus {
     for (const region of this.regions) this.row(region, this.entries[region.index], region.index === this.selected);
     if (this.pages > 1 && !header.length) {
       ctx.fillStyle = UI.muted; ctx.font = font(27, 600); ctx.textAlign = 'right';
-      ctx.fillText(`Page ${this.pageIndex + 1} / ${this.pages}`, width - PAD, PAD + 42);
+      ctx.fillText(`페이지 ${this.pageIndex + 1} / ${this.pages}`, width - PAD, PAD + 42);
     }
     ctx.fillStyle = UI.muted; ctx.font = font(24); ctx.textAlign = 'center';
     hint.forEach((line, i) => ctx.fillText(fit(ctx, line, inner), width / 2, y + 22 + i * 32));
@@ -396,7 +396,7 @@ export class VRStatus {
       const tick = item.current && item.swatch;
       ctx.font = font(tick ? 32 : item.current ? 22 : 26, item.current ? 750 : 400); ctx.textAlign = 'right';
       ctx.fillStyle = item.current ? filled ? UI.onAccent : UI.accent : filled ? UI.onAccent : UI.muted;
-      const value = tick ? '✓' : item.current ? 'CURRENT' : fit(ctx, item.value, width * .45);
+      const value = tick ? '✓' : item.current ? "현재" : fit(ctx, item.value, width * .45);
       ctx.fillText(value, right, middle + 1);
       right -= ctx.measureText(value).width + 16;
     }
@@ -442,7 +442,7 @@ export class VRStatus {
         // The clock in the accent, as the page's roof-sign plate
         const ink = model.urgent ? UI.onUrgent : UI.onAccent;
         glass(0, 160, model.urgent ? UI.urgent : [UI.accentTop, UI.accentBottom], model.urgent ? '#8a2a1c' : UI.accentEdge, 'gloss');
-        ctx.letterSpacing = '3px'; line(model.clockLabel ?? 'TIME', 80, 44, 24, 600, ink, 140, 'center', display); ctx.letterSpacing = '0px';
+        ctx.letterSpacing = '3px'; line(model.clockLabel ?? "남은 시간", 80, 44, 24, 600, ink, 140, 'center', display); ctx.letterSpacing = '0px';
         line(model.clock, 80, 120, 72, 700, ink, 140, 'center', display);
       }
       const x = 174, w = W - 174 * 2;

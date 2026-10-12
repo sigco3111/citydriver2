@@ -43,8 +43,8 @@ export class CityGuide {
     this.expanded = expanded; this.canvas.hidden = !expanded;
     $('city-guide').dataset.expanded = String(expanded);
     $('city-map-toggle').setAttribute('aria-expanded', String(expanded));
-    $('city-map-toggle').setAttribute('aria-label', expanded ? 'Hide map' : 'Show map');
-    $('city-map-toggle').title = expanded ? 'Hide map (N)' : 'Show map (N)';
+    $('city-map-toggle').setAttribute('aria-label', expanded ? "지도 숨기기" : "지도 보기");
+    $('city-map-toggle').title = expanded ? "지도 숨기기 (N)" : "지도 보기 (N)";
     $('taxi-offer').hidden = !expanded || !(this.taxi?.running || this.demolition?.running) || !$('taxi-offer').textContent;
     // Draw immediately so opening the map never exposes an empty canvas.
     if (expanded) {
@@ -58,14 +58,14 @@ export class CityGuide {
   refreshNotebook() {
     const e = this.exploration, total = PLACE_TYPES.length;
     $('city-stamps').textContent = `${e.found.size} / ${total}`;
-    $('city-notebook-progress').textContent = e.found.size === total ? `All ${total} found.` : `${e.found.size} / ${total} found. Drive past a place, or drop a fare there, to stamp it.`;
+    $('city-notebook-progress').textContent = e.found.size === total ? `${total}곳 모두 발견했습니다.` : `${total}곳 중 ${e.found.size}곳 발견. 장소를 지나거나 승객을 내려주면 기록됩니다.`;
     for (const row of document.querySelectorAll('[data-place-type]')) {
       const kind = CITY_PLACES[row.dataset.placeType], all = cityPlaces().filter(place => place.type === row.dataset.placeType);
       const names = all.filter(place => e.seen.has(place.id)).map(place => place.name), more = all.length - names.length;
       row.dataset.found = String(names.length > 0);
-      row.querySelector('small').textContent = names.length ? [...names, more && `${names.length} of ${all.length}`].filter(Boolean).join(' · ') : kind.short;
+      row.querySelector('small').textContent = names.length ? [...names, more && `${all.length}곳 중 ${names.length}곳`].filter(Boolean).join(' · ') : kind.short;
       row.querySelector('.notebook-check').textContent = names.length ? '✓' : '○';
-      row.setAttribute('aria-label', `${kind.label}, ${names.length ? `found: ${names.join(' and ')}${more ? `, ${more} more in the city` : ''}` : 'not found yet'}`);
+      row.setAttribute('aria-label', `${kind.label}, ${names.length ? `발견: ${names.join(', ')}${more ? `, 도시 내 ${more}곳 더 있음` : ''}` : "아직 미발견"}`);
     }
   }
   // The city's named jumps (see JumpBook), how far each has been taken, and
@@ -77,29 +77,29 @@ export class CityGuide {
     if (!list.childElementCount && sites.length) list.innerHTML = sites.map(site => `<div class="notebook-place" data-jump="${site.id}" style="--place-color:${site.kind === 'river' ? '#e3b02c' : '#5fd0c0'}"><span class="notebook-stamp">${RAMP_ICON}</span><span><strong>${site.name}</strong><small></small></span><span class="notebook-check" aria-hidden="true"></span></div>`).join('');
     for (const row of list.children) {
       const site = sites.find(each => each.id === Number(row.dataset.jump)), best = book.best.get(site.id), stars = book.stars(site);
-      const where = site.kind === 'river' ? 'Off the half-built bridge, over the water' : `By ${site.where}`;
+      const where = site.kind === 'river' ? "미완성 다리에서 물 위로" : `${site.where} 옆`;
       row.dataset.found = String(best !== undefined);
-      row.querySelector('small').textContent = best === undefined ? where : `${where} · best ${best} m`;
+      row.querySelector('small').textContent = best === undefined ? where : `${where} · 최고 ${best} m`;
       row.querySelector('.notebook-check').textContent = starText(stars);
-      row.setAttribute('aria-label', `${site.name}, ${where}: ${best === undefined ? 'not jumped yet' : `best ${best} meters, ${stars} of 3 stars`}`);
+      row.setAttribute('aria-label', `${site.name}, ${where}: ${best === undefined ? "아직 점프 기록 없음" : `최고 ${best} m, 별 3개 중 ${stars}개`}`);
     }
-    $('city-jumps-progress').textContent = sites.length ? `${book.landed} / ${sites.length} landed. Take a run at a ramp: stars for how far you fly.` : 'This city has no named jumps.';
+    $('city-jumps-progress').textContent = sites.length ? `${sites.length}곳 중 ${book.landed}곳 착지. 경사로를 향해 달려 점프하세요. 비행 거리에 따라 별을 얻습니다.` : "이 도시에는 지정된 점프 장소가 없습니다.";
     const r = book.records, records = $('city-jump-records');
     records.hidden = !r.longest;
-    records.textContent = r.longest ? ['Best ever', `${r.longest} m`, `${r.air.toFixed(1)} s in the air`, r.turns ? `${r.turns * 360} spin` : ''].filter(Boolean).join(' · ') : '';
+    records.textContent = r.longest ? ["역대 최고", `${r.longest} m`, `체공 ${r.air.toFixed(1)}초`, r.turns ? `${r.turns * 360}도 회전` : ''].filter(Boolean).join(' · ') : '';
   }
   // Every new place is news: the first of a kind stamps the notebook, and
   // another of a kind says how many there are
   announce(found) {
     const e = this.exploration, total = PLACE_TYPES.length, names = found.map(({ place }) => place.name);
-    const list = names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names.at(-1)}` : names[0];
+    const list = names.length > 1 ? `${names.slice(0, -1).join(', ')}, ${names.at(-1)}` : names[0];
     const one = found.length === 1 ? found[0].place : null, label = one && CITY_PLACES[one.type].label;
     // (no label where the name already says it: Maple Library, Station Square)
     const kind = label && !one.name.toLowerCase().includes(label.split(' ').at(-1).toLowerCase()) ? label : '';
     let count = '';
-    if (found.some(each => each.first)) count = e.found.size === total ? `all ${total} found` : `${e.found.size} / ${total}`;
-    else if (one) { const all = cityPlaces().filter(place => place.type === one.type); count = `${all.filter(place => e.seen.has(place.id)).length} of ${all.length}`; }
-    this.notify(['Found ' + list, kind, count].filter(Boolean).join(' · '), found);
+    if (found.some(each => each.first)) count = e.found.size === total ? `${total}곳 모두 발견` : `${e.found.size} / ${total}`;
+    else if (one) { const all = cityPlaces().filter(place => place.type === one.type); count = `${all.length}곳 중 ${all.filter(place => e.seen.has(place.id)).length}곳`; }
+    this.notify(["발견 " + list, kind, count].filter(Boolean).join(' · '), found);
     this.lately.push(...found.map(({ place }) => place));
     this.refreshNotebook();
   }
@@ -120,9 +120,9 @@ export class CityGuide {
     if (found.length) this.announce(found);
     if (this.taxi?.running) { this.updateTaxi(draw); return; }
     if (this.demolition?.running) { this.updateDemolition(draw); return; }
-    attribute(this.canvas, 'title', 'Local street map');
+    attribute(this.canvas, 'title', "주변 도로 지도");
     hide($('taxi-offer'), true);
-    attribute(this.canvas, 'aria-label', `Local street map. Your heading is up; the white arrow is ${vehicle.walker ? 'you' : 'your car'}. Colored dots are places you have found. Yellow cars are cabs and the orange one the demolition truck: get in one to work.${this.onFoot?.parked ? ' The car in a teal ring is your own, where you left it.' : ''}`);
+    attribute(this.canvas, 'aria-label', `주변 지도. 진행 방향이 위쪽이며 흰 화살표는 ${vehicle.walker ? '나' : '내 차량'}입니다. 색 점은 발견한 장소입니다. 노란 차량은 택시, 주황색은 철거 트럭이며 탑승하면 일을 시작합니다.${this.onFoot?.parked ? " 청록색 원 안의 차량은 내리기 전에 타던 내 차량입니다." : ''}`);
     if (this.expanded && draw) this.draw(vehicle);
   }
   updateTaxi(draw = true) {
@@ -130,13 +130,13 @@ export class CityGuide {
     // The map card keeps the next shift goal in view; the task card already
     // says everything else about the fare.
     const goal = run.goals?.find(goal => !goal.done);
-    const offer = goal ? `Goal · ${goal.text} · ${goalProgress(goal, run.stats)} / ${goal.target}` : '';
+    const offer = goal ? `목표 · ${goal.text} · ${goalProgress(goal, run.stats)} / ${goal.target}` : '';
     if ($('taxi-offer').textContent !== offer) $('taxi-offer').textContent = offer;
     hide($('taxi-offer'), !this.expanded || !offer);
-    attribute(this.canvas, 'title', run.status === 'pickup' ? 'Nearby passengers' : 'Route to the drop-off');
+    attribute(this.canvas, 'title', run.status === 'pickup' ? "주변 승객" : "목적지까지의 경로");
     attribute(this.canvas, 'aria-label', run.status === 'pickup'
-      ? 'Local street map. Your heading is up; the white arrow is your car. Dots mark waiting passengers, red for short trips through orange and yellow to green for long ones; numbers show group size.'
-      : 'Local street map. Your heading is up; the white arrow is your car. Gold marks the current drop-off and the stretch of street to stop in; a dashed line leads to the next group stop.');
+      ? "주변 지도입니다. 진행 방향이 위쪽이며 흰 화살표는 내 차량입니다. 점은 대기 중인 승객으로 짧은 거리의 빨강부터 주황, 노랑, 장거리 초록 순입니다. 숫자는 인원수입니다."
+      : "주변 지도입니다. 진행 방향이 위쪽이며 흰 화살표는 내 차량입니다. 금색은 현재 목적지와 정차 구역, 점선은 다음 하차 장소입니다.");
     if (this.expanded && draw) this.draw(vehicle);
   }
   // A demolition run's map card keeps its next contract in view, as a taxi
@@ -144,11 +144,11 @@ export class CityGuide {
   // ask for (`targets`, set up in main.js)
   updateDemolition(draw = true) {
     const run = this.demolition, vehicle = this.position(), contract = run.contracts.find(each => !each.done);
-    const offer = contract ? `Contract · ${contract.text} · ${contractProgress(contract)}` : '';
+    const offer = contract ? `계약 · ${contract.text} · ${contractProgress(contract)}` : '';
     if ($('taxi-offer').textContent !== offer) $('taxi-offer').textContent = offer;
     hide($('taxi-offer'), !this.expanded || !offer);
-    attribute(this.canvas, 'title', 'Local street map');
-    attribute(this.canvas, 'aria-label', 'Local street map. Your heading is up; the white arrow is your car. Orange dots mark what your contracts ask for.');
+    attribute(this.canvas, 'title', "주변 도로 지도");
+    attribute(this.canvas, 'aria-label', "주변 지도입니다. 진행 방향이 위쪽이며 흰 화살표는 내 차량입니다. 주황색 점은 계약 목표입니다.");
     if (this.expanded && draw) this.draw(vehicle);
   }
   render(car, origin) {

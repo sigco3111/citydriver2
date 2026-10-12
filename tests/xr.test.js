@@ -23,41 +23,41 @@ function panelFixture(model) {
   return { rig, status, label };
 }
 const item = (label, extra) => ({ label, activate() { this.pressed = (this.pressed ?? 0) + 1; }, ...extra });
-const pauseModel = () => ({ id: 'pause', title: 'Paused', columns: 2, items: [
-  item('Resume', { primary: true, header: true }),
-  item('Restart run', { group: 'Driving' }), item('Reset car', { group: 'Driving' }), item('City map', { group: 'The city' }),
-  item('Camera', { column: 1, group: 'View' }), item('Graphics', { column: 1, group: 'View' }),
-  item('Exit VR', { footer: true }),
+const pauseModel = () => ({ id: 'pause', title: "일시 정지", columns: 2, items: [
+  item("계속하기", { primary: true, header: true }),
+  item("다시 시작", { group: "운전" }), item("차량 복귀", { group: "운전" }), item("도시 지도", { group: "도시" }),
+  item("카메라", { column: 1, group: "시점" }), item("그래픽", { column: 1, group: "시점" }),
+  item("VR 종료", { footer: true }),
 ] });
 
 test('headset menus open on their main action and the stick walks rows and columns', () => {
   const { status, label } = panelFixture(pauseModel());
-  assert.equal(label(), 'Resume', 'pausing and pressing A again resumes: it never restarts the run');
-  status.move('vrMenuNext'); assert.equal(label(), 'Restart run');
-  status.move('vrMenuNext'); status.move('vrMenuNext'); assert.equal(label(), 'City map');
-  status.move('vrMenuNext'); assert.equal(label(), 'Camera', 'down the first column, then the second');
-  status.move('vrMenuLeft'); assert.equal(label(), 'Restart run', 'sideways to the nearest row of the other column');
-  status.move('vrMenuRight'); assert.equal(label(), 'Camera');
+  assert.equal(label(), "계속하기", 'pausing and pressing A again resumes: it never restarts the run');
+  status.move('vrMenuNext'); assert.equal(label(), "다시 시작");
+  status.move('vrMenuNext'); status.move('vrMenuNext'); assert.equal(label(), "도시 지도");
+  status.move('vrMenuNext'); assert.equal(label(), "카메라", 'down the first column, then the second');
+  status.move('vrMenuLeft'); assert.equal(label(), "다시 시작", 'sideways to the nearest row of the other column');
+  status.move('vrMenuRight'); assert.equal(label(), "카메라");
   status.move('vrMenuPrevious'); status.move('vrMenuPrevious'); status.move('vrMenuPrevious'); status.move('vrMenuPrevious');
-  assert.equal(label(), 'Resume');
-  status.move('vrMenuPrevious'); assert.equal(label(), 'Exit VR', 'the list wraps');
+  assert.equal(label(), "계속하기");
+  status.move('vrMenuPrevious'); assert.equal(label(), "VR 종료", 'the list wraps');
   status.activate(); assert.equal(status.entries[status.selected].pressed, 1);
   // A chooser opened from a row returns to that row when it closes.
   status.move('vrMenuNext'); status.move('vrMenuNext'); status.move('vrMenuNext'); status.move('vrMenuNext');
-  assert.equal(label(), 'City map');
-  status.update({ id: 'map', title: 'City map', items: [item('Back', { footer: true })] });
-  status.update(pauseModel()); assert.equal(label(), 'City map');
-  status.update(null); status.update(pauseModel()); assert.equal(label(), 'Resume', 'a fresh pause starts on Resume');
+  assert.equal(label(), "도시 지도");
+  status.update({ id: 'map', title: "도시 지도", items: [item("뒤로", { footer: true })] });
+  status.update(pauseModel()); assert.equal(label(), "도시 지도");
+  status.update(null); status.update(pauseModel()); assert.equal(label(), "계속하기", 'a fresh pause starts on Resume');
 });
 
 test('long headset lists page under group headings, and left or right at an edge turns the page', () => {
-  const items = [...Array.from({ length: 13 }, (_, i) => item(`Paint ${i}`, { group: 'Paint', swatch: '#fff' })),
-    ...Array.from({ length: 22 }, (_, i) => item(`Car ${i}`, { group: 'Cars', disabled: i === 3 })), item('Back', { footer: true })];
-  const { status, label } = panelFixture({ id: 'car-dialog', title: 'Garage', flow: true, items });
+  const items = [...Array.from({ length: 13 }, (_, i) => item(`Paint ${i}`, { group: "도색", swatch: '#fff' })),
+    ...Array.from({ length: 22 }, (_, i) => item(`Car ${i}`, { group: "자동차", disabled: i === 3 })), item("뒤로", { footer: true })];
+  const { status, label } = panelFixture({ id: 'car-dialog', title: "차고", flow: true, items });
   assert.equal(status.pages, 3);
-  assert.deepEqual(status.flowPages.map(page => page.headings.map(heading => heading.text)), [['Paint'], ['Cars'], ['Cars']],
+  assert.deepEqual(status.flowPages.map(page => page.headings.map(heading => heading.text)), [["도색"], ["자동차"], ["자동차"]],
     'each page is headed by the group it shows');
-  assert.ok(status.flowPages[0].rows.every(row => items[row.index].group === 'Paint'), 'the paints fill the first page');
+  assert.ok(status.flowPages[0].rows.every(row => items[row.index].group === "도색"), 'the paints fill the first page');
   const height = status.menu.height;
   status.page(1); assert.equal(label(), 'Car 0'); assert.equal(status.pageIndex, 1);
   assert.equal(status.menu.height, height, 'every page is as tall, so the panel keeps still');
@@ -65,11 +65,11 @@ test('long headset lists page under group headings, and left or right at an edge
   status.move('vrMenuLeft'); assert.equal(status.pageIndex, 2, 'left of the first column is the previous page');
   status.page(-1); status.move('vrMenuNext'); status.move('vrMenuNext'); status.move('vrMenuNext');
   assert.equal(label(), 'Car 4', 'disabled rows are passed over');
-  assert.deepEqual(status.entries.filter(entry => entry.footer).map(entry => entry.label), ['Back', '‹ Previous', 'Next ›']);
+  assert.deepEqual(status.entries.filter(entry => entry.footer).map(entry => entry.label), ["뒤로", "‹ 이전", "다음 ›"]);
 });
 
 test('pointing: a resting pointer leaves the selection alone, moving onto a row selects it, a held trigger must be released', () => {
-  const model = { id: 'title', title: 'citydriver', items: [item('Start run', { primary: true }), item('Free drive'), item('Exit VR')] };
+  const model = { id: 'title', title: 'citydriver', items: [item('Start run', { primary: true }), item("자유 주행"), item("VR 종료")] };
   const { rig, status, label } = panelFixture(model);
   const source = { handedness: 'right', targetRaySpace: {}, gamepad: { buttons: [{ value: 0 }] } };
   let aim = new THREE.Matrix4();
@@ -82,22 +82,22 @@ test('pointing: a resting pointer leaves the selection alone, moving onto a row 
     aim = new THREE.Matrix4().lookAt(hand, target, new THREE.Vector3(0, 1, 0)).setPosition(hand);
     status.point(frame, null, rig, true);
   };
-  point('Free drive');
+  point("자유 주행");
   assert.equal(label(), 'Start run', 'a pointer resting on the panel as it opens does not move the selection');
-  point('Exit VR'); assert.equal(label(), 'Exit VR', 'moving onto a row selects it');
-  point('Free drive'); assert.equal(label(), 'Free drive');
+  point("VR 종료"); assert.equal(label(), "VR 종료", 'moving onto a row selects it');
+  point("자유 주행"); assert.equal(label(), "자유 주행");
   assert.ok(status.rays[0].ray.visible && status.rays[0].cursor.visible);
-  source.gamepad.buttons[0].value = 1; point('Free drive'); source.gamepad.buttons[0].value = 0; point('Free drive');
+  source.gamepad.buttons[0].value = 1; point("자유 주행"); source.gamepad.buttons[0].value = 0; point("자유 주행");
   assert.equal(model.items[1].pressed, 1, 'a pull of the trigger presses the row pointed at');
   // A new menu under a trigger already held (the gas pedal) waits for a release.
   status.update(null);
-  const results = { id: 'taxi-results', title: 'Time up', items: [item('Play again', { primary: true }), item('Free drive')] };
-  source.gamepad.buttons[0].value = 1; status.update(results); point('Free drive');
+  const results = { id: 'taxi-results', title: 'Time up', items: [item("다시 플레이", { primary: true }), item("자유 주행")] };
+  source.gamepad.buttons[0].value = 1; status.update(results); point("자유 주행");
   assert.equal(results.items[1].pressed, undefined);
-  source.gamepad.buttons[0].value = 0; point('Free drive'); source.gamepad.buttons[0].value = 1; point('Free drive');
+  source.gamepad.buttons[0].value = 0; point("자유 주행"); source.gamepad.buttons[0].value = 1; point("자유 주행");
   assert.equal(results.items[1].pressed, 1);
   // The driving HUD is only read: nothing can be pressed on it.
-  status.update(null); status.hud({ heading: 'N', place: 'Downtown', weather: 'Day' });
+  status.update(null); status.hud({ heading: 'N', place: "도심", weather: 'Day' });
   source.gamepad.buttons[0].value = 0; status.point(frame, null, rig, true); source.gamepad.buttons[0].value = 1; status.point(frame, null, rig, true);
   assert.equal(status.rays[0].ray.visible, false);
   assert.ok(status.hudPanel.mesh.visible);
@@ -105,7 +105,7 @@ test('pointing: a resting pointer leaves the selection alone, moving onto a row 
 
 test('menus open in front of wherever the player is looking, level and a little low', () => {
   for (const yaw of [0, .9, -2]) {
-    const { rig, status } = panelFixture({ id: 'pause', title: 'Paused', items: [item('Resume')] });
+    const { rig, status } = panelFixture({ id: 'pause', title: "일시 정지", items: [item("계속하기")] });
     const camera = status.camera;
     camera.position.set(.1, .2, .05); camera.rotation.set(-.3, yaw, 0, 'YXZ'); rig.updateMatrixWorld(true);
     status.point({ session: { inputSources: [] } }, null, rig, true);
@@ -122,7 +122,7 @@ test('headset driving hints keep every control, including pause, inside the dash
   const hints = [
     'Right trigger: gas · Left trigger: brake · Left stick: steer · Grips: drift, boost · Y: get out · B: pause',
     'Triggers: forward, back · Left stick: turn · Right stick or grips: up, down · Y: get out · B: pause',
-    'Left stick: walk · Right stick: look · Left grip: jump · Right grip: sprint · Y: get in · B: pause',
+    "왼쪽 스틱: 걷기 · 오른쪽 스틱: 시선 · 왼쪽 그립: 점프 · 오른쪽 그립: 달리기 · Y: 탑승 · B: 일시 정지",
     'B: pause',
   ];
   for (const hint of hints) {
@@ -137,7 +137,7 @@ test('headset driving hints keep every control, including pause, inside the dash
 });
 
 test('pointer input must release after a frame-free visibility interruption', () => {
-  const model = { id: 'pause', title: 'Paused', items: [item('Resume', { primary: true })] };
+  const model = { id: 'pause', title: "일시 정지", items: [item("계속하기", { primary: true })] };
   const { rig, status } = panelFixture(model);
   const source = { handedness: 'right', targetRaySpace: {}, gamepad: { buttons: [{ value: 0 }] } };
   const mesh = status.menu.mesh, region = status.regions[0];
@@ -443,11 +443,11 @@ test('VR sessions handle visibility, exit, reentry and duplicate entry requests'
   const fixture = sessionFixture(); const { vr, session, events, button } = fixture;
   await vr.detect(); assert.equal(button.hidden, false);
   await Promise.all([vr.toggle(), vr.toggle()]); assert.equal(fixture.requested, 1);
-  assert.equal(vr.active, true); assert.equal(button.textContent, 'Exit VR');
+  assert.equal(vr.active, true); assert.equal(button.textContent, "VR 종료");
   session.visibilityState = 'visible-blurred'; session.dispatchEvent(new Event('visibilitychange'));
   assert.equal(vr.visible, false);
   session.visibilityState = 'visible'; session.dispatchEvent(new Event('visibilitychange'));
-  await vr.toggle(); assert.equal(vr.active, false); assert.equal(button.textContent, 'Enter VR');
+  await vr.toggle(); assert.equal(vr.active, false); assert.equal(button.textContent, "VR 시작");
   await vr.toggle(); assert.equal(vr.active, true);
   assert.deepEqual(events, ['start', false, true, 'end', 'start']);
 });

@@ -1,25 +1,25 @@
 <!doctype html>
-<html lang="en-US">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#20323d" />
-    <meta name="description" content="Free 3D taxi driving game in your browser. Pick up passengers in a new generated island city every time, beat the clock and earn cash, or wreck the city in a demolition truck. Works on desktop, mobile and VR." />
-    <title>Citydriver 2 - Free 3D Taxi Driving Game in Your Browser</title>
-    <link rel="canonical" href="https://citydriver2.jarvisar.com/" />
+    <meta name="description" content="매번 새로 생성되는 섬 도시에서 승객을 태우고 운임을 벌거나 철거 트럭으로 도시를 파괴하는 무료 3D 운전 게임. PC, 모바일, VR 지원." />
+    <title>시티드라이버 2 - 브라우저 3D 택시 운전 게임</title>
+    <link rel="canonical" href="https://sigco3111.github.io/citydriver2/" />
     <!-- Link previews need absolute URLs, so these point at the live site -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Citydriver 2" />
-    <meta property="og:title" content="Citydriver 2 - Free 3D Taxi Driving Game" />
-    <meta property="og:description" content="Drive a taxi or a demolition truck around a generated island city. Plays in the browser on desktop, mobile and VR." />
-    <meta property="og:url" content="https://citydriver2.jarvisar.com/" />
-    <meta property="og:image" content="https://citydriver2.jarvisar.com/screenshots/desktop.jpg" />
+    <meta property="og:title" content="시티드라이버 2 - 3D 택시 운전 게임" />
+    <meta property="og:description" content="새로 생성된 섬 도시에서 택시와 철거 트럭을 운전하세요. PC, 모바일, VR 브라우저에서 플레이합니다." />
+    <meta property="og:url" content="https://sigco3111.github.io/citydriver2/" />
+    <meta property="og:image" content="https://sigco3111.github.io/citydriver2/screenshots/desktop.jpg" />
     <meta property="og:image:width" content="1280" />
     <meta property="og:image:height" content="800" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Citydriver 2 - Free 3D Taxi Driving Game" />
-    <meta name="twitter:description" content="Drive a taxi or a demolition truck around a generated island city. Plays in the browser on desktop, mobile and VR." />
-    <meta name="twitter:image" content="https://citydriver2.jarvisar.com/screenshots/desktop.jpg" />
+    <meta name="twitter:title" content="시티드라이버 2 - 3D 택시 운전 게임" />
+    <meta name="twitter:description" content="새로 생성된 섬 도시에서 택시와 철거 트럭을 운전하세요. PC, 모바일, VR 브라우저에서 플레이합니다." />
+    <meta name="twitter:image" content="https://sigco3111.github.io/citydriver2/screenshots/desktop.jpg" />
     <!-- Keep startup styles inline so the page is covered before the game module loads. -->
     <style>
       html, body { margin: 0; overflow: hidden; background: #20323d; }
@@ -67,7 +67,7 @@
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "Citydriver 2",
-        "url": "https://citydriver2.jarvisar.com/"
+        "url": "https://sigco3111.github.io/citydriver2/"
       }
     </script>
     <!-- Cloudflare Web Analytics. Only on the live site, so local dev and the desktop app aren't counted -->
@@ -83,82 +83,82 @@
   </head>
   <body>
     <main id="app">
-      <div id="loading" class="loading" role="status"><span class="loading-bar" aria-hidden="true"></span><span id="loading-status">Loading Citydriver…</span></div>
+      <div id="loading" class="loading" role="status"><span class="loading-bar" aria-hidden="true"></span><span id="loading-status">시티드라이버 불러오는 중…</span></div>
       <noscript>
         <h1>Citydriver 2</h1>
-        <p>A free 3D taxi driving game built with Three.js. Every visit generates a new island city with a harbor, a river, parks and six districts. Pick up passengers and get them to their stop before time runs out, or wreck the city in a demolition truck. Citydriver 2 needs JavaScript and WebGL to run.</p>
+        <p>Three.js 기반 무료 3D 택시 운전 게임. 방문할 때마다 항구, 강, 공원, 여섯 지구가 있는 섬 도시가 생성됩니다. 승객을 시간 안에 데려다주거나 철거 트럭으로 도시를 파괴하세요. JavaScript와 WebGL이 필요합니다.</p>
       </noscript>
-      <canvas id="scene" aria-label="A generated low-poly island city. Drive with WASD or the arrow keys."></canvas>
+      <canvas id="scene" aria-label="절차 생성된 로우폴리 섬 도시. WASD 또는 방향키로 운전합니다."></canvas>
       <div id="menu-view-fade" aria-hidden="true"></div>
       <div class="vignette" aria-hidden="true"></div>
       <header class="topbar">
-        <div class="city-hud" aria-label="City navigation">
-          <span id="city-heading" class="city-heading" aria-label="Heading">N</span>
-          <span class="city-hud-copy"><span id="city-location">DOWNTOWN</span><span id="city-cash">$0</span></span>
+        <div class="city-hud" aria-label="도시 길 안내">
+          <span id="city-heading" class="city-heading" aria-label="방향">N</span>
+          <span class="city-hud-copy"><span id="city-location">도심</span><span id="city-cash">$0</span></span>
         </div>
-        <div class="drive-actions" role="group" aria-label="Driving actions">
-          <button id="view" title="Change camera (V)"><kbd>V</kbd><svg class="touch-utility-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="m8 5 2-3h4l2 3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/></svg> <span class="control-label">view</span></button>
-          <button id="reset" title="Reset in a new area (R)" aria-label="Reset scene and generate a fresh area"><kbd>R</kbd><svg class="touch-utility-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 1 0 8-8 8.7 8.7 0 0 0-6 2.4L4 8.4M4 4v4.4h4.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="control-label">reset</span></button>
-          <button id="pause" title="Pause (P or Escape)" aria-label="Pause" aria-pressed="false"><kbd>P</kbd><svg class="pause-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 6v12M16 6v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><svg class="play-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 6 10 6-10 6V6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg> <span class="control-label">pause</span></button>
+        <div class="drive-actions" role="group" aria-label="운전 조작">
+          <button id="view" title="카메라 변경 (V)"><kbd>V</kbd><svg class="touch-utility-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="m8 5 2-3h4l2 3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/></svg> <span class="control-label">시점</span></button>
+          <button id="reset" title="새 구역에서 다시 시작 (R)" aria-label="장면 초기화 후 새 구역 생성"><kbd>R</kbd><svg class="touch-utility-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12a8 8 0 1 0 8-8 8.7 8.7 0 0 0-6 2.4L4 8.4M4 4v4.4h4.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> <span class="control-label">초기화</span></button>
+          <button id="pause" title="일시 정지 (P 또는 Escape)" aria-label="일시 정지" aria-pressed="false"><kbd>P</kbd><svg class="pause-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 6v12M16 6v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><svg class="play-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 6 10 6-10 6V6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg> <span class="control-label">일시 정지</span></button>
         </div>
       </header>
       <div id="fps-counter" hidden>FPS: …</div>
       <div id="taxi-hud" class="taxi-hud" hidden>
-        <div class="taxi-clock-box"><span id="taxi-clock-label">TIME</span><strong id="taxi-clock" aria-label="Shift seconds remaining">90</strong></div>
-        <div class="taxi-score"><strong id="taxi-cash">$0</strong><span id="taxi-fares">0 fares</span></div>
+        <div class="taxi-clock-box"><span id="taxi-clock-label">남은 시간</span><strong id="taxi-clock" aria-label="영업 남은 초">90</strong></div>
+        <div class="taxi-score"><strong id="taxi-cash">$0</strong><span id="taxi-fares">운행 0회</span></div>
       </div>
-      <section id="taxi-task" class="taxi-task" hidden aria-label="Current taxi task">
-        <div id="taxi-nav" class="taxi-nav" hidden aria-label="Distance to drop-off">
+      <section id="taxi-task" class="taxi-task" hidden aria-label="현재 택시 임무">
+        <div id="taxi-nav" class="taxi-nav" hidden aria-label="목적지까지 거리">
           <canvas id="taxi-arrow" width="52" height="52" aria-hidden="true"></canvas>
           <span id="taxi-nav-distance">0 m</span>
         </div>
         <div class="taxi-task-copy">
-          <div class="taxi-task-heading"><span id="taxi-stage">Pick up</span><span id="taxi-timer" hidden></span><span id="taxi-fare-status"></span></div>
-          <div class="taxi-task-main"><strong id="taxi-task-title">Find a passenger</strong><span class="taxi-task-info"><span id="taxi-party"></span><span id="taxi-next-stop"></span></span><span id="taxi-task-detail" role="status"></span></div>
+          <div class="taxi-task-heading"><span id="taxi-stage">승차</span><span id="taxi-timer" hidden></span><span id="taxi-fare-status"></span></div>
+          <div class="taxi-task-main"><strong id="taxi-task-title">승객을 찾으세요</strong><span class="taxi-task-info"><span id="taxi-party"></span><span id="taxi-next-stop"></span></span><span id="taxi-task-detail" role="status"></span></div>
         </div>
         <div class="taxi-timer-track" hidden aria-hidden="true"><span id="taxi-timer-fill"></span></div>
-        <div class="taxi-stop-track" hidden role="progressbar" aria-label="Passenger boarding" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="taxi-stop-progress"></span></div>
+        <div class="taxi-stop-track" hidden role="progressbar" aria-label="승객 탑승 중" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="taxi-stop-progress"></span></div>
       </section>
-      <div id="taxi-dash" class="taxi-dash" hidden><span><b id="taxi-speed">0</b> mph</span><span id="taxi-combo"></span><span class="taxi-controller-charge">Boost<progress id="taxi-controller-boost" max="1" value="1" aria-label="Boost available"></progress></span></div>
+      <div id="taxi-dash" class="taxi-dash" hidden><span><b id="taxi-speed">0</b> mph</span><span id="taxi-combo"></span><span class="taxi-controller-charge">부스트<progress id="taxi-controller-boost" max="1" value="1" aria-label="사용 가능한 부스트"></progress></span></div>
       <div id="taxi-buttons" hidden>
-        <div class="taxi-boost-control"><button type="button" data-drive-button="boost" aria-describedby="taxi-boost-state"><kbd>SHIFT</kbd><span>Boost</span><small id="taxi-boost-state">Hold</small></button><div id="taxi-boost" role="progressbar" aria-label="Boost available" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span id="taxi-boost-fill"></span></div></div>
-        <button type="button" data-drive-button="handbrake" aria-describedby="drift-state"><kbd>SPACE</kbd><span>Drift</span><small id="drift-state" data-idle="Hold + steer">Hold + steer</small><span class="drift-charge" aria-hidden="true"><span id="drift-charge-fill"></span></span></button>
-        <button type="button" id="use-car" title="Get in or out (E / Y)" hidden><kbd class="key-hint">E</kbd><kbd class="pad-hint">Y</kbd><span>Get out</span><small></small></button>
+        <div class="taxi-boost-control"><button type="button" data-drive-button="boost" aria-describedby="taxi-boost-state"><kbd>SHIFT</kbd><span>부스트</span><small id="taxi-boost-state">누르기</small></button><div id="taxi-boost" role="progressbar" aria-label="사용 가능한 부스트" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><span id="taxi-boost-fill"></span></div></div>
+        <button type="button" data-drive-button="handbrake" aria-describedby="drift-state"><kbd>SPACE</kbd><span>드리프트</span><small id="drift-state" data-idle="누른 채 조향">누른 채 조향</small><span class="drift-charge" aria-hidden="true"><span id="drift-charge-fill"></span></span></button>
+        <button type="button" id="use-car" title="탑승 또는 내리기 (E / Y)" hidden><kbd class="key-hint">E</kbd><kbd class="pad-hint">Y</kbd><span>내리기</span><small></small></button>
       </div>
       <section id="taxi-results" class="taxi-results" hidden role="dialog" aria-modal="true" aria-labelledby="taxi-result-title">
         <div class="taxi-result-card">
           <div class="taxi-result-summary">
-            <h2 id="taxi-result-title">TIME UP<span id="taxi-result-shift" aria-label="Shift length">0:00</span></h2>
+            <h2 id="taxi-result-title">시간 종료<span id="taxi-result-shift" aria-label="영업 시간">0:00</span></h2>
             <strong id="taxi-result-cash">$0</strong>
-            <div id="taxi-result-license" class="taxi-license"><span id="taxi-license-badge" class="taxi-license-badge" aria-hidden="true">–</span><span class="taxi-license-copy"><strong id="taxi-license-name">No license</strong><small id="taxi-license-next"></small></span></div>
-            <ul id="taxi-result-stats" class="taxi-result-stats" aria-label="Shift statistics"></ul>
+            <div id="taxi-result-license" class="taxi-license"><span id="taxi-license-badge" class="taxi-license-badge" aria-hidden="true">–</span><span class="taxi-license-copy"><strong id="taxi-license-name">면허 없음</strong><small id="taxi-license-next"></small></span></div>
+            <ul id="taxi-result-stats" class="taxi-result-stats" aria-label="영업 통계"></ul>
           </div>
           <div class="taxi-result-more">
             <div id="taxi-result-goals" class="taxi-result-goals"></div>
-            <div id="taxi-result-career" class="taxi-result-career" hidden><div class="taxi-result-heading"><span id="taxi-career-rank">Rookie</span><span id="taxi-career-next"></span></div><progress id="taxi-career-progress" max="1" value="0"></progress><small id="taxi-career-livery"></small></div>
-            <p class="taxi-result-footer"><span id="taxi-result-best">Best $0</span><span id="taxi-result-bank"></span></p>
-            <button type="button" id="taxi-retry">Next shift</button><button type="button" id="taxi-keep" data-job="free">Free drive</button><button type="button" id="taxi-garage-results" aria-haspopup="dialog">Garage</button>
+            <div id="taxi-result-career" class="taxi-result-career" hidden><div class="taxi-result-heading"><span id="taxi-career-rank">신입</span><span id="taxi-career-next"></span></div><progress id="taxi-career-progress" max="1" value="0"></progress><small id="taxi-career-livery"></small></div>
+            <p class="taxi-result-footer"><span id="taxi-result-best">최고 $0</span><span id="taxi-result-bank"></span></p>
+            <button type="button" id="taxi-retry">다음 영업</button><button type="button" id="taxi-keep" data-job="free">자유 주행</button><button type="button" id="taxi-garage-results" aria-haspopup="dialog">차고</button>
           </div>
         </div>
       </section>
       <section id="demolition-results" class="taxi-results demolition-results" hidden role="dialog" aria-modal="true" aria-labelledby="demolition-result-title">
         <div class="taxi-result-card">
           <div class="taxi-result-summary">
-            <h2 id="demolition-result-title">TIME UP<span id="demolition-result-time" aria-label="Run length">0:00</span></h2>
+            <h2 id="demolition-result-title">시간 종료<span id="demolition-result-time" aria-label="플레이 시간">0:00</span></h2>
             <strong id="demolition-result-score">$0</strong>
-            <div id="demolition-result-rank" class="taxi-license demolition-rank"><span id="demolition-rank-badge" class="taxi-license-badge" aria-hidden="true">–</span><span class="taxi-license-copy"><strong id="demolition-rank-name">Fender bender</strong><small id="demolition-rank-next"></small></span></div>
-            <ul id="demolition-result-stats" class="taxi-result-stats" aria-label="Run statistics"></ul>
+            <div id="demolition-result-rank" class="taxi-license demolition-rank"><span id="demolition-rank-badge" class="taxi-license-badge" aria-hidden="true">–</span><span class="taxi-license-copy"><strong id="demolition-rank-name">접촉 사고</strong><small id="demolition-rank-next"></small></span></div>
+            <ul id="demolition-result-stats" class="taxi-result-stats" aria-label="플레이 통계"></ul>
           </div>
           <div class="taxi-result-more">
             <div id="demolition-result-scores" class="demolition-result-scores"></div>
             <p class="taxi-result-footer"><span id="demolition-result-best"></span><span id="demolition-result-total"></span></p>
-            <button type="button" id="demolition-retry">Play again</button><button type="button" id="demolition-keep" data-job="free">Free drive</button><button type="button" id="demolition-taxi">Taxi shift</button>
+            <button type="button" id="demolition-retry">다시 플레이</button><button type="button" id="demolition-keep" data-job="free">자유 주행</button><button type="button" id="demolition-taxi">택시 영업</button>
           </div>
         </div>
       </section>
-      <aside id="city-guide" class="city-guide" aria-label="Street map">
-        <div class="city-guide-header"><span>PLACES <b id="city-stamps" title="Kinds of place found">0 / 22</b></span><div class="city-guide-actions"><button type="button" id="city-map-open" aria-haspopup="dialog" title="City map (M / View / Share)"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m3 6 6-2 6 2 6-2v14l-6 2-6-2-6 2V6Zm6-2v14m6-12v14" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span>City map</span></button><button type="button" id="city-map-toggle" aria-expanded="true" aria-controls="city-map" aria-label="Hide map" title="Hide map (N)"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
-        <canvas id="city-map" width="208" height="144" role="img" aria-label="Local street map. Your heading is up; the white arrow is your car. Colored dots are places you have found."></canvas>
+      <aside id="city-guide" class="city-guide" aria-label="도로 지도">
+        <div class="city-guide-header"><span>장소 <b id="city-stamps" title="발견한 장소 종류">0 / 22</b></span><div class="city-guide-actions"><button type="button" id="city-map-open" aria-haspopup="dialog" title="도시 지도 (M / View / Share)"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m3 6 6-2 6 2 6-2v14l-6 2-6-2-6 2V6Zm6-2v14m6-12v14" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span>도시 지도</span></button><button type="button" id="city-map-toggle" aria-expanded="true" aria-controls="city-map" aria-label="지도 숨기기" title="지도 숨기기 (N)"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
+        <canvas id="city-map" width="208" height="144" role="img" aria-label="주변 도로 지도. 진행 방향이 위쪽이며 흰 화살표는 내 차량, 색 점은 발견한 장소입니다."></canvas>
         <p id="taxi-offer" hidden></p>
       </aside>
       <p id="vr-error" role="status" hidden></p>
@@ -169,161 +169,161 @@
           <div class="eyebrow" id="menu-route">TAXI</div>
         </div>
         <div class="menu-actions">
-          <button id="start" class="start-button"><svg class="wheel-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="12.5" stroke="currentColor" stroke-width="3"/><path d="M4 14h5c3 0 4-3 7-3s4 3 7 3h5v4h-6a4 4 0 0 0-4 4v6h-4v-6a4 4 0 0 0-4-4H4Z" fill="currentColor"/></svg><span>Taxi shift</span></button>
-          <button id="demolition" type="button" class="start-button demolition-entry"><svg class="demolition-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 21h7M6 21V5l13 1M6 9l3-4M19 6v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="14" r="4" stroke="currentColor" stroke-width="1.5"/></svg><span>Demolition</span></button>
-          <button id="free-drive" type="button" class="start-button"><svg class="free-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="m15.5 8.5-2.2 4.8-4.8 2.2 2.2-4.8 4.8-2.2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span>Free drive</span></button>
-          <button id="enter-vr" class="start-button vr-entry menu-secondary" type="button" hidden><svg class="vr-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.8 7.5h16.4a1.8 1.8 0 0 1 1.8 1.8v5.4a1.8 1.8 0 0 1-1.8 1.8h-3.6a2 2 0 0 1-1.7-.9l-1.2-1.8a2 2 0 0 0-3.4 0l-1.2 1.8a2 2 0 0 1-1.7.9H3.8A1.8 1.8 0 0 1 2 14.7V9.3a1.8 1.8 0 0 1 1.8-1.8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="vr-entry-label">Enter VR</span></button>
+          <button id="start" class="start-button"><svg class="wheel-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="12.5" stroke="currentColor" stroke-width="3"/><path d="M4 14h5c3 0 4-3 7-3s4 3 7 3h5v4h-6a4 4 0 0 0-4 4v6h-4v-6a4 4 0 0 0-4-4H4Z" fill="currentColor"/></svg><span>택시 영업</span></button>
+          <button id="demolition" type="button" class="start-button demolition-entry"><svg class="demolition-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 21h7M6 21V5l13 1M6 9l3-4M19 6v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="14" r="4" stroke="currentColor" stroke-width="1.5"/></svg><span>철거</span></button>
+          <button id="free-drive" type="button" class="start-button"><svg class="free-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="m15.5 8.5-2.2 4.8-4.8 2.2 2.2-4.8 4.8-2.2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span>자유 주행</span></button>
+          <button id="enter-vr" class="start-button vr-entry menu-secondary" type="button" hidden><svg class="vr-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.8 7.5h16.4a1.8 1.8 0 0 1 1.8 1.8v5.4a1.8 1.8 0 0 1-1.8 1.8h-3.6a2 2 0 0 1-1.7-.9l-1.2-1.8a2 2 0 0 0-3.4 0l-1.2 1.8a2 2 0 0 1-1.7.9H3.8A1.8 1.8 0 0 1 2 14.7V9.3a1.8 1.8 0 0 1 1.8-1.8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="vr-entry-label">VR 시작</span></button>
         </div>
-        <span class="controller-hint">D-pad / stick: choose · A / Cross: select · RT / R2: drive</span>
+        <span class="controller-hint">방향 패드 / 스틱: 이동 · A / ×: 선택 · RT / R2: 운전</span>
       </section>
       <div id="pause-overlay" class="pause-overlay" role="dialog" aria-modal="true" aria-labelledby="pause-heading" hidden>
         <div class="pause-content">
           <header class="pause-header">
-            <h2 id="pause-heading">Paused</h2><button id="resume" class="start-button"><svg class="wheel-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="12.5" stroke="currentColor" stroke-width="3"/><path d="M4 14h5c3 0 4-3 7-3s4 3 7 3h5v4h-6a4 4 0 0 0-4 4v6h-4v-6a4 4 0 0 0-4-4H4Z" fill="currentColor"/></svg><span>Resume</span></button>
-            <div class="location"><svg viewBox="0 0 29 34" fill="none" aria-hidden="true"><path d="M4 4c7 2 14 2 21 0v17c0 4-7 7-10.5 10C11 28 4 25 4 21V4Z" stroke="currentColor" stroke-width="1.3"/><text x="14.5" y="22" text-anchor="middle" fill="currentColor" font-size="19" font-family="Georgia, serif">1</text></svg><div class="location-copy"><span class="location-title">ENDLESS CITY</span><span class="location-sub"><span id="distance">0.0</span> mi driven</span><span id="pause-career" class="location-sub"></span></div></div>
+            <h2 id="pause-heading">일시 정지</h2><button id="resume" class="start-button"><svg class="wheel-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="12.5" stroke="currentColor" stroke-width="3"/><path d="M4 14h5c3 0 4-3 7-3s4 3 7 3h5v4h-6a4 4 0 0 0-4 4v6h-4v-6a4 4 0 0 0-4-4H4Z" fill="currentColor"/></svg><span>계속하기</span></button>
+            <div class="location"><svg viewBox="0 0 29 34" fill="none" aria-hidden="true"><path d="M4 4c7 2 14 2 21 0v17c0 4-7 7-10.5 10C11 28 4 25 4 21V4Z" stroke="currentColor" stroke-width="1.3"/><text x="14.5" y="22" text-anchor="middle" fill="currentColor" font-size="19" font-family="Georgia, serif">1</text></svg><div class="location-copy"><span class="location-title">끝없는 도시</span><span class="location-sub"><span id="distance">0.0</span> mi 주행</span><span id="pause-career" class="location-sub"></span></div></div>
           </header>
-          <div class="pause-modes" role="group" aria-label="Modes">
-            <button type="button" id="switch-mode" class="start-button mode-button" data-job="taxi"><span>Taxi shift</span><svg class="wheel-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="12.5" stroke="currentColor" stroke-width="3"/><path d="M4 14h5c3 0 4-3 7-3s4 3 7 3h5v4h-6a4 4 0 0 0-4 4v6h-4v-6a4 4 0 0 0-4-4H4Z" fill="currentColor"/></svg><svg class="demolition-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 21h7M6 21V5l13 1M6 9l3-4M19 6v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="14" r="4" stroke="currentColor" stroke-width="1.5"/></svg><svg class="free-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="m15.5 8.5-2.2 4.8-4.8 2.2 2.2-4.8 4.8-2.2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>
-            <button type="button" id="other-run" class="start-button mode-button" data-job="demolition"><span>Demolition</span><svg class="wheel-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="12.5" stroke="currentColor" stroke-width="3"/><path d="M4 14h5c3 0 4-3 7-3s4 3 7 3h5v4h-6a4 4 0 0 0-4 4v6h-4v-6a4 4 0 0 0-4-4H4Z" fill="currentColor"/></svg><svg class="demolition-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 21h7M6 21V5l13 1M6 9l3-4M19 6v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="14" r="4" stroke="currentColor" stroke-width="1.5"/></svg><svg class="free-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="m15.5 8.5-2.2 4.8-4.8 2.2 2.2-4.8 4.8-2.2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>
+          <div class="pause-modes" role="group" aria-label="모드">
+            <button type="button" id="switch-mode" class="start-button mode-button" data-job="taxi"><span>택시 영업</span><svg class="wheel-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="12.5" stroke="currentColor" stroke-width="3"/><path d="M4 14h5c3 0 4-3 7-3s4 3 7 3h5v4h-6a4 4 0 0 0-4 4v6h-4v-6a4 4 0 0 0-4-4H4Z" fill="currentColor"/></svg><svg class="demolition-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 21h7M6 21V5l13 1M6 9l3-4M19 6v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="14" r="4" stroke="currentColor" stroke-width="1.5"/></svg><svg class="free-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="m15.5 8.5-2.2 4.8-4.8 2.2 2.2-4.8 4.8-2.2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>
+            <button type="button" id="other-run" class="start-button mode-button" data-job="demolition"><span>철거</span><svg class="wheel-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="12.5" stroke="currentColor" stroke-width="3"/><path d="M4 14h5c3 0 4-3 7-3s4 3 7 3h5v4h-6a4 4 0 0 0-4 4v6h-4v-6a4 4 0 0 0-4-4H4Z" fill="currentColor"/></svg><svg class="demolition-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 21h7M6 21V5l13 1M6 9l3-4M19 6v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="19" cy="14" r="4" stroke="currentColor" stroke-width="1.5"/></svg><svg class="free-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><path d="m15.5 8.5-2.2 4.8-4.8 2.2 2.2-4.8 4.8-2.2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>
           </div>
           <div class="pause-settings">
             <div class="pause-column">
               <section class="pause-panel" aria-labelledby="garage-heading">
-                <h3 id="garage-heading">Driving</h3>
-                <button type="button" id="restart-run" class="panel-button"><span>Restart run</span></button>
-                <button type="button" id="end-run" class="panel-button"><span>End shift</span></button>
-                <button type="button" id="change-car" class="panel-button" aria-haspopup="dialog" title="Garage (G)"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 16h17v-4.2l-1.6-4A2 2 0 0 0 17 6.5H7a2 2 0 0 0-1.9 1.3l-1.6 4V16Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M3.5 11.8h17M4.8 16v1.8M19.2 16v1.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="panel-button-label">Garage</span><span id="current-car" class="panel-button-value"></span></button>
-                <button type="button" id="autodrive" class="panel-button panel-toggle" aria-pressed="false" title="Autodrive (H / D-pad Up while driving)"><span class="panel-button-label">Autodrive</span><span class="panel-switch" aria-hidden="true"></span></button>
-                <button type="button" id="traffic" class="panel-button panel-toggle" aria-pressed="true"><span class="panel-button-label">Traffic</span><span class="panel-switch" aria-hidden="true"></span></button>
-                <button type="button" id="drift-tap" class="panel-button panel-toggle" aria-pressed="false" title="Tap Drift to start a drift and tap it again to boost, instead of holding it"><span class="panel-button-label">Tap to drift</span><span class="panel-switch" aria-hidden="true"></span></button>
-                <button type="button" id="popups" class="panel-button panel-toggle" aria-pressed="true" title="Pay, time and stunt labels rising over the car"><span class="panel-button-label">Popups</span><span class="panel-switch" aria-hidden="true"></span></button>
+                <h3 id="garage-heading">운전</h3>
+                <button type="button" id="restart-run" class="panel-button"><span>다시 시작</span></button>
+                <button type="button" id="end-run" class="panel-button"><span>영업 종료</span></button>
+                <button type="button" id="change-car" class="panel-button" aria-haspopup="dialog" title="차고 (G)"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 16h17v-4.2l-1.6-4A2 2 0 0 0 17 6.5H7a2 2 0 0 0-1.9 1.3l-1.6 4V16Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M3.5 11.8h17M4.8 16v1.8M19.2 16v1.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="panel-button-label">차고</span><span id="current-car" class="panel-button-value"></span></button>
+                <button type="button" id="autodrive" class="panel-button panel-toggle" aria-pressed="false" title="자동 운전 (H / 운전 중 방향 패드 위)"><span class="panel-button-label">자동 운전</span><span class="panel-switch" aria-hidden="true"></span></button>
+                <button type="button" id="traffic" class="panel-button panel-toggle" aria-pressed="true"><span class="panel-button-label">교통</span><span class="panel-switch" aria-hidden="true"></span></button>
+                <button type="button" id="drift-tap" class="panel-button panel-toggle" aria-pressed="false" title="누르고 있는 대신 드리프트를 탭하여 시작하고 다시 탭하여 부스트"><span class="panel-button-label">탭으로 드리프트</span><span class="panel-switch" aria-hidden="true"></span></button>
+                <button type="button" id="popups" class="panel-button panel-toggle" aria-pressed="true" title="차량 위로 떠오르는 수입, 시간, 묘기 알림"><span class="panel-button-label">팝업 알림</span><span class="panel-switch" aria-hidden="true"></span></button>
               </section>
               <section class="pause-panel goals-panel" id="goals-panel" aria-labelledby="goals-heading" hidden>
-                <h3 id="goals-heading">Shift goals</h3>
-                <ul id="shift-goals" class="shift-goals" aria-label="Shift goals"></ul>
+                <h3 id="goals-heading">영업 목표</h3>
+                <ul id="shift-goals" class="shift-goals" aria-label="영업 목표"></ul>
                 <p id="goals-summary" class="weather-note"></p>
               </section>
               <section class="pause-panel scores-panel" id="scores-panel" aria-labelledby="scores-heading" hidden>
-                <h3 id="scores-heading">High scores</h3>
-                <ol id="demolition-scores" class="demolition-score-list" aria-label="Demolition high scores"></ol>
+                <h3 id="scores-heading">최고 기록</h3>
+                <ol id="demolition-scores" class="demolition-score-list" aria-label="철거 최고 기록"></ol>
                 <p id="scores-summary" class="weather-note"></p>
               </section>
             </div>
             <div class="pause-column">
               <section class="pause-panel weather-panel" aria-labelledby="weather-heading">
-                <h3 id="weather-heading">The city</h3>
-                <button type="button" id="open-world-map" class="panel-button" aria-haspopup="dialog" title="City map (M / View / Share)"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m3 6 6-2 6 2 6-2v14l-6 2-6-2-6 2V6Zm6-2v14m6-12v14" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="panel-button-label">City map</span><span id="world-map-here" class="panel-button-value"></span></button>
-                <label class="weather-setting" for="city-weather"><span>Weather &amp; light</span><select id="city-weather"><option value="auto" selected>Auto</option><option value="clear">Day</option><option value="overcast">Overcast</option><option value="rain">Rain</option><option value="storm">Storm</option><option value="snow">Snow</option><option value="sunset">Golden hour</option><option value="night">Night</option></select></label>
+                <h3 id="weather-heading">도시</h3>
+                <button type="button" id="open-world-map" class="panel-button" aria-haspopup="dialog" title="도시 지도 (M / View / Share)"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m3 6 6-2 6 2 6-2v14l-6 2-6-2-6 2V6Zm6-2v14m6-12v14" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="panel-button-label">도시 지도</span><span id="world-map-here" class="panel-button-value"></span></button>
+                <label class="weather-setting" for="city-weather"><span>날씨와 조명</span><select id="city-weather"><option value="auto" selected>자동</option><option value="clear">낮</option><option value="overcast">흐림</option><option value="rain">비</option><option value="storm">폭풍</option><option value="snow">눈</option><option value="sunset">노을</option><option value="night">밤</option></select></label>
               </section>
               <section class="pause-panel notebook-panel" aria-labelledby="notebook-heading">
-                <h3 id="notebook-heading">Places</h3>
-                <p id="city-notebook-progress">Drive past a place, or drop a fare there, to stamp it.</p>
-                <div id="city-notebook" aria-label="Places found"></div>
-                <p class="weather-note">Found places last until you load a new city.</p>
-                <h4 class="garage-subheading notebook-jumps-heading" id="jumps-heading">Jumps</h4>
-                <p id="city-jumps-progress">Take a run at a ramp. Stars for how far you fly.</p>
+                <h3 id="notebook-heading">장소</h3>
+                <p id="city-notebook-progress">장소를 지나거나 승객을 내려 주면 발견 기록이 남습니다.</p>
+                <div id="city-notebook" aria-label="발견한 장소"></div>
+                <p class="weather-note">발견 기록은 새 도시를 불러올 때까지 유지됩니다.</p>
+                <h4 class="garage-subheading notebook-jumps-heading" id="jumps-heading">점프</h4>
+                <p id="city-jumps-progress">경사로를 향해 달려 점프하세요. 비행 거리에 따라 별을 얻습니다.</p>
                 <div id="city-jumps" aria-labelledby="jumps-heading"></div>
                 <p id="city-jump-records" class="weather-note" hidden></p>
               </section>
             </div>
             <div class="pause-column">
               <section class="pause-panel graphics-panel" aria-labelledby="graphics-heading">
-                <h3 id="graphics-heading">Display</h3>
-                <button type="button" id="fullscreen" class="panel-button panel-toggle" title="Fullscreen (F, or this switch)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="panel-button-label">Fullscreen</span><span class="panel-switch" aria-hidden="true"></span></button>
-                <button type="button" id="camera-toggle" class="panel-button graphics-toggle" aria-expanded="false" aria-controls="camera-settings"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/></svg><span class="panel-button-label">Camera<small id="camera-summary">Third-person view</small></span><svg class="settings-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.8"/></svg></button>
+                <h3 id="graphics-heading">화면</h3>
+                <button type="button" id="fullscreen" class="panel-button panel-toggle" title="전체 화면 (F 또는 이 스위치)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 4H4v5m11-5h5v5M4 15v5h5m11-5v5h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="panel-button-label">전체 화면</span><span class="panel-switch" aria-hidden="true"></span></button>
+                <button type="button" id="camera-toggle" class="panel-button graphics-toggle" aria-expanded="false" aria-controls="camera-settings"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/></svg><span class="panel-button-label">카메라<small id="camera-summary">3인칭 시점</small></span><svg class="settings-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.8"/></svg></button>
                 <div id="camera-settings" class="graphics-settings camera-settings" hidden>
-                  <label class="weather-setting" for="camera-view"><span>View</span><select id="camera-view"></select></label>
+                  <label class="weather-setting" for="camera-view"><span>시점</span><select id="camera-view"></select></label>
                   <div class="pixel-density-control">
-                    <label for="camera-distance">Third-person distance <output id="camera-distance-value" for="camera-distance">1.0×</output></label>
+                    <label for="camera-distance">3인칭 카메라 거리 <output id="camera-distance-value" for="camera-distance">1.0×</output></label>
                     <input id="camera-distance" class="graphics-slider" type="range" min="45" max="600" step="5" value="100" aria-describedby="camera-profile-note">
                   </div>
-                  <button id="camera-recenter" class="panel-button" type="button"><span>Recenter camera</span><span class="panel-button-value">Q / R3</span></button>
+                  <button id="camera-recenter" class="panel-button" type="button"><span>카메라 중앙으로</span><span class="panel-button-value">Q / R3</span></button>
                   <p id="camera-profile-note" class="weather-note"></p>
                   <div class="camera-input-controls">
-                    <label class="weather-setting" for="camera-source"><span>Look controls</span><select id="camera-source"><option value="mouse">Mouse</option><option value="touch">Touch</option><option value="controller">Controller</option></select></label>
+                    <label class="weather-setting" for="camera-source"><span>시선 조작</span><select id="camera-source"><option value="mouse">마우스</option><option value="touch">터치</option><option value="controller">컨트롤러</option></select></label>
                     <div class="pixel-density-control">
-                      <label for="look-sensitivity">Sensitivity <output id="look-sensitivity-value" for="look-sensitivity">100% · Default</output></label>
+                      <label for="look-sensitivity">민감도 <output id="look-sensitivity-value" for="look-sensitivity">100% · 기본값</output></label>
                       <input id="look-sensitivity" class="graphics-slider" type="range" min="25" max="200" step="5" value="100">
                     </div>
-                    <button id="invert-look" class="panel-button panel-toggle" type="button" aria-pressed="false"><span class="panel-button-label">Invert vertical look</span><span class="panel-switch" aria-hidden="true"></span></button>
-                    <button id="reset-look" class="panel-button" type="button">Reset these look controls</button>
-                    <p class="weather-note">Adjusts looking only. Steering, flight controls and headset tracking stay the same.</p>
+                    <button id="invert-look" class="panel-button panel-toggle" type="button" aria-pressed="false"><span class="panel-button-label">수직 시선 반전</span><span class="panel-switch" aria-hidden="true"></span></button>
+                    <button id="reset-look" class="panel-button" type="button">시선 조작 초기화</button>
+                    <p class="weather-note">시선만 조정합니다. 조향, 비행 조작, 헤드셋 추적은 바뀌지 않습니다.</p>
                   </div>
                 </div>
-                <button type="button" id="graphics-toggle" class="panel-button graphics-toggle" aria-expanded="false" aria-controls="graphics-settings"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 21h8m-4-4v4" stroke="currentColor" stroke-width="1.5"/></svg><span class="panel-button-label">Graphics<small id="graphics-summary">Auto</small></span><svg class="settings-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.8"/></svg></button>
+                <button type="button" id="graphics-toggle" class="panel-button graphics-toggle" aria-expanded="false" aria-controls="graphics-settings"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 21h8m-4-4v4" stroke="currentColor" stroke-width="1.5"/></svg><span class="panel-button-label">그래픽<small id="graphics-summary">자동</small></span><svg class="settings-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.8"/></svg></button>
                 <div id="graphics-settings" class="graphics-settings" hidden>
-                  <div class="graphics-levels" role="radiogroup" aria-label="Graphics quality">
-                    <button type="button" role="radio" aria-checked="true" data-quality="auto">Auto</button>
-                    <button type="button" role="radio" aria-checked="false" data-quality="high">High</button>
-                    <button type="button" role="radio" aria-checked="false" data-quality="balanced">Balanced</button>
-                    <button type="button" role="radio" aria-checked="false" data-quality="smooth">Smooth</button>
-                    <button type="button" role="radio" aria-checked="false" data-quality="basic">Basic</button>
+                  <div class="graphics-levels" role="radiogroup" aria-label="그래픽 품질">
+                    <button type="button" role="radio" aria-checked="true" data-quality="auto">자동</button>
+                    <button type="button" role="radio" aria-checked="false" data-quality="high">높음</button>
+                    <button type="button" role="radio" aria-checked="false" data-quality="balanced">균형</button>
+                    <button type="button" role="radio" aria-checked="false" data-quality="smooth">부드러움</button>
+                    <button type="button" role="radio" aria-checked="false" data-quality="basic">기본</button>
                   </div>
                   <div class="pixel-density-control">
-                    <label for="pixel-density">Pixel density <output id="pixel-density-value" for="pixel-density">100% · Native</output></label>
+                    <label for="pixel-density">픽셀 밀도 <output id="pixel-density-value" for="pixel-density">100% · 원래 해상도</output></label>
                     <input type="range" id="pixel-density" class="graphics-slider" min="50" max="100" step="1" value="100">
                   </div>
                   <div class="pixel-density-control">
-                    <label for="frame-cap">Frame rate <output id="frame-cap-value" for="frame-cap">Auto</output></label>
+                    <label for="frame-cap">프레임 속도 <output id="frame-cap-value" for="frame-cap">자동</output></label>
                     <input type="range" id="frame-cap" class="graphics-slider" min="0" max="7" step="1" value="0">
                   </div>
                   <div class="pixel-density-control">
-                    <label for="fog-distance">Fog distance <output id="fog-distance-value" for="fog-distance">25% · Default</output></label>
+                    <label for="fog-distance">안개 거리 <output id="fog-distance-value" for="fog-distance">25% · 기본값</output></label>
                     <input type="range" id="fog-distance" class="graphics-slider" min="0" max="100" step="1" value="25" aria-describedby="fog-distance-note">
-                    <p id="fog-distance-note" class="weather-note">First and third person. Higher pushes the fog back.</p>
+                    <p id="fog-distance-note" class="weather-note">1인칭과 3인칭에 적용. 높일수록 안개가 멀어집니다.</p>
                   </div>
-                  <button type="button" id="soft-shading" class="panel-toggle" aria-pressed="true">Soft shading<span class="panel-switch" aria-hidden="true"></span></button>
+                  <button type="button" id="soft-shading" class="panel-toggle" aria-pressed="true">부드러운 음영<span class="panel-switch" aria-hidden="true"></span></button>
                   <p id="graphics-status" class="graphics-status" role="status"></p>
                 </div>
               </section>
               <section class="pause-panel" aria-labelledby="sound-heading">
-                <h3 id="sound-heading">Sound</h3>
-                <button type="button" id="sound" class="panel-button panel-toggle" title="Sound" aria-label="Turn sound on" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path class="sound-off" d="m16 9 6 6m0-6-6 6" stroke="currentColor" stroke-width="1.5"/><path class="sound-on" d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14" stroke="currentColor" stroke-width="1.5"/></svg><span class="panel-button-label">Sound</span><span class="panel-switch" aria-hidden="true"></span></button>
-                <button type="button" id="audio-mixer-toggle" class="panel-button audio-mixer-toggle" aria-expanded="false" aria-controls="audio-mixer"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 3v4m0 4v10M12 3v10m0 4v4M19 3v3m0 4v11M2 9h6M9 15h6M16 8h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="panel-button-label">Audio settings<small id="audio-mix-label">Balanced</small></span><svg class="audio-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.8"/></svg></button>
+                <h3 id="sound-heading">소리</h3>
+                <button type="button" id="sound" class="panel-button panel-toggle" title="소리" aria-label="소리 켜기" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path class="sound-off" d="m16 9 6 6m0-6-6 6" stroke="currentColor" stroke-width="1.5"/><path class="sound-on" d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14" stroke="currentColor" stroke-width="1.5"/></svg><span class="panel-button-label">소리</span><span class="panel-switch" aria-hidden="true"></span></button>
+                <button type="button" id="audio-mixer-toggle" class="panel-button audio-mixer-toggle" aria-expanded="false" aria-controls="audio-mixer"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 3v4m0 4v10M12 3v10m0 4v4M19 3v3m0 4v11M2 9h6M9 15h6M16 8h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="panel-button-label">소리 설정<small id="audio-mix-label">균형</small></span><svg class="audio-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 10 5 5 5-5" stroke="currentColor" stroke-width="1.8"/></svg></button>
                 <div id="audio-mixer" class="audio-mixer" hidden></div>
-                <button type="button" id="vibration" class="panel-button panel-toggle" aria-pressed="true" title="Controller, headset and phone vibration: drift sparks, turbos, crashes and hard landings"><span class="panel-button-label">Vibration</span><span class="panel-switch" aria-hidden="true"></span></button>
+                <button type="button" id="vibration" class="panel-button panel-toggle" aria-pressed="true" title="컨트롤러, 헤드셋, 휴대폰 진동: 드리프트 불꽃, 터보, 충돌, 거친 착륙"><span class="panel-button-label">진동</span><span class="panel-switch" aria-hidden="true"></span></button>
               </section>
-              <button id="enter-vr-pause" class="panel-button vr-entry" type="button" hidden><svg class="vr-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.8 7.5h16.4a1.8 1.8 0 0 1 1.8 1.8v5.4a1.8 1.8 0 0 1-1.8 1.8h-3.6a2 2 0 0 1-1.7-.9l-1.2-1.8a2 2 0 0 0-3.4 0l-1.2 1.8a2 2 0 0 1-1.7.9H3.8A1.8 1.8 0 0 1 2 14.7V9.3a1.8 1.8 0 0 1 1.8-1.8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="vr-entry-label">Enter VR</span></button>
+              <button id="enter-vr-pause" class="panel-button vr-entry" type="button" hidden><svg class="vr-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.8 7.5h16.4a1.8 1.8 0 0 1 1.8 1.8v5.4a1.8 1.8 0 0 1-1.8 1.8h-3.6a2 2 0 0 1-1.7-.9l-1.2-1.8a2 2 0 0 0-3.4 0l-1.2 1.8a2 2 0 0 1-1.7.9H3.8A1.8 1.8 0 0 1 2 14.7V9.3a1.8 1.8 0 0 1 1.8-1.8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="vr-entry-label">VR 시작</span></button>
             </div>
-            <span class="controller-hint">D-pad or stick: choose · left / right: adjust<br>A / Cross: select · B / Circle or Menu: resume<br>Right stick: scroll · View / Share: city map<br>RT gas · LT brake · A boost · X drift · B camera<br>Y get in or out · D-pad Down: reset the car</span>
+            <span class="controller-hint">방향 패드 또는 스틱: 이동 · 좌우: 조정<br>A / ×: 선택 · B / ○ 또는 Menu: 계속하기<br>오른쪽 스틱: 스크롤 · View / Share: 도시 지도<br>RT 가속 · LT 제동 · A 부스트 · X 드리프트 · B 카메라<br>Y 탑승 / 내리기 · 방향 패드 아래: 차량 복귀</span>
           </div>
         </div>
       </div>
       <footer class="bottom-bar">
-        <div class="controls"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> <span class="control-label">drive</span></span></div>
+        <div class="controls"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> <span class="control-label">운전</span></span></div>
       </footer>
-      <div class="touch-controls" role="group" aria-label="Touch driving controls"><div id="touch-stick" role="group" aria-label="Virtual joystick" aria-describedby="stick-help"><span class="stick-guide" aria-hidden="true"></span><span class="stick-thumb" aria-hidden="true"></span></div><span id="stick-help"><span class="stick-help-copy">Drag anywhere to drive<br><span class="stick-help-line">Release to stop</span></span></span></div>
+      <div class="touch-controls" role="group" aria-label="터치 운전 조작"><div id="touch-stick" role="group" aria-label="가상 조이스틱" aria-describedby="stick-help"><span class="stick-guide" aria-hidden="true"></span><span class="stick-thumb" aria-hidden="true"></span></div><span id="stick-help"><span class="stick-help-copy">아무 곳이나 드래그하여 운전<br><span class="stick-help-line">놓으면 정지</span></span></span></div>
       <div id="toast" role="status"></div>
-      <div id="camera-tools" role="group" aria-label="Camera controls" hidden>
-        <button type="button" data-camera-action="zoomOut" aria-label="Move camera farther away" title="Move camera farther away"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.5"/><path d="m15 15 6 6M7 10h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-        <button type="button" data-camera-action="recenter" aria-label="Recenter camera" title="Recenter camera"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/></svg></button>
-        <button type="button" data-camera-action="zoomIn" aria-label="Move camera closer" title="Move camera closer"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.5"/><path d="m15 15 6 6M7 10h6m-3-3v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <div id="camera-tools" role="group" aria-label="카메라 조작" hidden>
+        <button type="button" data-camera-action="zoomOut" aria-label="카메라 멀리 이동" title="카메라 멀리 이동"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.5"/><path d="m15 15 6 6M7 10h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <button type="button" data-camera-action="recenter" aria-label="카메라 중앙으로" title="카메라 중앙으로"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/></svg></button>
+        <button type="button" data-camera-action="zoomIn" aria-label="카메라 가까이 이동" title="카메라 가까이 이동"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="1.5"/><path d="m15 15 6 6M7 10h6m-3-3v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
       </div>
       <dialog id="world-map-dialog" class="chooser world-map-dialog" aria-labelledby="world-map-heading">
-        <div class="chooser-heading"><h2 id="world-map-heading" class="garage-title">City map</h2><button type="button" id="close-world-map" class="icon-button" aria-label="Close city map"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
+        <div class="chooser-heading"><h2 id="world-map-heading" class="garage-title">도시 지도</h2><button type="button" id="close-world-map" class="icon-button" aria-label="도시 지도 닫기"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div>
         <div class="world-map-body">
-          <div class="world-map-frame"><canvas id="world-map" role="img" aria-label="Map of the whole city, north up. Each district is its own color and each neighborhood is named; sand is the grounds of the city's venues, colored dots are places you have found, the white arrow is you, and a car in a teal ring is your own car where you left it."></canvas></div>
+          <div class="world-map-frame"><canvas id="world-map" role="img" aria-label="북쪽이 위인 전체 도시 지도. 지구마다 색과 이름이 다릅니다. 모래색은 시설 부지, 색 점은 발견한 장소, 흰 화살표는 나, 청록색 원의 차량은 내 차량입니다."></canvas></div>
           <div class="world-map-key">
             <p id="world-map-status" class="world-map-status" role="status"></p>
-            <ul id="world-map-legend" class="world-map-legend" aria-label="Districts"></ul>
-            <p class="world-map-note">Point at the map to name a district, a place you have found or a jump. Each district's share of the city's blocks; Midtown includes downtown.</p>
+            <ul id="world-map-legend" class="world-map-legend" aria-label="지구"></ul>
+            <p class="world-map-note">지도를 가리키면 지구, 발견한 장소, 점프 이름을 볼 수 있습니다. 비율은 도시 블록 면적 기준이며 중심 지구에는 도심이 포함됩니다.</p>
           </div>
         </div>
-        <span class="controller-hint">B / Circle or View / Share: close</span>
+        <span class="controller-hint">B / ○ 또는 View / Share: 닫기</span>
       </dialog>
       <dialog id="car-dialog" class="chooser" aria-labelledby="car-heading">
-        <div class="chooser-heading"><div class="garage-heading"><h2 id="car-heading" class="garage-title">Garage</h2><p class="garage-wallet"><strong id="garage-wallet"></strong><span id="garage-saving"></span></p></div><div class="garage-heading-actions"><button type="button" id="offer-back" class="offer-back" hidden><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14 6-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>All cars</button><button id="close-cars" class="icon-button" aria-label="Close garage"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div></div>
-        <span class="controller-hint">D-pad / stick: choose · A / Cross: select · B / Circle: close<br>Custom paint: A / Cross to change color</span>
+        <div class="chooser-heading"><div class="garage-heading"><h2 id="car-heading" class="garage-title">차고</h2><p class="garage-wallet"><strong id="garage-wallet"></strong><span id="garage-saving"></span></p></div><div class="garage-heading-actions"><button type="button" id="offer-back" class="offer-back" hidden><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14 6-6 6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>모든 차량</button><button id="close-cars" class="icon-button" aria-label="차고 닫기"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button></div></div>
+        <span class="controller-hint">방향 패드 / 스틱: 이동 · A / ×: 선택 · B / ○: 닫기<br>사용자 지정 도색: A / ×로 색 변경</span>
         <section id="paint-shop" class="paint-shop" aria-labelledby="paint-heading">
           <div class="paint-shop-heading">
-            <h3 id="paint-heading">Paint</h3>
+            <h3 id="paint-heading">도색</h3>
             <span id="paint-current" class="paint-current" role="status"></span>
           </div>
           <div id="paint-row" class="paint-row">
             <div id="paint-swatches" class="paint-swatches" role="radiogroup" aria-labelledby="paint-heading"></div>
-            <label id="paint-custom-well" class="paint-custom" title="Custom color"><input type="color" id="paint-custom" aria-label="Custom color" value="#d96143"><span class="paint-custom-chip" aria-hidden="true"></span><span class="paint-custom-label">Custom</span></label>
+            <label id="paint-custom-well" class="paint-custom" title="사용자 지정 색상"><input type="color" id="paint-custom" aria-label="사용자 지정 색상" value="#d96143"><span class="paint-custom-chip" aria-hidden="true"></span><span class="paint-custom-label">사용자 지정</span></label>
           </div>
-          <p id="paint-note" class="paint-note">Paint applies to all cars.</p>
+          <p id="paint-note" class="paint-note">도색은 모든 차량에 적용됩니다.</p>
         </section>
         <div id="garage-sections"></div>
         <section id="garage-offer" class="garage-offer" aria-labelledby="offer-name" hidden>
@@ -337,14 +337,14 @@
               <progress id="offer-savings" max="1" value="0" aria-labelledby="offer-progress"></progress>
               <p id="offer-progress" class="offer-progress"></p>
               <div class="offer-actions"><button type="button" id="offer-buy"></button><button type="button" id="offer-test"></button></div>
-              <button type="button" id="offer-goal" class="offer-goal" aria-pressed="false">Save for this</button>
+              <button type="button" id="offer-goal" class="offer-goal" aria-pressed="false">구매 목표로 지정</button>
               <p id="offer-note" class="offer-note"></p>
               <p id="offer-earn" class="offer-note"></p>
             </div>
           </div>
         </section>
       </dialog>
-      <div id="error" class="error" hidden role="alert"><h2>Unable to start the game</h2><p>The game could not finish loading. Select Try again to reload.</p><button onclick="location.reload()">Try again</button></div>
+      <div id="error" class="error" hidden role="alert"><h2>게임을 시작하지 못했습니다</h2><p>게임을 불러오지 못했습니다. 다시 시도를 눌러 새로 고침하세요.</p><button onclick="location.reload()">다시 시도</button></div>
     </main>
     <script>
       const failedStartup = error => {

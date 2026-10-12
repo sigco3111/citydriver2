@@ -72,7 +72,7 @@ test('a cafe is paid for whole, a tree is counted, and nothing is paid outside a
   assert.equal(idle.events.length, 0);
   const run = started();
   assert.equal(run.smash(['table', 'chair', 'chair', 'chair', 'chair']), PRICES.table + PRICES.chair * 4);
-  assert.equal(run.last.label, 'Cafe terrace');
+  assert.equal(run.last.label, "카페 테라스");
   run.smash(['tree']); assert.equal(run.trees, 1); assert.equal(run.smashed, 2);
   assert.equal(run.smash(['person']), 0, 'people are not property');
 });
@@ -102,7 +102,7 @@ test('wrecking a moving car buys time; a parked one pays but does not, and the c
   run.damageCar(car('van', { parked: {} }), WRECK_SPEED);
   assert.equal(run.timeLeft, RUN_SECONDS); assert.equal(run.takedowns, 0); assert.equal(run.wrecked, 1);
   const wreck = run.drainEvents().find(event => event.kind === 'wreck');
-  assert.equal(wreck.label, 'Parked van wrecked'); assert.equal(wreck.seconds, 0);
+  assert.equal(wreck.label, '주차된 밴 파괴됨'); assert.equal(wreck.seconds, 0);
   run.damageCar(car('hatchback'), WRECK_SPEED);
   assert.equal(run.timeLeft, RUN_SECONDS + TAKEDOWN_SECONDS); assert.equal(run.takedowns, 1);
   assert.equal(run.drainEvents().find(event => event.kind === 'wreck').seconds, TAKEDOWN_SECONDS);
@@ -205,7 +205,7 @@ test('contracts: three a run, drawn by the runs played, harder with a better rat
   // Progress is news as it moves; done, the contract pays its time
   const run = started(null, [contract('trees', 2), contract('parked', 1), contract('bank', 15000)]);
   run.smash(['tree']);
-  assert.deepEqual(run.drainEvents().filter(event => event.kind === 'progress').map(event => event.text), ['Trees 1 / 2']);
+  assert.deepEqual(run.drainEvents().filter(event => event.kind === 'progress').map(event => event.text), ['나무 1 / 2']);
   run.smash(['tree']);
   const done = run.drainEvents().find(event => event.kind === 'contract');
   assert.equal(done.contract.id, 'trees'); assert.equal(done.seconds, CONTRACT_SECONDS); assert.equal(run.timeLeft, RUN_SECONDS + CONTRACT_SECONDS);

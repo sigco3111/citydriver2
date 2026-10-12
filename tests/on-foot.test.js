@@ -150,10 +150,10 @@ test('a cab or the demolition truck taken from the traffic is the garage\'s of t
   const kit = actorTraffic(), { vehicle, traffic, feet } = kit;
   try {
     feet.getOut();
-    for (const [job, id, name, paint] of [['taxi', 'taxi', 'Taxi', '#f5c42e'], ['demolition', 'demolition', 'Demolition truck', '#e27a24']]) {
+    for (const [job, id, name, paint] of [['taxi', 'taxi', "택시", '#f5c42e'], ['demolition', 'demolition', "철거 트럭", '#e27a24']]) {
       const car = behind(traffic, traffic.vehicles.find(each => each.job === job), vehicle.s, vehicle.u, vehicle.heading, -12, 0);
       car.car.visible = true;
-      assert.equal(feet.borrow(car), `${name} · borrowed`);
+      assert.equal(feet.borrow(car), `${name} · 빌린 차량`);
       assert.equal(vehicle.carId, id); assert.equal(vehicle.paintColor, paint);
       // (the truck drives as the garage's Truck, six wheels and all)
       if (job === 'demolition') { assert.deepEqual(vehicle.stats, carStats('rig')); assert.equal(vehicle.wheels.length, 6); }
@@ -655,7 +655,7 @@ test('out of the car and back in: by the driver\'s door, stopping first, and the
     // Paint reaches it where it stands
     assert.ok(feet.paint('#123456'));
     // Back in, with a hop
-    assert.equal(feet.offer().own, true); assert.equal(feet.offer().name, 'Surf Wagon');
+    assert.equal(feet.offer().own, true); assert.equal(feet.offer().name, "서핑 왜건");
     feet.use();
     assert.ok(feet.boarding && feet.walking && vehicle.walker.board, 'hopping in');
     for (let i = 0; i < 120 && feet.boarding; i++) { vehicle.update(step, feet.control({})); feet.update(step); }
@@ -679,7 +679,7 @@ test('a borrowed traffic car is driven as it was going, and given back drives on
     assert.ok(offer.car === car && !offer.own);
     const speed = car.speed, count = traffic.vehicles.length;
     // (moving, it does not stop for them: they dive in)
-    assert.match(getIn(feet, vehicle), /borrowed$/);
+    assert.match(getIn(feet, vehicle), /빌린 차량$/);
     assert.equal(feet.borrowed, car); assert.equal(traffic.vehicles.length, count - 1, 'out of the traffic while borrowed');
     assert.equal(vehicle.actor, car.actor, 'the player controls the same traffic actor');
     assert.equal(vehicle.car, car.car, 'the actor keeps its scene root');
@@ -758,7 +758,7 @@ test('they go to a car a few meters off by themselves and hop in, the one they f
     for (let i = 0; i < 120 * 5 && (feet.approach || feet.boarding); i++) {
       vehicle.update(step, feet.control({ walk: { x: 0, z: 0 } })); traffic.update(step, vehicle); said = feet.update(step) || said;
     }
-    assert.match(said, /borrowed$/); assert.equal(feet.borrowed, car);
+    assert.match(said, /빌린 차량$/); assert.equal(feet.borrowed, car);
     assert.ok(Math.abs(vehicle.speed) < .5, `it waited for them (${vehicle.speed.toFixed(2)} m/s as they got in)`);
   } finally { feet.clear(); traffic.dispose(); vehicle.disposeModel(); }
 });
@@ -884,8 +884,8 @@ test('a car parked along the curb can be borrowed while there is traffic, and le
     vehicle.scenery = chunkOf(bay);
     vehicle.s = home.s + Math.sin(h) * 1.6; vehicle.u = home.u - Math.cos(h) * 1.6; vehicle.update(0, {});
     const offer = feet.offer();
-    assert.ok(offer.bay === bay && offer.name === 'Highway Sedan' && !offer.own, 'offered the parked car');
-    assert.equal(getIn(feet, vehicle), 'Highway Sedan · borrowed');
+    assert.ok(offer.bay === bay && offer.name === "고속도로 세단" && !offer.own, 'offered the parked car');
+    assert.equal(getIn(feet, vehicle), '고속도로 세단 · 빌린 차량');
     assert.ok(feet.bay === bay && !feet.walking && vehicle.carId === 'sedan' && vehicle.paintColor === '#4f7086');
     assert.ok(bay.woken && bay.parked.hidden, 'its bay stands empty');
     assert.ok(Math.abs(vehicle.heading - h) < 1e-9 && Math.hypot(vehicle.s - home.s, vehicle.u - home.u) < 1e-9, 'driven from where it stood');

@@ -359,7 +359,7 @@ test('a parked car the player runs into is knocked loose, and put back in its ba
       stand ??= traffic.woken.find(c => c.parked === parked);
     }
     assert.ok(stand && parked.woken, 'knocked loose');
-    assert.ok(run.drainEvents().some(event => event.kind === 'dent' && event.label.startsWith('Parked ')), 'and priced as a parked car');
+    assert.ok(run.drainEvents().some(event => event.kind === 'dent' && event.label.startsWith("주차된 ")), 'and priced as a parked car');
     assert.ok(Math.hypot(stand.u - from.x, -stand.s - from.z) > 1, 'and shoved along');
     assert.equal(stand.car.visible, true);
     assert.equal(parked.parked.hidden, true, 'its bay stands empty while it is out of it');

@@ -20,10 +20,10 @@ const markerScale = 1.3;
 const SPARE_RIDERS = 48;
 // Hints for new drivers, each shown once in the instruction line and saved
 export const HINTS = {
-  rings: 'Stop in any ring for a fare · green rings pay most',
-  drive: 'Follow the arrow · arrive while the pill is green',
-  group: 'Each rider has a stop · the group pays at the last',
-  tips: 'Drifts, jumps and near misses tip · crashes end the combo',
+  rings: "원 안에 정차해 승객을 태우세요 · 초록색 원 운임이 가장 높습니다",
+  drive: "화살표를 따라가세요 · 시간 표시가 초록일 때 도착하세요",
+  group: "승객마다 목적지가 있습니다 · 마지막 하차 후 정산합니다",
+  tips: "드리프트, 점프, 아슬아슬한 추월로 팁 획득 · 충돌하면 콤보 종료",
 };
 const HINT_SECONDS = 7, HINTS_KEY = 'citydriver-taxi-hints';
 // Rating colors, as in taxi.css
@@ -113,7 +113,7 @@ export class TaxiView {
     if (!this.labels.enabled) return false;
     const tip = (amount, stunt) => this.labels.pop({ amount: `+$${amount}`, caption: stunt.toUpperCase(), colour: '#ffe07a' });
     if (event.kind === 'tip') tip(event.tip, `${event.trick}${event.combo > 1 ? ` ×${event.combo}` : ''}`);
-    if (event.stunt > 0) tip(event.stunt, 'Crazy stop');
+    if (event.stunt > 0) tip(event.stunt, "굉장한 정차");
     if (event.paid) this.labels.pop({ amount: `+$${event.paid.toLocaleString('en-US')}`, caption: RATINGS.find(rating => rating.id === event.rating)?.label.toUpperCase() ?? '', colour: RATING_COLOURS[event.rating] ?? '#fff8e7' });
     else if (event.kind === 'dropoff') this.labels.pop({ amount: RATINGS.find(rating => rating.id === event.rating)?.label ?? '', colour: RATING_COLOURS[event.rating] ?? '#fff8e7' });
     if (event.seconds > 0) this.labels.pop({ amount: `+${event.seconds}s`, colour: '#8ff0b0' });
@@ -281,7 +281,7 @@ export class TaxiView {
   results(run, found = []) {
     const model = taxiResultModel(run, found), { license } = model;
     const summary = run.summary, career = run.career, beaten = id => Boolean(summary?.beaten.includes(id));
-    $('taxi-result-shift').textContent = `Shift ${clock(Math.round(run.elapsed))}`; $('taxi-result-shift').dataset.new = String(beaten('shift'));
+    $('taxi-result-shift').textContent = `영업 ${clock(Math.round(run.elapsed))}`; $('taxi-result-shift').dataset.new = String(beaten('shift'));
     $('taxi-result-cash').textContent = model.cash;
     $('taxi-result-license').dataset.license = license.id;
     $('taxi-license-badge').textContent = license.badge;
@@ -289,25 +289,25 @@ export class TaxiView {
     $('taxi-license-next').textContent = model.next;
     // The shift in six numbers. A tile turns gold where it beat a career record.
     const rated = RATINGS.reduce((sum, rating) => sum + (run.ratings?.[rating.id] ?? 0), 0);
-    const tiles = [['fares', 'Fares', String(run.delivered), beaten('fares')], ['riders', 'Riders', String(run.deliveredPassengers), false],
-      ['speedy', 'Speedy', rated ? `${run.ratings.speedy}/${rated}` : '–', false],
-      ['combo', 'Combo', run.bestCombo > 1 ? `×${run.bestCombo}` : '–', beaten('combo')], ['streak', 'Streak', String(run.bestStreak), beaten('streak')],
-      ['tips', 'Tips', money(run.tipsBanked), beaten('tips')]];
+    const tiles = [['fares', "운행 수", String(run.delivered), beaten('fares')], ['riders', "승객 수", String(run.deliveredPassengers), false],
+      ['speedy', "빠름", rated ? `${run.ratings.speedy}/${rated}` : '–', false],
+      ['combo', "콤보", run.bestCombo > 1 ? `×${run.bestCombo}` : '–', beaten('combo')], ['streak', "연속 성공", String(run.bestStreak), beaten('streak')],
+      ['tips', "팁", money(run.tipsBanked), beaten('tips')]];
     $('taxi-result-stats').innerHTML = tiles.map(([id, label, value, record]) =>
       `<li data-stat="${id}" data-new="${record}"><strong>${value}</strong><span>${label}</span></li>`).join('');
     const goals = run.goals ?? [], done = goals.filter(goal => goal.done), stats = run.stats;
-    $('taxi-result-goals').innerHTML = !goals.length ? '' : `<div class="taxi-result-heading"><span>Goals</span><span>${done.length} / ${goals.length}${run.goalCash ? ` · +${money(run.goalCash)}` : ''}</span></div>`
+    $('taxi-result-goals').innerHTML = !goals.length ? '' : `<div class="taxi-result-heading"><span>목표</span><span>${done.length} / ${goals.length}${run.goalCash ? ` · +${money(run.goalCash)}` : ''}</span></div>`
       + `<ul>${goals.map(goal => `<li data-done="${goal.done}"><span aria-hidden="true">${goal.done ? '✓' : '○'}</span><span>${goal.text}</span>${goal.done ? '' : `<span>${goalProgress(goal, stats)} / ${goal.target}</span>`}</li>`).join('')}</ul>`;
     const rank = career?.rank;
     const career$ = $('taxi-result-career'); hide(career$, !rank);
     if (rank) {
       const span = rank.next ? rank.next.earnings - rank.earnings : 1, into = rank.next ? career.earnings - rank.earnings : 1;
       career$.dataset.promoted = String(Boolean(summary?.promoted));
-      $('taxi-career-rank').textContent = summary?.promoted ? `Promoted · ${rank.name}` : rank.name;
-      $('taxi-career-next').textContent = rank.next ? `${money(rank.next.earnings - career.earnings)} to ${rank.next.name}` : 'Top rank';
+      $('taxi-career-rank').textContent = summary?.promoted ? `승급 · ${rank.name}` : rank.name;
+      $('taxi-career-next').textContent = rank.next ? `${rank.next.name}까지 ${money(rank.next.earnings - career.earnings)} 남음` : "최고 등급";
       const bar = $('taxi-career-progress'); bar.max = span; bar.value = Math.min(span, into);
-      bar.setAttribute('aria-label', `${rank.name} rank, ${money(career.earnings)} career earnings`);
-      $('taxi-career-livery').textContent = summary?.liveries.length ? `Livery unlocked · ${summary.liveries.map(livery => livery.name).join(', ')}` : '';
+      bar.setAttribute('aria-label', `${rank.name} 등급, 누적 수입 ${money(career.earnings)}`);
+      $('taxi-career-livery').textContent = summary?.liveries.length ? `도색 해제 · ${summary.liveries.map(livery => livery.name).join(', ')}` : '';
     }
     $('taxi-result-best').textContent = model.best;
     $('taxi-results').hidden = false;

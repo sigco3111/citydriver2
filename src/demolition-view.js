@@ -6,12 +6,12 @@ import { FloatingLabels } from './floating-labels.js';
 import { $, text, compactCash, clock, OnceHints } from './hud-dom.js';
 
 const compact = value => value >= 1000 ? compactCash.format(value) : money(value);
-const day = date => { const parsed = new Date(`${date}T12:00:00`); return Number.isNaN(parsed.getTime()) ? '' : parsed.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); };
+const day = date => { const parsed = new Date(`${date}T12:00:00`); return Number.isNaN(parsed.getTime()) ? '' : parsed.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }); };
 // Hints for new players, each shown once in the task card's last line
 export const HINTS = {
-  chain: 'Smash things one after another to build a chain',
-  bank: 'Stop smashing for a moment to bank the chain',
-  time: 'Takedowns and contracts add time',
+  chain: "연달아 파괴하면 연속 기록이 쌓입니다",
+  bank: "잠시 파괴를 멈추면 연속 기록을 정산합니다",
+  time: "차량 격파와 계약 완료로 시간이 늘어납니다",
 };
 const HINTS_KEY = 'citydriver-demolition-hints';
 
@@ -20,8 +20,8 @@ const HINTS_KEY = 'citydriver-demolition-hints';
 // green for time won
 const LABEL_STYLES = {
   smash: { colour: '#ffc07a' }, dent: { colour: '#ffc07a' },
-  wreck: { colour: '#ff8a2a', caption: 'WRECKED' }, penalty: { colour: '#ff6d5e', caption: 'PEDESTRIAN' },
-  bonus: { colour: '#8ff0b0', caption: 'TAKEDOWN' }, contract: { colour: '#8ff0b0', caption: 'CONTRACT' },
+  wreck: { colour: '#ff8a2a', caption: "파괴됨" }, penalty: { colour: '#ff6d5e', caption: "보행자" },
+  bonus: { colour: '#8ff0b0', caption: "차량 격파" }, contract: { colour: '#8ff0b0', caption: "계약" },
 };
 export class DemolitionView {
   constructor(scene, storage = null) {
@@ -34,8 +34,8 @@ export class DemolitionView {
   // A blow's price (or a fine, or time won) rising over the truck. False with popups off.
   pop(event) {
     const style = LABEL_STYLES[event.kind] ?? LABEL_STYLES.smash;
-    const amount = event.kind === 'penalty' ? event.fine ? `−$${event.fine.toLocaleString('en-US')}` : 'CHAIN LOST'
-      : event.kind === 'bonus' || event.kind === 'contract' ? event.seconds ? `+${event.seconds}s` : 'DONE' : `$${event.value.toLocaleString('en-US')}`;
+    const amount = event.kind === 'penalty' ? event.fine ? `−$${event.fine.toLocaleString('en-US')}` : "연속 기록 상실"
+      : event.kind === 'bonus' || event.kind === 'contract' ? event.seconds ? `+${event.seconds}s` : "완료" : `$${event.value.toLocaleString('en-US')}`;
     // (a blow in a chain says what it was multiplied by)
     const times = ['smash', 'dent', 'wreck'].includes(event.kind) && event.multiplier > 1 ? `×${event.multiplier}` : '';
     const caption = [style.caption, times].filter(Boolean).join(' ');
@@ -69,14 +69,14 @@ export class DemolitionView {
   contracts(run) {
     const contracts = run.status === 'idle' ? [] : run.contracts ?? [];
     $('shift-goals').innerHTML = contracts.map(contract => `<li data-done="${contract.done}"><span class="goal-check" aria-hidden="true">${contract.done ? '✓' : '○'}</span>`
-      + `<span class="goal-copy"><strong>${contract.text}</strong><small>${contract.done ? 'Done' : `${progress(contract)} · +${CONTRACT_SECONDS}s`}</small></span></li>`).join('');
-    text('goals-summary', contracts.length ? `${run.contractsDone} of ${contracts.length} · Each adds ${CONTRACT_SECONDS} seconds` : '');
+      + `<span class="goal-copy"><strong>${contract.text}</strong><small>${contract.done ? "완료" : `${progress(contract)} · +${CONTRACT_SECONDS}s`}</small></span></li>`).join('');
+    text('goals-summary', contracts.length ? `${contracts.length}개 중 ${run.contractsDone}개 완료 · 각 ${CONTRACT_SECONDS}초 추가` : '');
   }
   // The pause screen's table
   scores(run) {
     const records = run.records;
     $('demolition-scores').innerHTML = this.scoreList(records.scores);
-    text('scores-summary', records.runs ? `${records.runs} run${records.runs === 1 ? '' : 's'} · ${money(records.lifetime)} of damage in all` : '');
+    text('scores-summary', records.runs ? `플레이 ${records.runs}회 · 누적 피해 ${money(records.lifetime)}` : '');
   }
   // (`saving`: what the balance is going toward, see savingFor)
   results(run, saving = '') {
@@ -89,17 +89,17 @@ export class DemolitionView {
     $('demolition-rank-next').textContent = model.next;
     // (contracts as a tile: listed, they made the card taller than a
     // laptop's screen once the high score table was full)
-    const tiles = [['smashed', 'Smashed', run.smashed + run.wrecked], ['takedowns', 'Takedowns', run.takedowns],
-      ['chain', 'Chain', run.bestMultiplier > 1 ? `×${run.bestMultiplier}` : run.bestChain || '–'], ['bank', 'Best bank', run.bestBank ? compact(run.bestBank) : '–'],
-      ['contracts', 'Contracts', `${run.contractsDone}/${run.contracts?.length ?? 0}`], ['fines', 'Fines', run.fineCount]];
+    const tiles = [['smashed', "파괴 수", run.smashed + run.wrecked], ['takedowns', "차량 격파", run.takedowns],
+      ['chain', "연속 기록", run.bestMultiplier > 1 ? `×${run.bestMultiplier}` : run.bestChain || '–'], ['bank', "최고 정산액", run.bestBank ? compact(run.bestBank) : '–'],
+      ['contracts', "계약", `${run.contractsDone}/${run.contracts?.length ?? 0}`], ['fines', "벌금", run.fineCount]];
     $('demolition-result-stats').innerHTML = tiles.map(([id, label, value]) =>
       `<li data-stat="${id}" data-bad="${id === 'fines' && run.fineCount > 0}"><strong>${value}</strong><span>${label}</span></li>`).join('');
     const placement = summary?.placement ?? -1;
-    $('demolition-result-scores').innerHTML = `<div class="taxi-result-heading"><span>High scores</span><span>${placement >= 0 ? `#${placement + 1} of ${records.scores.length}` : `Best ${money(records.best)}`}</span></div>`
+    $('demolition-result-scores').innerHTML = `<div class="taxi-result-heading"><span>최고 기록</span><span>${placement >= 0 ? `${records.scores.length}개 기록 중 ${placement + 1}위` : `최고 ${money(records.best)}`}</span></div>`
       + `<ol class="demolition-score-list">${this.scoreList(records.scores, placement)}</ol>`;
-    $('demolition-result-best').textContent = `${records.runs} run${records.runs === 1 ? '' : 's'} · ${compact(records.lifetime)} of damage in all`;
+    $('demolition-result-best').textContent = `플레이 ${records.runs}회 · 누적 피해 ${compact(records.lifetime)}`;
     // (the contractor's cut, paid into the fleet balance as each chain banked)
-    $('demolition-result-total').textContent = [run.paid && `+${money(run.paid)} to your balance`, saving].filter(Boolean).join(' · ');
+    $('demolition-result-total').textContent = [run.paid && `잔액 +${money(run.paid)}`, saving].filter(Boolean).join(' · ');
     $('demolition-results').hidden = false;
   }
   dispose() {

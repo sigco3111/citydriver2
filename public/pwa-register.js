@@ -15,7 +15,7 @@ if ('serviceWorker' in navigator && window.isSecureContext) {
     for (const parent of document.querySelectorAll('#welcome, #pause-overlay .pause-header')) {
       const notice = document.createElement('div');
       notice.className = 'update-notice';
-      notice.innerHTML = '<span role="status">Update available</span><button type="button">Reload</button>';
+      notice.innerHTML = '<span role="status">업데이트 가능</span><button type="button">새로 고침</button>';
       notice.querySelector('button').addEventListener('click', () => {
         reloading = true;
         for (const button of document.querySelectorAll('.update-notice button')) button.disabled = true;

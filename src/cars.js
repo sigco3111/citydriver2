@@ -37,64 +37,64 @@ const BASE = { topSpeed: 33, acceleration: 14.5, braking: 20, grip: 1, offRoad: 
 
 export const CARS = {
   taxi: {
-    name: 'Taxi', kind: 'built', taxi: true, paint: '#f5c42e', shape: { ...shape('sedan'), name: 'taxi' },
+    name: "택시", kind: 'built', taxi: true, paint: '#f5c42e', shape: { ...shape('sedan'), name: 'taxi' },
     stats: { topSpeed: 47, acceleration: 27, braking: 32, grip: 1.4, offRoad: 32.9 },
   },
   taxiGT: {
-    name: 'GT Taxi', kind: 'built', taxi: true, paint: '#f5c42e', shape: SPORTS_MODEL,
+    name: "GT 택시", kind: 'built', taxi: true, paint: '#f5c42e', shape: SPORTS_MODEL,
     stats: { topSpeed: 54, acceleration: 37, braking: 34, grip: 1.55, offRoad: 32.9 },
   },
   taxiFormula: {
-    name: 'Formula Taxi', mass: .95, kind: 'formula', taxi: true, paint: '#f5c42e',
+    name: "포뮬러 택시", mass: .95, kind: 'formula', taxi: true, paint: '#f5c42e',
     shape: { ...FORMULA_SHAPE, name: 'taxi-formula', cabin: [1.12, .34, 1.1], eye: [-.28, .88, -.76] },
     stats: { topSpeed: 59, acceleration: 51, braking: 36, grip: 2.2, offRoad: 32.9, turnRadius: 3.6 },
   },
   auto: {
-    name: 'Default',
+    name: "기본",
     // No portrait and no meters in the chooser: this card is whichever car the road brings.
     plain: true, kind: 'classic', trim: null, paint: '#d96143', shape: CLASSIC_SHAPE, stats: BASE,
   },
   coast: {
-    name: 'Surf Wagon', kind: 'classic', trim: 'coast', paint: '#d96143', shape: CLASSIC_SHAPE, stats: BASE,
+    name: "서핑 왜건", kind: 'classic', trim: 'coast', paint: '#d96143', shape: CLASSIC_SHAPE, stats: BASE,
   },
   desert: {
-    name: 'Off-road Wagon', kind: 'classic', trim: 'desert', paint: '#78977b', shape: CLASSIC_SHAPE,
+    name: "오프로드 왜건", kind: 'classic', trim: 'desert', paint: '#78977b', shape: CLASSIC_SHAPE,
     stats: { topSpeed: 32.1, acceleration: 14.1, braking: 19.4, grip: .97, offRoad: 22.4 },
   },
   snow: {
-    name: 'Winter Wagon', kind: 'classic', trim: 'snow', paint: '#9fc4d5', shape: CLASSIC_SHAPE,
+    name: "겨울 왜건", kind: 'classic', trim: 'snow', paint: '#9fc4d5', shape: CLASSIC_SHAPE,
     stats: { topSpeed: 32.3, acceleration: 14, braking: 21, grip: 1.06, offRoad: 21.7 },
   },
   jungle: {
-    name: 'Utility Wagon', kind: 'classic', trim: 'jungle', paint: '#e0b44a', shape: CLASSIC_SHAPE,
+    name: "다목적 왜건", kind: 'classic', trim: 'jungle', paint: '#e0b44a', shape: CLASSIC_SHAPE,
     stats: { topSpeed: 31.4, acceleration: 14.7, braking: 19.2, grip: .96, offRoad: 21.9 },
   },
   plains: {
-    name: 'Country Wagon', kind: 'classic', trim: 'plains', paint: '#4f8f8b', shape: CLASSIC_SHAPE,
+    name: "시골 왜건", kind: 'classic', trim: 'plains', paint: '#4f8f8b', shape: CLASSIC_SHAPE,
     stats: { topSpeed: 32.8, acceleration: 14.3, braking: 19.8, grip: .99, offRoad: 22.2 },
   },
   city: {
-    name: 'City Wagon', kind: 'classic', trim: 'city', paint: '#7a3b47', shape: CLASSIC_SHAPE,
+    name: "도시 왜건", kind: 'classic', trim: 'city', paint: '#7a3b47', shape: CLASSIC_SHAPE,
     stats: { topSpeed: 31.2, acceleration: 15.1, braking: 20.4, grip: 1.02, offRoad: 20.8 },
   },
   hatchback: {
-    name: 'City Hatch', kind: 'built', paint: '#6fa9c2', shape: shape('hatchback'),
+    name: "도시 해치백", kind: 'built', paint: '#6fa9c2', shape: shape('hatchback'),
     stats: { topSpeed: 30.9, acceleration: 15.5, braking: 20.6, grip: 1.1, offRoad: 19.8 },
   },
   sedan: {
-    name: 'Highway Sedan', kind: 'built', paint: '#e7e3d5', shape: shape('sedan'),
+    name: "고속도로 세단", kind: 'built', paint: '#e7e3d5', shape: shape('sedan'),
     stats: { topSpeed: 33.7, acceleration: 14.2, braking: 20.2, grip: 1.01, offRoad: 21.2 },
   },
   wagon: {
-    name: 'Estate Wagon', kind: 'built', paint: '#5f7a5a', shape: shape('wagon'),
+    name: "패밀리 왜건", kind: 'built', paint: '#5f7a5a', shape: shape('wagon'),
     stats: { topSpeed: 33, acceleration: 13.7, braking: 19.6, grip: .97, offRoad: 21.6 },
   },
   pickup: {
-    name: 'Work Pickup', kind: 'built', paint: '#b06a3a', shape: shape('pickup'),
+    name: "작업용 픽업", kind: 'built', paint: '#b06a3a', shape: shape('pickup'),
     stats: { topSpeed: 31.2, acceleration: 13.2, braking: 18.6, grip: .92, offRoad: 21.7 },
   },
   van: {
-    name: 'Delivery Van', kind: 'built', paint: '#9aa6ad', shape: shape('van'),
+    name: "배달 밴", kind: 'built', paint: '#9aa6ad', shape: shape('van'),
     stats: { topSpeed: 31.9, acceleration: 12.7, braking: 18.8, grip: .9, offRoad: 19.7 },
   },
   sports: {
@@ -102,42 +102,42 @@ export const CARS = {
     stats: { topSpeed: 38.9, acceleration: 17.3, braking: 23, grip: 1.14, offRoad: 23.7 },
   },
   exotic: {
-    name: 'Exotic', kind: 'built', paint: '#407394', shape: EXOTIC_MODEL,
+    name: "슈퍼카", kind: 'built', paint: '#407394', shape: EXOTIC_MODEL,
     stats: { topSpeed: 44.3, acceleration: 19.5, braking: 23, grip: 1.22, offRoad: 23.7 },
   },
   // Light, short and on knobbly tires: it barely notices the tarmac ending.
   buggy: {
-    name: 'Buggy', mass: .7, kind: 'special', paint: '#e2a23b', shape: SPECIAL_SHAPES.buggy,
+    name: "버기", mass: .7, kind: 'special', paint: '#e2a23b', shape: SPECIAL_SHAPES.buggy,
     stats: { topSpeed: 30.1, acceleration: 18.6, braking: 19, grip: 1.12, offRoad: 27.7 },
   },
   // Goes anywhere at the same unhurried pace, and leans on its tires to stop or turn.
   monster: {
-    name: 'Monster Truck', mass: 4.5, kind: 'special', paint: '#3f7fb5', shape: SPECIAL_SHAPES.monster,
+    name: "몬스터 트럭", mass: 4.5, kind: 'special', paint: '#3f7fb5', shape: SPECIAL_SHAPES.monster,
     stats: { topSpeed: 27.7, acceleration: 13.3, braking: 16.5, grip: .8, offRoad: 25.7 },
   },
   // All engine: quicker in a straight line than the coupe, and nowhere else.
   hotrod: {
-    name: 'Hot Rod', kind: 'special', paint: '#1f2326', shape: SPECIAL_SHAPES.hotrod,
+    name: "핫로드", kind: 'special', paint: '#1f2326', shape: SPECIAL_SHAPES.hotrod,
     stats: { topSpeed: 43.7, acceleration: 22.4, braking: 17, grip: .86, offRoad: 24.2 },
   },
   // Eight tonnes of tractor unit. It gets there, and it needs the room to stop.
   rig: {
-    name: 'Truck', mass: 8, kind: 'special', paint: '#a3312c', shape: SPECIAL_SHAPES.rig,
+    name: "트럭", mass: 8, kind: 'special', paint: '#a3312c', shape: SPECIAL_SHAPES.rig,
     stats: { topSpeed: 31.9, acceleration: 11, braking: 15.5, grip: .78, offRoad: 19.2, turnRadius: 5.4 },
   },
   // The city's bus, as heavy as the truck and bigger: it goes through what
   // the truck does, is nearly as slow away, and swings wide at a corner.
   bus: {
-    name: 'City Bus', mass: BUS_MODEL.mass, kind: 'special', paint: BUS_PAINT, shape: SPECIAL_SHAPES.bus,
+    name: "시내버스", mass: BUS_MODEL.mass, kind: 'special', paint: BUS_PAINT, shape: SPECIAL_SHAPES.bus,
     stats: { topSpeed: 29.5, acceleration: 11.8, braking: 16.2, grip: .8, offRoad: 18.9, turnRadius: 6.8 },
   },
   // Out of breath by 57 mph, but it changes lanes like a thought.
   micro: {
-    name: 'Micro', kind: 'special', paint: '#8fcfc0', shape: SPECIAL_SHAPES.micro,
+    name: "초소형차", kind: 'special', paint: '#8fcfc0', shape: SPECIAL_SHAPES.micro,
     stats: { topSpeed: 25.4, acceleration: 16.1, braking: 22, grip: 1.26, offRoad: 15.6, turnRadius: 3.2 },
   },
   formula: {
-    name: 'Formula', mass: .8, kind: 'formula', paint: '#d8452f', shape: FORMULA_SHAPE,
+    name: "포뮬러", mass: .8, kind: 'formula', paint: '#d8452f', shape: FORMULA_SHAPE,
     // 100 m/s ceiling; air drag balances full throttle near 79 m/s (177 mph).
     stats: { topSpeed: 100, acceleration: 60, braking: 30, grip: 2.25, offRoad: 20, turnRadius: 3.6 },
   },
@@ -145,7 +145,7 @@ export const CARS = {
   // it. Its stats set its top speed, its pull and how hard it can stop. It
   // weighs in heavy enough to keep going: a tree takes about a tenth of its speed.
   helicopter: {
-    name: 'Helicopter', mass: 4, kind: 'helicopter', flies: true, paint: '#c9362f', shape: HELICOPTER_SHAPE,
+    name: "헬리콥터", mass: 4, kind: 'helicopter', flies: true, paint: '#c9362f', shape: HELICOPTER_SHAPE,
     stats: { topSpeed: 47, acceleration: 16.6, braking: 16, grip: 1.2, offRoad: 47 },
   },
   // A light plane on big soft tires (see plane.js): it needs a run at it to
@@ -153,7 +153,7 @@ export const CARS = {
   // weighed in heavier than it is, as the helicopter is, so a tree it flies
   // through only costs it a bite of its speed.
   plane: {
-    name: 'Plane', mass: 2.2, kind: 'plane', flies: true, paint: '#2f6fa8', shape: PLANE_SHAPE,
+    name: "비행기", mass: 2.2, kind: 'plane', flies: true, paint: '#2f6fa8', shape: PLANE_SHAPE,
     stats: { topSpeed: 66, acceleration: 15.4, braking: 14, grip: 1.1, offRoad: 66 },
   },
 };
@@ -161,7 +161,7 @@ export const CARS = {
 // The demolition contractor's truck: the garage's in site-work orange. It
 // isn't sold. One drives about in the traffic, and getting into it (or
 // Demolition on the menus) puts a demolition run on standby.
-CARS.demolition = { ...CARS.rig, name: 'Demolition truck', job: 'demolition', paint: '#e27a24' };
+CARS.demolition = { ...CARS.rig, name: "철거 트럭", job: 'demolition', paint: '#e27a24' };
 
 // The wheeled fleet, which the handling is built for, and the garage, which
 // has the flying machines too. Neither has the demolition truck, a copy of the Truck.
@@ -189,7 +189,7 @@ export const carPrice = id => typeof id === 'string' && Object.hasOwn(GARAGE_PRI
 // What the garage sells that isn't a vehicle, in its own section. The
 // jetpack works on foot (see Walker): until it is bought, a held jump in
 // the air does nothing more. The parachute stays free.
-export const GEAR = { jetpack: { name: 'Jetpack', about: 'Hold jump in the air to fly, up to 90 m over the street. Let go to drop, and land on your feet.' } };
+export const GEAR = { jetpack: { name: "제트팩", about: "공중에서 점프를 누르면 도로 위 최대 90 m까지 날 수 있습니다. 놓으면 내려와 발로 착지합니다." } };
 export const SHOP_IDS = [...GARAGE_IDS, ...Object.keys(GEAR)];
 export const shopName = id => GEAR[id]?.name ?? carEntry(id).name;
 // A test drive lasts this long. The first of each car is free, and each
@@ -197,7 +197,7 @@ export const shopName = id => GEAR[id]?.name ?? carEntry(id).name;
 export const TEST_DRIVE_SECONDS = 120;
 export const testDrivePrice = id => Math.max(50, Math.round(carPrice(id) * .025 / 50) * 50);
 // The garage's sections, in order
-export const GARAGE_GROUPS = [['cab', 'Cabs'], ['car', 'Cars'], ['special', 'Specials'], ['air', 'Aircraft']];
+export const GARAGE_GROUPS = [['cab', "택시"], ['car', "자동차"], ['special', "특수 차량"], ['air', "항공기"]];
 export const garageGroup = id => {
   const entry = carEntry(id);
   return entry.taxi ? 'cab' : entry.flies ? 'air' : ['special', 'formula'].includes(entry.kind) ? 'special' : 'car';
@@ -252,19 +252,19 @@ export function carStats(id) {
 // it was built for. The formula racer is off that scale by design and pegs the
 // first three; what its slicks cost shows on the fourth.
 const METERS = [
-  { label: 'Top speed', key: 'topSpeed', low: 23.6, high: 44.8 },
-  { label: 'Acceleration', key: 'acceleration', low: 9.6, high: 23.7 },
-  { label: 'Handling', key: 'grip', low: .72, high: 1.3 },
-  { label: 'Off road', key: 'offRoad', low: 14.2, high: 28.9 },
+  { label: "최고 속도", key: 'topSpeed', low: 23.6, high: 44.8 },
+  { label: "가속력", key: 'acceleration', low: 9.6, high: 23.7 },
+  { label: "조종성", key: 'grip', low: .72, high: 1.3 },
+  { label: "험로 주행", key: 'offRoad', low: 14.2, high: 28.9 },
 ];
 // The cabs are tuned past every road car, so on that scale all three pegged
 // every bar. They get one of their own from zero (the old Taxi fleet's), so
 // the Taxi, GT Taxi and Formula Taxi still tell apart in the garage.
 const CAB_METERS = [
-  { label: 'Top speed', key: 'topSpeed', low: 0, high: 65 },
-  { label: 'Acceleration', key: 'acceleration', low: 0, high: 54 },
-  { label: 'Handling', key: 'grip', low: 0, high: 2.3 },
-  { label: 'Off road', key: 'offRoad', low: 0, high: 38 },
+  { label: "최고 속도", key: 'topSpeed', low: 0, high: 65 },
+  { label: "가속력", key: 'acceleration', low: 0, high: 54 },
+  { label: "조종성", key: 'grip', low: 0, high: 2.3 },
+  { label: "험로 주행", key: 'offRoad', low: 0, high: 38 },
 ];
 export function carMeters(id) {
   const { stats, taxi } = carEntry(id);

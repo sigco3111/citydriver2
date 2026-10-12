@@ -26,7 +26,7 @@ export const chainMultiplier = chain => Math.min(MULTIPLIER_MAX, 1 + Math.floor(
 export const CHAIN_TIGHTEN = .2;
 export const chainSeconds = multiplier => CHAIN_SECONDS - CHAIN_TIGHTEN * (multiplier - 1);
 // Called out as the multiplier climbs
-export const CALLOUTS = ['', '', 'Smash', 'Wrecking', 'Rampage', 'Total chaos'];
+export const CALLOUTS = ['', '', "파괴", "박살", "난동", "완전한 혼돈"];
 export const FINE = 10000, FINE_GAP = 1;
 // Each smash tops up the boost, as a taxi's stunts do, and a wreck more
 export const SMASH_BOOST = .06, WRECK_BOOST = .2;
@@ -54,16 +54,16 @@ export const PRICES = {
   'news-boxes': 300, 'bike-rack': 400, 'post-box': 900, cabinet: 1600, hydrant: 2200,
 };
 export const PIECE_NAMES = {
-  bin: 'Litter bin', chair: 'Cafe chair', table: 'Cafe table', sign: 'Street sign', bench: 'Bench', lantern: 'Park lantern',
-  stall: 'Market stall', lamp: 'Lamp post', tree: 'Tree', signal: 'Traffic light', shelter: 'Bus shelter', mast: 'Signal gantry',
-  'news-boxes': 'News stand', 'bike-rack': 'Bike rack', 'post-box': 'Post box', cabinet: 'Utility box', hydrant: 'Fire hydrant',
+  bin: "쓰레기통", chair: "카페 의자", table: "카페 테이블", sign: "도로 표지판", bench: "벤치", lantern: "공원 조명",
+  stall: "시장 가판대", lamp: "가로등", tree: "나무", signal: "신호등", shelter: "버스 정류장", mast: "신호등 지지대",
+  'news-boxes': "신문 가판대", 'bike-rack': "자전거 거치대", 'post-box': "우체통", cabinet: "설비함", hydrant: "소화전",
 };
 // Cars by model: what it costs to write one off. A parked car pays
 // PARKED_SHARE of that: they stand in rows, and a truck plowing a row of
 // them earned most of every big run's score (1.3M of 1.6M in one bot run).
 export const CAR_PRICES = { hatchback: 14000, sedan: 19000, taxi: 19000, wagon: 21000, pickup: 26000, van: 29000, demolition: 38000, bus: 45000 };
 export const PARKED_SHARE = .5;
-const CAR_NAMES = { hatchback: 'Hatchback', sedan: 'Sedan', taxi: 'Cab', wagon: 'Estate', pickup: 'Pickup', van: 'Van', demolition: 'Truck', bus: 'Bus' };
+const CAR_NAMES = { hatchback: "해치백", sedan: "세단", taxi: "택시", wagon: "왜건", pickup: "픽업", van: "밴", demolition: "트럭", bus: "버스" };
 const CAR_PRICE = 18000;
 // A blow closing at WRECK_SPEED (m/s) writes a car off at once; slower ones
 // dent it by the square of their speed, so it pays to hit hard. Under
@@ -82,14 +82,14 @@ export const carDamage = (price, closing) => closing < DENT_SPEED ? 0 : Math.max
 // the three is always a tier harder.
 export const CONTRACT_SECONDS = 10, CONTRACTS_PER_RUN = 3;
 export const CONTRACTS = [
-  { id: 'trees', stat: 'tree', targets: [3, 5, 8], text: n => `Fell ${n} trees`, short: 'Trees' },
-  { id: 'lamps', stat: 'lamp', targets: [4, 7, 12], text: n => `Flatten ${n} lamp posts`, short: 'Lamp posts' },
-  { id: 'signals', stat: 'signals', targets: [1, 3, 5], text: n => `Knock down ${n} traffic light${n > 1 ? 's' : ''}`, short: 'Traffic lights' },
-  { id: 'shelters', stat: 'shelter', targets: [1, 2, 3], text: n => `Crush ${n} bus shelter${n > 1 ? 's' : ''}`, short: 'Bus shelters' },
-  { id: 'parked', stat: 'parkedWrecks', targets: [2, 4, 7], text: n => `Write off ${n} parked cars`, short: 'Parked cars' },
-  { id: 'takedowns', stat: 'takedowns', targets: [1, 2, 4], text: n => `${n} takedown${n > 1 ? 's' : ''}`, short: 'Takedowns' },
-  { id: 'chain', stat: 'bestChain', targets: [8, 14, 22], text: n => `A ${n} hit chain`, short: 'Chain' },
-  { id: 'bank', stat: 'bestBank', targets: [40000, 120000, 300000], text: n => `Bank ${compactMoney(n)} in one chain`, short: 'Best bank', money: true },
+  { id: 'trees', stat: 'tree', targets: [3, 5, 8], text: n => `나무 ${n}그루 쓰러뜨리기`, short: "나무" },
+  { id: 'lamps', stat: 'lamp', targets: [4, 7, 12], text: n => `가로등 ${n}개 쓰러뜨리기`, short: "가로등" },
+  { id: 'signals', stat: 'signals', targets: [1, 3, 5], text: n => `신호등 ${n}개 쓰러뜨리기`, short: "신호등" },
+  { id: 'shelters', stat: 'shelter', targets: [1, 2, 3], text: n => `버스 정류장 ${n}개 파괴`, short: "버스 정류장" },
+  { id: 'parked', stat: 'parkedWrecks', targets: [2, 4, 7], text: n => `주차 차량 ${n}대 격파`, short: "주차 차량" },
+  { id: 'takedowns', stat: 'takedowns', targets: [1, 2, 4], text: n => `차량 ${n}대 격파`, short: "차량 격파" },
+  { id: 'chain', stat: 'bestChain', targets: [8, 14, 22], text: n => `${n}회 연속 타격`, short: "연속 기록" },
+  { id: 'bank', stat: 'bestBank', targets: [40000, 120000, 300000], text: n => `한 연속 기록에서 ${compactMoney(n)} 정산`, short: "최고 정산액", money: true },
 ];
 export const contractTier = rank => Math.min(2, Math.floor(rank / 2));
 // Drawn by the number of runs finished, so a restarted run keeps its contracts
@@ -112,13 +112,13 @@ export function runContracts(runs, rank = 0) {
 // before contracts and the last chain made runs longer, and before a
 // pedestrian hit by debris stopped costing the chain.)
 export const DEMOLITION_RANKS = [
-  { id: 'none', badge: '–', name: 'Fender bender', min: 0 },
-  { id: 'd', badge: 'D', name: 'Nuisance', min: 50000 },
-  { id: 'c', badge: 'C', name: 'Vandal', min: 125000 },
-  { id: 'b', badge: 'B', name: 'Menace', min: 250000 },
-  { id: 'a', badge: 'A', name: 'Wrecking ball', min: 500000 },
-  { id: 's', badge: 'S', name: 'Natural disaster', min: 1000000 },
-  { id: 'legend', badge: '★', name: 'Act of God', min: 2000000 },
+  { id: 'none', badge: '–', name: "접촉 사고", min: 0 },
+  { id: 'd', badge: 'D', name: "골칫거리", min: 50000 },
+  { id: 'c', badge: 'C', name: "기물 파괴자", min: 125000 },
+  { id: 'b', badge: 'B', name: "도시의 위협", min: 250000 },
+  { id: 'a', badge: 'A', name: "철거 공", min: 500000 },
+  { id: 's', badge: 'S', name: "자연재해", min: 1000000 },
+  { id: 'legend', badge: '★', name: "천재지변", min: 2000000 },
 ];
 export function demolitionRank(score = 0) {
   const rank = Math.max(0, DEMOLITION_RANKS.findLastIndex(entry => score >= entry.min));
@@ -160,7 +160,7 @@ export class DemolitionRecords {
   get best() { return this.scores[0]?.score ?? 0; }
   save() {
     try {
-      if (!this.storage) throw new Error('Storage unavailable');
+      if (!this.storage) throw new Error("저장소 사용 불가");
       const text = JSON.stringify({ version: 1, runs: this.runs, lifetime: this.lifetime, scores: this.scores });
       this.storage.setItem(SCORES_KEY, text);
       this.seen = text; this.saved = true;
@@ -241,7 +241,7 @@ export class DemolitionRun {
       const seconds = this.overtime ? 0 : Math.min(CONTRACT_SECONDS, MAX_SECONDS - this.timeLeft);
       this.timeLeft += seconds; this.bonusSeconds += seconds;
       this.events.push({ kind: 'contract', contract, seconds, x: at?.x ?? 0, y: at?.y ?? 0, z: at?.z ?? 0,
-        text: `Contract done · ${contract.text}${seconds ? ` · +${seconds}s` : ''}` });
+        text: `계약 완료 · ${contract.text}${seconds ? ` · +${seconds}s` : ''}` });
     }
   }
   // Boost is metered, as on a taxi run; smashing fills it
@@ -276,7 +276,7 @@ export class DemolitionRun {
     if (!value) return 0;
     this.begin();
     this.smashed++; if (kinds.includes('tree')) this.trees++;
-    const kind = kinds[0], label = kinds.length > 1 && kind === 'table' ? 'Cafe terrace' : PIECE_NAMES[kind] ?? 'Street furniture';
+    const kind = kinds[0], label = kinds.length > 1 && kind === 'table' ? "카페 테라스" : PIECE_NAMES[kind] ?? "거리 시설물";
     this.tally[kind] = (this.tally[kind] ?? 0) + 1;
     if (kind === 'signal' || kind === 'mast') this.tally.signals++;
     this.add(value, label, at, 'smash');
@@ -300,7 +300,7 @@ export class DemolitionRun {
     if (!(value > 0)) return 0;
     if (!record.damage) this.carsHit++;
     record.damage += value; record.hit = this.elapsed;
-    const name = `${record.parked ? 'Parked ' : ''}${(CAR_NAMES[model] ?? 'car').toLowerCase()}`.replace(/^./, first => first.toUpperCase());
+    const name = `${record.parked ? "주차된 " : ''}${(CAR_NAMES[model] ?? 'car').toLowerCase()}`.replace(/^./, first => first.toUpperCase());
     if (record.damage < price) return this.add(value, name, at, 'dent');
     record.wrecked = true; this.wrecked++;
     // A moving car written off is a takedown, and buys time
@@ -311,7 +311,7 @@ export class DemolitionRun {
       seconds = this.overtime ? 0 : Math.min(TAKEDOWN_SECONDS, MAX_SECONDS - this.timeLeft);
       this.timeLeft += seconds; this.bonusSeconds += seconds;
     }
-    this.add(value, `${name} wrecked`, at, 'wreck', { seconds });
+    this.add(value, `${name} 파괴됨`, at, 'wreck', { seconds });
     this.checkContracts(at);
     return value;
   }
@@ -330,7 +330,7 @@ export class DemolitionRun {
     if (bail) { this.chain = 0; this.pot = 0; this.chainTime = 0; }
     if (!fine && !lost) return;
     this.events.push({ kind: 'penalty', fine, lost, by, x: at?.x ?? 0, y: at?.y ?? 0, z: at?.z ?? 0,
-      text: `${bail ? 'Pedestrian!' : 'Pedestrian hit'}${fine ? ` −${money(fine)}` : ''}${lost ? ` · ${money(lost)} chain lost` : ''}` });
+      text: `${bail ? "보행자!" : "보행자 충돌"}${fine ? ` −${money(fine)}` : ''}${lost ? ` · 연속 기록 ${money(lost)} 상실` : ''}` });
   }
   // The chain is over: its pot joins the score, and may lift the run's rating
   bank() {
@@ -343,10 +343,10 @@ export class DemolitionRun {
     this.chain = 0; this.pot = 0; this.chainTime = 0;
     const rank = this.rank;
     this.events.push({ kind: 'banked', amount, pay, chain, multiplier, rank: rank.rank > before.rank ? rank : null,
-      text: chain > 1 ? `${chain} hit chain · +${money(amount)}` : `+${money(amount)}` });
+      text: chain > 1 ? `${chain}회 연속 타격 · +${money(amount)}` : `+${money(amount)}` });
     // (past the best run on the table, once)
     if (!this.beatBest && this.previousBest > 0 && this.score > this.previousBest) {
-      this.beatBest = true; this.events.push({ kind: 'record', text: 'New high score!' });
+      this.beatBest = true; this.events.push({ kind: 'record', text: "최고 기록 경신!" });
     }
     this.checkContracts();
     return amount;
@@ -360,7 +360,7 @@ export class DemolitionRun {
     // Time up mid-chain: the chain plays on, as a combo does in Tony Hawk's,
     // and the run ends when it banks or is lost
     if (!this.chain) this.finish();
-    else if (!this.overtime) { this.overtime = true; this.events.push({ kind: 'overtime', text: 'Time up · keep the chain going' }); }
+    else if (!this.overtime) { this.overtime = true; this.events.push({ kind: 'overtime', text: "시간 종료 · 연속 기록을 이어 가세요" }); }
   }
   // A jump landed keeps a chain going, as a stunt does in Burnout's Stunt Run
   // (see CarAir): its wait starts again. A spin out doesn't.
@@ -368,7 +368,7 @@ export class DemolitionRun {
     if (!this.running || !this.chain || event.landing === 'spun' || event.landing === 'splash') return;
     this.chainTime = Math.max(this.chainTime, chainSeconds(this.multiplier));
     // (a drop off something, onto a car, is kept quietly)
-    if (event.distance >= AIR_NEWS) this.events.push({ kind: 'progress', text: `Air · ${Math.round(event.distance)} m · chain ×${this.multiplier} kept` });
+    if (event.distance >= AIR_NEWS) this.events.push({ kind: 'progress', text: `공중 묘기 · ${Math.round(event.distance)} m · 연속 배율 ×${this.multiplier} 유지` });
   }
   finish() {
     this.bank();

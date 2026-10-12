@@ -183,7 +183,7 @@ test('free drive\'s book of jumps: stars by distance, a best for each jump, and 
   const first = book.land(jump(site.stars[0] + 1));
   assert.match(first.text, /★☆☆/); assert.equal(first.gained, 1);
   const best = book.land(jump(site.stars[2] + 1));
-  assert.match(best.text, /★★★/); assert.match(best.text, /Best here/);
+  assert.match(best.text, /★★★/); assert.match(best.text, /이 장소 최고/);
   assert.equal(best.gained, 2, 'only the stars it newly took pay');
   assert.equal(book.land(jump(site.stars[0] + 1)).gained, 0);
   assert.equal(book.best.get(site.id), Math.round(site.stars[2] + 1));
@@ -193,7 +193,7 @@ test('free drive\'s book of jumps: stars by distance, a best for each jump, and 
   // Off anything else: a hop is not worth a word, big air and a spin are
   const loose = (distance, air, turns = 0) => book.land({ kind: 'jump', distance, air, turns, landing: 'clean', jump: null });
   assert.equal(loose(6, .5), null);
-  assert.match(loose(40, 1.8).text, /^Big air/);
+  assert.match(loose(40, 1.8).text, /^대형 점프/);
   assert.match(loose(30, 1.2, 1).text, /^360/);
   assert.ok(book.records.longest >= site.stars[2] && book.records.turns === 1);
 });
@@ -221,9 +221,9 @@ test('a jump with a fare aboard tips as a Crazy jump, and a spin out loses the c
   run.onTheWay = () => true;
   run.jumped({ air: 1.5, turns: 0, landing: 'clean' }, {});
   const tip = run.drainEvents().find(event => event.kind === 'tip');
-  assert.ok(tip && tip.trick === 'Crazy jump' && tip.tip === Math.round(TIPS.jump * 2 * 1.5) * 2, JSON.stringify(tip));
+  assert.ok(tip && tip.trick === "굉장한 점프" && tip.tip === Math.round(TIPS.jump * 2 * 1.5) * 2, JSON.stringify(tip));
   run.jumped({ air: 1, turns: 1, landing: 'clean' }, {});
-  assert.equal(run.drainEvents().find(event => event.kind === 'tip')?.trick, 'Crazy 360');
+  assert.equal(run.drainEvents().find(event => event.kind === 'tip')?.trick, '굉장한 360도 회전');
   run.jumped({ air: 1, turns: 0, landing: 'spun' }, {});
   assert.equal(run.combo, 1);
   // A nervous rider is shaken by a hard landing

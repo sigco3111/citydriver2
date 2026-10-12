@@ -1,9 +1,9 @@
 {
   "id": "./",
-  "name": "Citydriver",
-  "short_name": "Citydriver",
-  "description": "Free 3D taxi driving game in a generated island city.",
-  "lang": "en-US",
+  "name": "시티드라이버 2",
+  "short_name": "시티드라이버",
+  "description": "절차 생성 섬 도시의 3D 택시 운전 게임",
+  "lang": "ko",
   "start_url": "./",
   "scope": "./",
   "display": "fullscreen",
@@ -15,14 +15,14 @@
       "sizes": "1280x800",
       "type": "image/jpeg",
       "form_factor": "wide",
-      "label": "A taxi run in the chase view"
+      "label": "추적 시점 택시 영업"
     },
     {
       "src": "screenshots/mobile.jpg",
       "sizes": "540x960",
       "type": "image/jpeg",
       "form_factor": "narrow",
-      "label": "A taxi run with touch driving controls"
+      "label": "터치 조작 택시 영업"
     }
   ],
   "icons": [

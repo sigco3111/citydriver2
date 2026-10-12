@@ -31,10 +31,10 @@
 // facade trim (window frames, sills, courses), whose shadows are a texel or
 // two wide, do not (see SMALL_CASTERS in citydriver-world.js).
 export const QUALITY_LEVELS = [
-  { id: 'high', label: 'High', summary: 'Full detail · sharp shadows', density: 1, shadowMap: 2048, shadowDistance: 100, shadowDetail: true, chunks: { behind: 3, ahead: 5 }, antialias: true, aoQuality: 'high' },
-  { id: 'balanced', label: 'Balanced', summary: '85% resolution · medium shadows', density: .85, shadowMap: 1536, shadowDistance: 80, shadowDetail: true, chunks: { behind: 2, ahead: 4 }, antialias: true, aoQuality: 'high' },
-  { id: 'smooth', label: 'Smooth', summary: '70% resolution · nearer shadows', density: .7, shadowMap: 1024, shadowDistance: 60, shadowDetail: false, chunks: { behind: 2, ahead: 4 }, antialias: true, aoQuality: 'low' },
-  { id: 'basic', label: 'Basic', summary: '50% resolution · near shadows · nearby detail', density: .5, shadowMap: 512, shadowDistance: 45, shadowDetail: false, chunks: { behind: 1, ahead: 3 }, antialias: false, aoQuality: 'low' },
+  { id: 'high', label: "높음", summary: "전체 세부 표현 · 선명한 그림자", density: 1, shadowMap: 2048, shadowDistance: 100, shadowDetail: true, chunks: { behind: 3, ahead: 5 }, antialias: true, aoQuality: 'high' },
+  { id: 'balanced', label: "균형", summary: "해상도 85% · 중간 그림자", density: .85, shadowMap: 1536, shadowDistance: 80, shadowDetail: true, chunks: { behind: 2, ahead: 4 }, antialias: true, aoQuality: 'high' },
+  { id: 'smooth', label: "부드러움", summary: "해상도 70% · 가까운 그림자", density: .7, shadowMap: 1024, shadowDistance: 60, shadowDetail: false, chunks: { behind: 2, ahead: 4 }, antialias: true, aoQuality: 'low' },
+  { id: 'basic', label: "기본", summary: "해상도 50% · 가까운 그림자와 세부 표현", density: .5, shadowMap: 512, shadowDistance: 45, shadowDetail: false, chunks: { behind: 1, ahead: 3 }, antialias: false, aoQuality: 'low' },
 ];
 // On a graphics card of its own (see dedicatedGpu) High's shadows reach to the
 // fog and stay sharper. A headset draws every frame twice and can look any

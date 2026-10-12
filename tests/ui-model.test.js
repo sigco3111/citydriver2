@@ -14,7 +14,7 @@ import { DEFAULT_PAINT } from '../src/car-paint.js';
 
 const player = () => ({ s: 25, u: 3, heading: 0, speed: 0, distance: 1609.344, boosting: false, drifting: false });
 const state = (extra = {}) => ({ started: true, paused: true, loading: false, chooser: null, mode: 'taxi', over: false, running: true,
-  location: { place: 'Downtown', distance: '1.0' }, carName: 'City Taxi', weather: 'sunset', view: 'Chase view',
+  location: { place: "도심", distance: '1.0' }, carName: 'City Taxi', weather: 'sunset', view: 'Chase view',
   graphics: 'Auto', sound: true, mix: 'balanced', comfort: true, rates: [], rateChoice: null, ...extra });
 const actions = calls => new Proxy({}, { get: (_, key) => () => calls.push(key) });
 
@@ -29,30 +29,30 @@ test('menu choices and commands cover the title, pause modes, choosers and resul
   assert.equal(build(state({ paused: false })), null);
   assert.equal(build(state({ loading: true })).id, 'loading');
   // The pause screen's two mode buttons: in a run, Free drive beside the other run; on a job's standby, Free drive in its place
-  for (const [extra, modes] of [[{ mode: 'free' }, [['Taxi shift', 'taxi'], ['Demolition', 'demolition']]], [{ mode: 'free', standby: 'taxi' }, [['Free drive', 'free'], ['Demolition', 'demolition']]],
-    [{ mode: 'free', standby: 'demolition' }, [['Taxi shift', 'taxi'], ['Free drive', 'free']]], [{ mode: 'taxi' }, [['Free drive', 'free'], ['Demolition', 'demolition']]],
-    [{ mode: 'demolition' }, [['Free drive', 'free'], ['Taxi shift', 'taxi']]]]) {
+  for (const [extra, modes] of [[{ mode: 'free' }, [["택시 영업", 'taxi'], ["철거", 'demolition']]], [{ mode: 'free', standby: 'taxi' }, [["자유 주행", 'free'], ["철거", 'demolition']]],
+    [{ mode: 'free', standby: 'demolition' }, [["택시 영업", 'taxi'], ["자유 주행", 'free']]], [{ mode: 'taxi' }, [["자유 주행", 'free'], ["철거", 'demolition']]],
+    [{ mode: 'demolition' }, [["자유 주행", 'free'], ["택시 영업", 'taxi']]]]) {
     const controls = menuControls(state(extra), commands);
     assert.deepEqual([controls.switchMode, controls.otherRun].map(({ label, job }) => [label, job]), modes, JSON.stringify(extra));
   }
-  for (const [mode, driving] of [['taxi', ['End shift', 'Free drive', 'Demolition', 'Garage', 'Tap to drift', 'Popups', 'Reset car']],
-    ['demolition', ['Restart run', 'End run', 'Free drive', 'Taxi shift', 'Tap to drift', 'Popups', 'Reset car']], ['free', ['Taxi shift', 'Demolition', 'Garage', 'Autodrive', 'Traffic', 'Tap to drift', 'Popups', 'Reset car']]]) {
+  for (const [mode, driving] of [['taxi', ["영업 종료", "자유 주행", "철거", "차고", "탭으로 드리프트", "팝업 알림", "차량 복귀"]],
+    ['demolition', ["다시 시작", "플레이 종료", "자유 주행", "택시 영업", "탭으로 드리프트", "팝업 알림", "차량 복귀"]], ['free', ["택시 영업", "철거", "차고", "자동 운전", "교통", "탭으로 드리프트", "팝업 알림", "차량 복귀"]]]) {
     model = build(state({ mode, running: mode !== 'free' }));
-    assert.deepEqual(model.items.filter(item => item.group === 'Driving').map(item => item.label), driving);
-    assert.equal(model.items[0].label, 'Resume'); assert.equal(model.items[0].primary, true);
-    assert.equal(model.items.find(item => item.id === 'weather').value, 'Golden hour');
+    assert.deepEqual(model.items.filter(item => item.group === "운전").map(item => item.label), driving);
+    assert.equal(model.items[0].label, "계속하기"); assert.equal(model.items[0].primary, true);
+    assert.equal(model.items.find(item => item.id === 'weather').value, "노을");
     assert.equal(model.items.find(item => item.id === 'sound').toggle, true);
     assert.equal(model.items.some(item => item.id === 'rate'), false);
   }
   model = build(state({ rates: [72, 90], frameRate: 90 }));
-  assert.equal(model.items.find(item => item.id === 'rate').value, 'Auto · 90 Hz');
+  assert.equal(model.items.find(item => item.id === 'rate').value, '자동 · 90 Hz');
   assert.equal(cycleChoice(WEATHER_CHOICES.map(([id]) => id), 'night'), 'auto');
   model = build(state({ over: true, chooser: 'map' }), { mapKey: 1 });
   assert.equal(model.id, 'map', 'a chooser can cover results'); model.items[0].activate(); assert.equal(calls.at(-1), 'back');
   for (const mode of ['taxi', 'demolition']) {
-    model = build(state({ mode, over: true }), { result: { cash: '$500', name: 'Class D', next: 'Next rating', best: 'Best $600' } });
-    assert.equal(model.title, 'Time up · $500');
-    assert.deepEqual(model.items.slice(0, 3).map(item => item.label), mode === 'taxi' ? ['Next shift', 'Free drive', 'Garage'] : ['Play again', 'Free drive', 'Taxi shift']);
+    model = build(state({ mode, over: true }), { result: { cash: '$500', name: "D급", next: 'Next rating', best: 'Best $600' } });
+    assert.equal(model.title, '시간 종료 · $500');
+    assert.deepEqual(model.items.slice(0, 3).map(item => item.label), mode === 'taxi' ? ["다음 영업", "자유 주행", "차고"] : ["다시 플레이", "자유 주행", "택시 영업"]);
     assert.equal(model.items[2].value, undefined, 'results keep the short action labels');
     model.items[0].activate(); assert.equal(calls.at(-1), mode);
     model.items[1].activate(); assert.equal(calls.at(-1), 'keep');
@@ -67,11 +67,11 @@ test('the garage says when progress is not being saved', () => {
   const disk = { getItem: key => values.get(key) ?? null, setItem: (key, value) => { if (full) throw Error('Quota'); values.set(key, value); } };
   const fleet = new TaxiFleet(disk), career = new TaxiCareer(disk), ownPaint = () => '#123456';
   const garage = shift => garageModel({ carId: 'coast', paint: null, ownPaint, fleet, career, shift }, garageActions([]));
-  assert.equal(garage(false).unsaved, false); assert.doesNotMatch(garage(false).summary, /not saved/);
+  assert.equal(garage(false).unsaved, false); assert.doesNotMatch(garage(false).summary, /저장 안 됨/);
   full = true; fleet.credit(100);
-  assert.equal(garage(false).unsaved, true); assert.match(garage(false).summary, /\$100 · \d+ of \d+ owned · Progress not saved/);
+  assert.equal(garage(false).unsaved, true); assert.match(garage(false).summary, /\$100 · \d+개 중 \d+개 보유 · 진행 상황 저장 안 됨/);
   const s = state({ mode: 'taxi', started: true, chooser: 'garage' });
-  assert.match(menuModel(s, menuControls(s, actions([])), { garage: garage(true) }).subtitle, /Progress not saved/);
+  assert.match(menuModel(s, menuControls(s, actions([])), { garage: garage(true) }).subtitle, /진행 상황 저장 안 됨/);
   full = false; fleet.credit(1);
   assert.equal(garage(false).unsaved, false, 'a later save that works clears it');
 });
@@ -85,15 +85,15 @@ test('garage selection uses car and paint state, and preserves paint-first heads
   garage.cars.find(car => car.id === 'taxi').activate(); garage.paints[0].activate();
   assert.deepEqual(calls, ['taxi', DEFAULT_PAINT]);
   const s = state({ mode: 'free', chooser: 'garage' }), model = menuModel(s, menuControls(s, actions([])), { garage });
-  assert.equal(model.items[0].group, 'Paint'); assert.equal(model.items[0].swatch, '#123456');
-  assert.match(model.subtitle, /\$0 · 3 of 21 owned/);
-  assert.equal(model.items.find(item => item.id === 'jetpack')?.label, 'Jetpack', 'the gear after the cars');
+  assert.equal(model.items[0].group, "도색"); assert.equal(model.items[0].swatch, '#123456');
+  assert.match(model.subtitle, /\$0 · 21개 중 3개 보유/);
+  assert.equal(model.items.find(item => item.id === 'jetpack')?.label, "제트팩", 'the gear after the cars');
   assert.ok(!garage.paints.some(item => item.id === 'rainbow'), 'no rainbow before the code');
   assert.ok(garage.paints.filter(item => item.id !== DEFAULT_PAINT).every(item => item.disabled), 'no color without the money for it');
   assert.equal(garage.paints[0].disabled, false, 'each car\'s own color is free');
-  assert.deepEqual([...new Set(garage.cars.map(car => car.group))], ['Cabs', 'Cars', 'Specials', 'Aircraft'], 'the garage in sections');
+  assert.deepEqual([...new Set(garage.cars.map(car => car.group))], ["택시", "자동차", "특수 차량", "항공기"], 'the garage in sections');
   assert.ok(!garage.cars.some(car => ['auto', 'desert', 'city'].includes(car.id)), 'without the old route wagons');
-  assert.equal(model.items.at(-1).label, 'Back');
+  assert.equal(model.items.at(-1).label, "뒤로");
 });
 
 test('an unowned car opens its offer: buy it, test drive it or save for it, the same commands on the page and in a headset', () => {
@@ -104,33 +104,33 @@ test('an unowned car opens its offer: buy it, test drive it or save for it, the 
   plane.activate(); assert.deepEqual(calls, ['offer:plane']);
   garage = build('plane');
   const s = state({ mode: 'free', chooser: 'garage' }), model = menuModel(s, menuControls(s, actions([])), { garage });
-  assert.equal(model.id, 'car-offer'); assert.equal(model.title, 'Plane');
+  assert.equal(model.id, 'car-offer'); assert.equal(model.title, "비행기");
   const [buy, drive, save, back] = model.items;
-  assert.equal(buy.disabled, true, 'not yet'); assert.equal(buy.value, '$140,000 to go');
-  assert.equal(drive.disabled, false); assert.equal(drive.value, 'Free · 2 min'); assert.equal(drive.primary, true, 'the test drive leads while the car is out of reach');
+  assert.equal(buy.disabled, true, 'not yet'); assert.equal(buy.value, '$140,000 남음');
+  assert.equal(drive.disabled, false); assert.equal(drive.value, '무료 · 2분'); assert.equal(drive.primary, true, 'the test drive leads while the car is out of reach');
   drive.activate(); save.activate(); back.activate();
   assert.deepEqual(calls.slice(1), ['test:plane', 'save:plane', 'close']);
   fleet.testDrive('plane'); fleet.setGoal('plane');
   garage = build('plane');
-  assert.equal(garage.offer.items[1].disabled, true, 'a second test drive costs money'); assert.equal(garage.offer.items[1].value, `$${testDrivePrice('plane').toLocaleString('en-US')} to go`);
+  assert.equal(garage.offer.items[1].disabled, true, 'a second test drive costs money'); assert.equal(garage.offer.items[1].value, `$${testDrivePrice('plane').toLocaleString('en-US')} 남음`);
   assert.equal(garage.offer.items[2].toggle, true); garage.offer.items[2].activate(); assert.equal(calls.at(-1), 'save:null');
   assert.equal(garage.cars.find(car => car.id === 'plane').goal, true);
   fleet.credit(carPrice('plane'));
   garage = build('plane');
-  assert.equal(garage.offer.items[0].disabled, false); assert.equal(garage.offer.items[0].primary, true); assert.match(garage.offer.progress, /^Leaves/);
+  assert.equal(garage.offer.items[0].disabled, false); assert.equal(garage.offer.items[0].primary, true); assert.match(garage.offer.progress, /^구매 후 잔액/);
   fleet.buy('plane');
   assert.equal(build('plane').offer, null, 'a car owned has no offer');
   fleet.credit(carPrice('jetpack')); fleet.buy('jetpack');
   const jetpack = build(null).gear.find(item => item.id === 'jetpack');
-  assert.equal(jetpack.value, 'Owned'); jetpack.activate(); assert.equal(calls.at(-1), 'jetpack', 'owned gear says how to use it');
+  assert.equal(jetpack.value, "보유 중"); jetpack.activate(); assert.equal(calls.at(-1), 'jetpack', 'owned gear says how to use it');
   const poorer = new TaxiFleet(), offer = garageModel({ carId: 'taxi', paint: null, ownPaint, fleet: poorer, offer: 'jetpack' }, garageActions(calls)).offer;
-  assert.equal(offer.items[1].label, 'Try it'); assert.match(offer.note, /on foot/);
+  assert.equal(offer.items[1].label, "체험"); assert.match(offer.note, /걸어 다니는 동안/);
   poorer.enterKonami(); assert.ok(garageModel({ carId: 'taxi', paint: null, ownPaint, fleet: poorer }, garageActions(calls)).paints.some(item => item.id === 'rainbow' && !item.disabled), 'the code adds the rainbow');
 });
 
 test('saving for a car: the one chosen, else the cheapest still out of reach, and none once the garage is full', () => {
   const fleet = new TaxiFleet();
-  assert.equal(savingFor(fleet).id, 'hatchback'); assert.equal(savingFor(fleet).text, 'City Hatch in $2,000');
+  assert.equal(savingFor(fleet).id, 'hatchback'); assert.equal(savingFor(fleet).text, '도시 해치백까지 $2,000 남음');
   fleet.credit(2100);
   assert.equal(savingFor(fleet).id, 'sedan', 'one it can buy already is not a goal');
   fleet.setGoal('helicopter');
@@ -144,18 +144,18 @@ test('the garage holds the fleet too: the shift cab and liveries, and in a shift
   const calls = [], fleet = new TaxiFleet(), career = new TaxiCareer(), ownPaint = () => '#123456';
   const build = (shift, offer = null) => garageModel({ carId: 'hatchback', paint: null, ownPaint, fleet, career, shift, offer }, garageActions(calls));
   let garage = build(false);
-  assert.equal(garage.cars.find(car => car.id === 'taxi').value, 'Shift cab', 'the shift\'s cab is marked among the cars');
+  assert.equal(garage.cars.find(car => car.id === 'taxi').value, "영업용 택시", 'the shift\'s cab is marked among the cars');
   assert.ok(garage.liveries.some(livery => livery.disabled) && garage.liveries.some(livery => livery.current), 'liveries, locked by rank');
   garage = build(true);
-  assert.deepEqual([...new Set(garage.cars.map(car => car.group))], ['Cabs']); assert.equal(garage.paints.length, 0); assert.equal(garage.gear.length, 0);
+  assert.deepEqual([...new Set(garage.cars.map(car => car.group))], ["택시"]); assert.equal(garage.paints.length, 0); assert.equal(garage.gear.length, 0);
   assert.equal(garage.cars.find(car => car.current).id, 'taxi', 'the next shift\'s cab is the current one');
   garage.cars.find(car => car.id === 'taxi').activate(); assert.equal(calls.at(-1), 'cab:taxi', 'an owned cab is picked for the next shift, not driven');
   garage.cars.find(car => car.id === 'taxiGT').activate(); assert.equal(calls.at(-1), 'offer:taxiGT');
   const offer = build(true, 'taxiGT').offer;
-  assert.equal(offer.items[1].disabled, true, 'no test drives mid-shift'); assert.match(offer.note, /next shift/);
+  assert.equal(offer.items[1].disabled, true, 'no test drives mid-shift'); assert.match(offer.note, /다음 영업/);
   assert.equal(build(true, 'plane').offer, null, 'nothing but cabs on offer in a shift');
   const s = state({ chooser: 'garage' }), model = menuModel(s, menuControls(s, actions([])), { garage });
-  assert.deepEqual([...new Set(model.items.map(item => item.group).filter(Boolean))], ['Cab livery', 'Cabs']); assert.match(model.subtitle, /next shift/);
+  assert.deepEqual([...new Set(model.items.map(item => item.group).filter(Boolean))], ["택시 도색", "택시"]); assert.match(model.subtitle, /다음 영업/);
   garage.liveries.find(livery => livery.id === 'cream').activate(); assert.equal(calls.at(-1), 'livery:cream');
   // (a stale row is checked again when chosen: TaxiFleet takes only what the rank unlocks)
   assert.equal(fleet.setLivery('cream', career), false); career.earnings = 2000; assert.equal(fleet.setLivery('cream', career), true);
@@ -167,21 +167,21 @@ test('taxi HUD covers nearby fares, boarding, rating changes, group stops and ov
   const customer = run.customers.find(customer => customer.passengers > 1 && customer.id !== run.blockedPickup?.id);
   Object.assign(car, { s: customer.s, u: customer.u });
   let model = taxiHudModel(run, car);
-  assert.equal(model.title, `To ${customer.destination.name}`); assert.equal(model.detail, 'Stop to pick up'); assert.equal(model.timer, null);
+  assert.equal(model.title, `목적지: ${customer.destination.name}`); assert.equal(model.detail, "정차하여 태우세요"); assert.equal(model.timer, null);
   run.update(STOP_SECONDS / 2, car); model = taxiHudModel(run, car);
-  assert.equal(model.detail, 'Boarding…'); assert.equal(model.stopProgress.visible, true);
+  assert.equal(model.detail, "탑승 중…"); assert.equal(model.stopProgress.visible, true);
   run.update(STOP_SECONDS / 2, car); assert.equal(run.status, 'driving');
   for (const [fraction, tone] of [[.8, 'speedy'], [.4, 'normal'], [.1, 'slow']]) {
     run.legElapsed = run.currentStop.limit * (1 - fraction);
     model = taxiHudModel(run, car);
     assert.equal(model.timer.tone, tone); assert.ok(Math.abs(model.timer.fraction - fraction) < 1e-6);
-    assert.match(model.nextStop, /^Next · /); assert.match(model.party, /aboard/);
+    assert.match(model.nextStop, /^다음 · /); assert.match(model.party, /탑승 중/);
     assert.equal(headsetHudModel(model).timer.fraction, fraction);
   }
   run.overtime = true; model = taxiHudModel(run, car);
-  assert.equal(model.clockLabel, 'LAST RIDE'); assert.equal(model.stage, 'Last ride');
+  assert.equal(model.clockLabel, "마지막 운행"); assert.equal(model.stage, "마지막 운행");
   Object.assign(car, { s: run.target.s, u: run.target.u }); model = taxiHudModel(run, car);
-  assert.equal(model.navigation.distance, 'Here'); assert.equal(model.detail, 'Dropping off…');
+  assert.equal(model.navigation.distance, "도착"); assert.equal(model.detail, "하차 중…");
 });
 
 test('demolition HUD switches between contracts, chains and overtime without stale taxi fields', () => {
@@ -190,10 +190,10 @@ test('demolition HUD switches between contracts, chains and overtime without sta
   assert.equal(model.timer.fraction, null); assert.equal(model.navigation, null);
   assert.match(headsetHudModel(model).detail, /\+.*s/);
   run.smash(['bench']); model = demolitionHudModel(run, car);
-  assert.equal(model.timer.text, '1 hit'); assert.equal(model.timer.tone, 'chain'); assert.ok(model.timer.fraction > 0);
-  assert.equal(model.nextStop, '3 more for ×2');
+  assert.equal(model.timer.text, '타격 1회'); assert.equal(model.timer.tone, 'chain'); assert.ok(model.timer.fraction > 0);
+  assert.equal(model.nextStop, '×2까지 3회 남음');
   run.timeLeft = .01; run.update(.02); model = demolitionHudModel(run, car);
-  assert.equal(model.clockLabel, 'LAST CHAIN'); assert.equal(model.clock, '');
+  assert.equal(model.clockLabel, "마지막 연속 기록"); assert.equal(model.clock, '');
   assert.equal(headsetHudModel(model).clock, '');
   run.update(CHAIN_SECONDS + 1); assert.equal(demolitionHudModel(run, car).running, false);
 });
@@ -222,18 +222,18 @@ test('rendering the same HUD twice does not advance cash or hints, and desktop e
     assert.deepEqual(headsetHudModel(model), headset); assert.equal(hints, 1);
     const free = taxiHudModel({ running: false }, { ...car, boosting: true, walker: {} }, { free: true });
     renderRunHud(free); assert.equal(elements.get('taxi-hud').hidden, true); assert.equal(elements.get('taxi-buttons').hidden, false);
-    assert.equal(elements.get('taxi-boost-state').textContent, 'Sprinting');
+    assert.equal(elements.get('taxi-boost-state').textContent, "달리는 중");
   } finally { if (previous === undefined) delete globalThis.document; else globalThis.document = previous; }
 });
 
 test('location and result summaries are available before either interface renders', () => {
-  const car = player(), location = locationHudModel({ ...car, heading: -Math.PI / 2 }, 'Harbor', 'Night');
-  assert.deepEqual(location, { distance: '1.0', heading: 'W', place: 'Harbor', weather: 'Night', cash: '' });
-  assert.equal(headsetHudModel(null, location).place, 'Harbor');
+  const car = player(), location = locationHudModel({ ...car, heading: -Math.PI / 2 }, "항구", 'Night');
+  assert.deepEqual(location, { distance: '1.0', heading: 'W', place: "항구", weather: 'Night', cash: '' });
+  assert.equal(headsetHudModel(null, location).place, "항구");
   const run = new TaxiRun(); run.start(car); run.cash = 600; run.timeLeft = .01; run.update(.02, car);
-  const taxi = taxiResultModel(run, [{ name: 'Museum' }]);
-  assert.equal(taxi.cash, '$600'); assert.match(taxi.best, /1 new place found/); assert.match(taxi.next, /New best license/);
+  const taxi = taxiResultModel(run, [{ name: "박물관" }]);
+  assert.equal(taxi.cash, '$600'); assert.match(taxi.best, /새 장소 1곳 발견/); assert.match(taxi.next, /최고 면허 등급 경신/);
   const demolition = new DemolitionRun(); demolition.start(); demolition.score = 1e6; demolition.timeLeft = .01; demolition.update(.02);
   const result = demolitionResultModel(demolition);
-  assert.equal(result.cash, '$1,000,000'); assert.match(result.next, /New high score/);
+  assert.equal(result.cash, '$1,000,000'); assert.match(result.next, /최고 기록 경신/);
 });

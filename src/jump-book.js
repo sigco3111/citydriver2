@@ -36,7 +36,7 @@ export class JumpBook {
   }
   save() {
     try {
-      if (!this.storage) throw new Error('Storage unavailable');
+      if (!this.storage) throw new Error("저장소 사용 불가");
       const text = JSON.stringify(this.records);
       this.storage.setItem(KEY, text); this.seen = text; this.saved = true;
     } catch { this.saved = false; }
@@ -57,22 +57,22 @@ export class JumpBook {
     // (a spin out lands, but badly: no records from it)
     let record = '';
     if (!spun) {
-      if (distance > records.longest) { if (!first && records.longest) record = 'Longest yet'; records.longest = distance; }
-      if (event.air > records.air) { if (!first && records.air && !record) record = 'Most air yet'; records.air = +event.air.toFixed(2); }
+      if (distance > records.longest) { if (!first && records.longest) record = "최장 거리 경신"; records.longest = distance; }
+      if (event.air > records.air) { if (!first && records.air && !record) record = "최장 체공 경신"; records.air = +event.air.toFixed(2); }
       const turns = Math.abs(event.turns);
-      if (turns > records.turns) { if (!first && !record) record = `${turns * 360} spin, a first`; records.turns = turns; }
+      if (turns > records.turns) { if (!first && !record) record = `첫 ${turns * 360}도 회전`; records.turns = turns; }
     }
     this.save();
     const trick = event.turns ? `${Math.abs(event.turns) * 360}` : '';
     if (site && !spun) {
       const before = this.best.get(site.id), stars = this.stars(site, distance), had = this.stars(site);
       if (before === undefined || distance > before) this.best.set(site.id, distance);
-      const better = before !== undefined && distance > before, name = site.kind === 'river' && !stars ? 'River jump · short' : site.name;
-      return { text: [name, `${distance} m`, starText(stars), trick, better ? 'Best here' : '', record].filter(Boolean).join(' · '), amount: `${distance} m`, caption: stars ? starText(stars) : 'SHORT', gold: stars > 0, gained: Math.max(0, stars - had) };
+      const better = before !== undefined && distance > before, name = site.kind === 'river' && !stars ? "강 점프 · 거리 부족" : site.name;
+      return { text: [name, `${distance} m`, starText(stars), trick, better ? "이 장소 최고" : '', record].filter(Boolean).join(' · '), amount: `${distance} m`, caption: stars ? starText(stars) : "거리 부족", gold: stars > 0, gained: Math.max(0, stars - had) };
     }
     if (!trick && distance < WORTH.distance && event.air < WORTH.air) return null;
-    if (spun) return { text: trick ? `${trick} · spun out` : 'Spun out', amount: 'SPUN', caption: '', gold: false };
-    const word = trick || (event.air >= BIG_AIR ? 'Big air' : 'Air');
+    if (spun) return { text: trick ? `${trick} · 회전 실패` : "회전 실패", amount: "회전 실패", caption: '', gold: false };
+    const word = trick || (event.air >= BIG_AIR ? "대형 점프" : "공중 묘기");
     return { text: [word, `${distance} m`, event.air >= BIG_AIR && !trick ? `${event.air.toFixed(1)} s` : '', record].filter(Boolean).join(' · '), amount: `${distance} m`, caption: word.toUpperCase(), gold: Boolean(trick) };
   }
 }

@@ -15,5 +15,5 @@ test('hint flags preserve earlier hints and tolerate missing or unavailable stor
   flags.loop = true;
   assert.deepEqual(flags, { roll: true, loop: true });
   assert.deepEqual(readHintFlags('hints'), {});
-  assert.deepEqual(readHintFlags('hints', { getItem() { throw new Error('Storage unavailable'); } }), {});
+  assert.deepEqual(readHintFlags('hints', { getItem() { throw new Error("저장소 사용 불가"); } }), {});
 });

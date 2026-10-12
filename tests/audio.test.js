@@ -156,7 +156,7 @@ test('unsupported audio fails cleanly and leaves sound disabled', async () => {
   globalThis.window = {};
   try {
     const audio = new DriveAudio();
-    await assert.rejects(audio.toggle(), /unavailable/);
+    await assert.rejects(audio.toggle(), /사용할 수 없습니다/);
     assert.equal(audio.enabled, false); assert.equal(audio.context, null);
     await audio.dispose(); await audio.dispose();
   } finally { if (original === undefined) delete globalThis.window; else globalThis.window = original; }

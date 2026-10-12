@@ -9,7 +9,7 @@ const distanceLabel = meters => meters >= 1000 ? `${(meters / 1000).toFixed(1)} 
 const countUp = (shown, total, step) => total < shown ? total : Math.min(total, shown + Math.max(step, (total - shown) * .35));
 const mileageFormat = new Intl.NumberFormat('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 // What the Drift button says through a drift, as its sparks change (see Drift)
-const DRIFT_STATES = ['Drifting', 'Blue', 'Orange', 'Pink'];
+const DRIFT_STATES = ["드리프트 중", "파랑", "주황", "분홍"];
 
 function baseHud(run, vehicle, free = false) {
   // (the Drift button shows the charge toward the next stage, then the turbo running down)
@@ -17,9 +17,9 @@ function baseHud(run, vehicle, free = false) {
   return { running: run.running, buttons: run.running || free, boostVisible: run.running,
     boosting: run.running ? run.boostActive : vehicle.boosting, drifting: vehicle.drifting,
     driftStage: charging ? drift.stage : turbo ? drift.turboStage : 0, driftCharge: charging ? drift.progress : turbo ? drift.boost : 0,
-    driftState: charging ? DRIFT_STATES[drift.stage] : turbo ? 'Turbo' : null, turbo,
-    boost: run.boost, boostState: run.running ? run.boostActive ? 'Boosting' : run.boost < .1 ? 'Release to fill' : 'Hold'
-      : vehicle.boosting ? vehicle.walker ? 'Sprinting' : 'Boosting' : 'Hold',
+    driftState: charging ? DRIFT_STATES[drift.stage] : turbo ? "터보" : null, turbo,
+    boost: run.boost, boostState: run.running ? run.boostActive ? "부스트 중" : run.boost < .1 ? "놓으면 충전" : "누르기"
+      : vehicle.boosting ? vehicle.walker ? "달리는 중" : "부스트 중" : "누르기",
     speed: Math.round(Math.abs(vehicle.speed) * 2.23694), navigation: null, timer: null, stopProgress: null,
     combo: '', party: '', band: '', nextStop: '', mood: '', detail: '', info: '', fareStatus: '', arriving: false, taskUrgent: false, overtime: false };
 }
@@ -35,16 +35,16 @@ function nearbyFare(run, vehicle) {
 function pickupCard(model, run, vehicle, nearby) {
   const band = nearby && fareBand(nearby.length), mood = MOODS[nearby?.mood];
   model.arriving = Boolean(run.boarding);
-  model.title = nearby ? `To ${nearby.destination.name}` : '';
-  model.party = band ? `${nearby.passengers > 1 ? `${nearby.passengers} riders` : nearby.name} · ${band.label} · ${distanceLabel(nearby.length)}` : '';
+  model.title = nearby ? `목적지: ${nearby.destination.name}` : '';
+  model.party = band ? `${nearby.passengers > 1 ? `승객 ${nearby.passengers}명` : nearby.name} · ${band.label} · ${distanceLabel(nearby.length)}` : '';
   model.band = band?.id ?? '';
-  model.nextStop = mood ? `${mood.label} · ${mood.rule}` : nearby?.passengers > 1 ? `${nearby.stops.length} stops · paid at the last` : '';
+  model.nextStop = mood ? `${mood.label} · ${mood.rule}` : nearby?.passengers > 1 ? `${nearby.stops.length}곳 하차 · 마지막에 정산` : '';
   model.mood = nearby?.mood ?? '';
   const inRing = nearby && nearby.id !== run.blockedPickup?.id && Math.hypot(nearby.s - vehicle.s, nearby.u - vehicle.u) < STOP_RADIUS;
-  model.detail = run.boarding ? 'Boarding…' : inRing ? 'Stop to pick up' : '';
+  model.detail = run.boarding ? "탑승 중…" : inRing ? "정차하여 태우세요" : '';
   // (a special rider's rule matters more than the band, and the fare is on the line above)
   model.info = mood ? 'next' : 'party';
-  model.fareStatus = nearby ? `Fare ${money(nearby.fare + nearby.groupBonus)}` : '';
+  model.fareStatus = nearby ? `운임 ${money(nearby.fare + nearby.groupBonus)}` : '';
 }
 
 // Build once per HUD tick. Counting cash and once-only hints must not advance
@@ -54,35 +54,35 @@ export function taxiHudModel(run, vehicle, { free = false, shownCash = 0, hint =
   model.shownCash = shownCash;
   if (!run.running) return model;
   model.shownCash = countUp(shownCash, run.cash, 25);
-  Object.assign(model, { clockLabel: run.overtime ? 'LAST RIDE' : 'TIME', clock: String(Math.ceil(run.timeLeft)), urgent: run.timeLeft <= 15,
-    cash: compact(Math.round(model.shownCash)), cashLabel: `Total earned ${money(run.cash)}`,
-    fares: `${run.delivered} fare${run.delivered === 1 ? '' : 's'}`, status: run.status });
+  Object.assign(model, { clockLabel: run.overtime ? "마지막 운행" : "남은 시간", clock: String(Math.ceil(run.timeLeft)), urgent: run.timeLeft <= 15,
+    cash: compact(Math.round(model.shownCash)), cashLabel: `총 수입 ${money(run.cash)}`,
+    fares: `운행 ${run.delivered}회`, status: run.status });
   const stop = run.target, pickup = run.status === 'pickup';
-  model.stage = pickup ? 'Pick up' : run.overtime ? 'Last ride' : run.fare.stops.length > 1 ? `Stop ${run.stopIndex + 1} of ${run.fare.stops.length}` : 'Drop off';
+  model.stage = pickup ? "승차" : run.overtime ? "마지막 운행" : run.fare.stops.length > 1 ? `하차 ${run.stopIndex + 1} / ${run.fare.stops.length}` : "하차";
   model.taskUrgent = !pickup && run.fareLeft <= 10;
-  model.combo = !pickup && run.combo > 1 ? `Combo ×${run.combo}` : '';
-  model.stopProgress = { visible: run.hold > 0, label: pickup ? 'Passenger boarding' : 'Passenger drop-off', fraction: Math.min(1, run.hold / STOP_SECONDS) };
+  model.combo = !pickup && run.combo > 1 ? `콤보 ×${run.combo}` : '';
+  model.stopProgress = { visible: run.hold > 0, label: pickup ? "승객 탑승 중" : "승객 하차 중", fraction: Math.min(1, run.hold / STOP_SECONDS) };
   if (!stop) {
     const nearby = nearbyFare(run, vehicle);
     pickupCard(model, run, vehicle, nearby);
-    model.title ||= 'Find a passenger';
+    model.title ||= "승객을 찾으세요";
     model.detail ||= hint(!nearby && 'rings');
     return model;
   }
   const length = routeDistance(taxiRoute(vehicle, run.approach(vehicle))), nearStop = insideStop(stop, vehicle);
-  model.navigation = { distance: nearStop ? 'Here' : `${Math.max(10, Math.round(length / 10) * 10)} m`,
-    label: `Drop-off ${Math.round(length)} meters by road; the green arrow points directly to the destination` };
+  model.navigation = { distance: nearStop ? "도착" : `${Math.max(10, Math.round(length / 10) * 10)} m`,
+    label: `목적지까지 도로 거리 ${Math.round(length)} m. 초록 화살표는 목적지 방향입니다` };
   model.title = stop.name;
   const remaining = run.legRemaining, rating = arrivalRating(remaining), seconds = Math.ceil(run.ratingSeconds);
   model.timer = { text: `${rating.label} ${seconds}s`, tone: rating.id, fraction: remaining,
-    label: rating.remaining > 0 ? `Arrive within ${seconds} seconds for ${rating.label}` : `${seconds} seconds before the riders give up` };
-  model.fareStatus = `Meter ${money(run.remainingFare + run.tips)}`;
+    label: rating.remaining > 0 ? `${seconds}초 이내 도착 시 ${rating.label}` : `승객 포기까지 ${seconds}초` };
+  model.fareStatus = `미터 ${money(run.remainingFare + run.tips)}`;
   const mood = MOODS[run.fare.mood];
-  model.party = run.fare.passengers > 1 ? `${run.onboard} aboard` : mood ? run.shaken ? `${mood.label} · no bonus now` : `${mood.label} · ${mood.rule}` : '';
+  model.party = run.fare.passengers > 1 ? `${run.onboard}명 탑승 중` : mood ? run.shaken ? `${mood.label} · 보너스 상실` : `${mood.label} · ${mood.rule}` : '';
   const next = run.fare.stops[run.stopIndex + 1];
-  model.nextStop = next ? `Next · ${next.destination.name} · ${Math.round(next.length / 10) * 10} m` : run.fare.passengers > 1 ? 'Last stop' : '';
+  model.nextStop = next ? `다음 · ${next.destination.name} · ${Math.round(next.length / 10) * 10} m` : run.fare.passengers > 1 ? "마지막 정류장" : '';
   const key = run.tips > 0 ? 'tips' : run.fare.passengers > 1 ? 'group' : 'drive';
-  model.detail = nearStop ? Math.abs(vehicle.speed) >= 2.5 ? 'Stop to drop off' : 'Dropping off…' : hint(!run.overtime && key);
+  model.detail = nearStop ? Math.abs(vehicle.speed) >= 2.5 ? "정차하여 내려 주세요" : "하차 중…" : hint(!run.overtime && key);
   model.info = model.nextStop ? 'next' : 'party';
   model.arriving = nearStop;
   return model;
@@ -92,26 +92,26 @@ export function demolitionHudModel(run, vehicle, { shownCash = 0, hint = () => '
   const model = baseHud(run, vehicle);
   model.shownCash = run.running ? countUp(shownCash, run.score, 900) : run.score;
   if (!run.running) return model;
-  Object.assign(model, { clockLabel: run.overtime ? 'LAST CHAIN' : 'TIME', clock: run.overtime ? '' : String(Math.ceil(run.timeLeft)),
-    overtime: run.overtime, urgent: run.timeLeft <= 10, cash: compact(model.shownCash, damageMoney), cashLabel: `Damage ${damageMoney(run.score)}`,
-    fares: run.beatBest ? 'New best!' : run.previousBest > 0 ? `Best ${compact(run.previousBest, damageMoney)}` : `${run.smashed + run.carsHit} smashed`, status: 'demolition' });
+  Object.assign(model, { clockLabel: run.overtime ? "마지막 연속 기록" : "남은 시간", clock: run.overtime ? '' : String(Math.ceil(run.timeLeft)),
+    overtime: run.overtime, urgent: run.timeLeft <= 10, cash: compact(model.shownCash, damageMoney), cashLabel: `피해액 ${damageMoney(run.score)}`,
+    fares: run.beatBest ? "최고 기록 경신!" : run.previousBest > 0 ? `최고 ${compact(run.previousBest, damageMoney)}` : `${run.smashed + run.carsHit}개 파괴`, status: 'demolition' });
   const contracts = run.contracts ?? [], open = contracts.filter(contract => !contract.done);
   if (run.chain > 0) {
-    model.stage = `${run.overtime ? 'Last chain' : 'Chain'} ×${run.multiplier}`;
-    model.timer = { text: `${run.chain} hit${run.chain === 1 ? '' : 's'}`, tone: 'chain', fraction: run.chainLeft, label: `${run.chain} hits in the chain` };
+    model.stage = `${run.overtime ? "마지막 연속 기록" : "연속 기록"} ×${run.multiplier}`;
+    model.timer = { text: `타격 ${run.chain}회`, tone: 'chain', fraction: run.chainLeft, label: `연속 타격 ${run.chain}회` };
     model.fareStatus = damageMoney(run.pending);
     model.title = run.last.label;
     model.party = `+${damageMoney(run.last.value)}`; model.band = 'damage';
-    model.nextStop = run.nextStep ? `${run.nextStep} more for ×${run.multiplier + 1}` : 'Top multiplier';
+    model.nextStop = run.nextStep ? `×${run.multiplier + 1}까지 ${run.nextStep}회 남음` : "최대 배율";
     model.detail = hint(run.multiplier > 1 ? 'bank' : ''); model.info = 'next';
   } else {
     const next = open[0];
-    model.stage = next ? 'Contract' : 'Demolition';
+    model.stage = next ? "계약" : "철거";
     model.timer = { text: `${contracts.length - open.length} / ${contracts.length}`, tone: 'chain', fraction: null,
-      label: `${contracts.length - open.length} of ${contracts.length} contracts done` };
-    model.fareStatus = ''; model.title = next ? next.text : 'Smash everything';
+      label: `계약 ${contracts.length}개 중 ${contracts.length - open.length}개 완료` };
+    model.fareStatus = ''; model.title = next ? next.text : "모든 것을 파괴하세요";
     model.party = next ? `${contractProgress(next)} · +${CONTRACT_SECONDS}s` : ''; model.band = next ? 'damage' : '';
-    model.nextStop = next ? open.slice(1).map(other => `${other.short} ${contractProgress(other)}`).join(' · ') : contracts.length ? 'All contracts done' : '';
+    model.nextStop = next ? open.slice(1).map(other => `${other.short} ${contractProgress(other)}`).join(' · ') : contracts.length ? "모든 계약 완료" : '';
     model.detail = hint(run.bestChain ? 'time' : 'chain'); model.info = next ? 'party' : 'next';
   }
   return model;
@@ -121,10 +121,10 @@ export function demolitionHudModel(run, vehicle, { shownCash = 0, hint = () => '
 // stopping or landing before the player's own takes its place
 function testCard(model, test) {
   const seconds = Math.ceil(test.left);
-  return Object.assign(model, { task: true, status: 'test', stage: test.stage ?? (test.over ? 'Test drive over' : 'Test drive'), fareStatus: test.price,
-    timer: { text: test.clock, tone: seconds <= 15 ? 'slow' : 'chain', fraction: test.fraction, label: `${seconds} seconds of test drive left` },
-    title: test.over ? test.landing ? 'Landing…' : 'Stopping…' : test.label, taskUrgent: !test.over && seconds <= 15,
-    party: test.over ? `Back to your ${test.own}` : test.note, info: 'party' });
+  return Object.assign(model, { task: true, status: 'test', stage: test.stage ?? (test.over ? "시승 종료" : "시승"), fareStatus: test.price,
+    timer: { text: test.clock, tone: seconds <= 15 ? 'slow' : 'chain', fraction: test.fraction, label: `시승 ${seconds}초 남음` },
+    title: test.over ? test.landing ? "착륙 중…" : "정차 중…" : test.label, taskUrgent: !test.over && seconds <= 15,
+    party: test.over ? `내 ${test.own} 복귀` : test.note, info: 'party' });
 }
 
 // Free drive's HUD, in the runs' panels. The task card only shows when it
@@ -135,29 +135,29 @@ export function freeHudModel(stunts, vehicle, { taxi = null, demolition = null, 
   const model = Object.assign(baseHud({ running: false }, vehicle, true), { task: false, status: 'free' });
   if (test?.over) return testCard(model, test);
   if (stunts.chain) {
-    return Object.assign(model, { task: true, status: 'chain', stage: `Chain ×${stunts.multiplier}`, fareStatus: money(stunts.pot),
-      timer: { text: `${stunts.chain} stunt${stunts.chain === 1 ? '' : 's'}`, tone: 'chain', fraction: stunts.chainLeft, label: `${stunts.chain} stunts in the chain` },
-      title: stunts.last?.label ?? 'Stunt', party: `+${money(stunts.last?.value)}`, band: 'damage',
-      nextStop: stunts.nextStep ? `${stunts.nextStep} more for ×${stunts.multiplier + 1}` : 'Top multiplier', info: 'next', detail: hint('chain') });
+    return Object.assign(model, { task: true, status: 'chain', stage: `연속 기록 ×${stunts.multiplier}`, fareStatus: money(stunts.pot),
+      timer: { text: `묘기 ${stunts.chain}회`, tone: 'chain', fraction: stunts.chainLeft, label: `연속 묘기 ${stunts.chain}회` },
+      title: stunts.last?.label ?? "묘기", party: `+${money(stunts.last?.value)}`, band: 'damage',
+      nextStop: stunts.nextStep ? `×${stunts.multiplier + 1}까지 ${stunts.nextStep}회 남음` : "최대 배율", info: 'next', detail: hint('chain') });
   }
   const nearby = taxi?.waiting ? nearbyFare(taxi, vehicle) : null;
   if (nearby) {
     pickupCard(model, taxi, vehicle, nearby);
-    return Object.assign(model, { task: true, status: 'pickup', stage: 'Fare',
-      stopProgress: { visible: taxi.hold > 0, label: 'Passenger boarding', fraction: Math.min(1, taxi.hold / STOP_SECONDS) } });
+    return Object.assign(model, { task: true, status: 'pickup', stage: "운임",
+      stopProgress: { visible: taxi.hold > 0, label: "승객 탑승 중", fraction: Math.min(1, taxi.hold / STOP_SECONDS) } });
   }
   if (test) return testCard(model, test);
   // (the demolition truck on standby: what starts the run, and its contracts)
   if (demolition?.waiting) {
     const contracts = demolition.contracts ?? [];
-    return Object.assign(model, { task: true, status: 'standby', stage: 'Demolition', fareStatus: `Clock ${Math.round(demolition.timeLeft)} s`,
-      title: 'Hit anything to start', party: contracts.length ? `Contracts · ${contracts.map(contract => contract.short).join(', ')}` : '', info: 'party' });
+    return Object.assign(model, { task: true, status: 'standby', stage: "철거", fareStatus: `남은 시간 ${Math.round(demolition.timeLeft)}초`,
+      title: "무언가에 부딪히면 시작", party: contracts.length ? `계약 · ${contracts.map(contract => contract.short).join(', ')}` : '', info: 'party' });
   }
   // (and a cab with no fare near: what starts the shift. Said once as a tip,
   // it left a shift picked on the menus with nothing on screen.)
   if (taxi?.waiting) {
-    return Object.assign(model, { task: true, status: 'standby', stage: 'Taxi shift', fareStatus: `Clock ${Math.round(taxi.timeLeft)} s`,
-      title: 'Find a passenger', party: 'Stop in a ring · the clock starts with the first fare', info: 'party' });
+    return Object.assign(model, { task: true, status: 'standby', stage: "택시 영업", fareStatus: `남은 시간 ${Math.round(taxi.timeLeft)}초`,
+      title: "승객을 찾으세요", party: "원 안에 정차 · 첫 승객부터 시간 시작", info: 'party' });
   }
   return model;
 }

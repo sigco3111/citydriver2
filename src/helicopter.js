@@ -450,7 +450,7 @@ export class Helicopter {
     if (this.water) meetPiers(this, () => ({ x: v.groundedPosition.x, z: v.groundedPosition.z, heading: v.heading, halfWidth: v.spec.width / 2, halfLength: v.spec.length / 2 }));
     // (under a bridge, no higher than its deck, and out from under it, a word)
     if (this.y > this.ceiling) { this.y = Math.max(this.ceiling, this.y - DUCKING * dt); this.vy = Math.min(0, this.vy); }
-    if (this.wasBridged && !this.bridged && dt && !this.unmanned) this.events.push({ kind: 'stunt', text: 'Under the bridge' });
+    if (this.wasBridged && !this.bridged && dt && !this.unmanned) this.events.push({ kind: 'stunt', text: "다리 아래 통과" });
     this.wasBridged = this.bridged;
     // Setting down: on the ground the skids hold it, and a hard landing thumps.
     // Over the water it only hovers.
@@ -465,7 +465,7 @@ export class Helicopter {
       }
     }
     this.landed = this.y === floor && !water;
-    if (this.landed && !wasLanded && dt && this.aloft > 3 && !this.unmanned && floor > this.ground + 1) this.events.push({ kind: 'landing', text: 'Rooftop landing' });
+    if (this.landed && !wasLanded && dt && this.aloft > 3 && !this.unmanned && floor > this.ground + 1) this.events.push({ kind: 'landing', text: "옥상 착륙" });
     this.aloft = this.landed ? 0 : this.aloft + dt;
     v.airborne = this.y - this.ground > AIRBORNE;
     v.distance += Math.hypot(v.s - fromS, v.u - fromU);

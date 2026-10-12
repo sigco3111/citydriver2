@@ -10,12 +10,12 @@ import { CALLOUTS, CHAIN_STEP, MULTIPLIER_MAX, chainMultiplier, chainSeconds, PR
 
 // Dollars per stunt, before the multiplier
 export const STUNTS = {
-  drift: [['Drift', 5], ['Super drift', 10], ['Ultra drift', 20]],
+  drift: [["드리프트", 5], ["슈퍼 드리프트", 10], ["울트라 드리프트", 20]],
   nearMiss: 6,
   // a jump: a flat amount, more for each second in the air, and each full spin
   jump: 4, air: 6, spin: 15, trick: 5,
   // the flying machines' stunts and landings, by the name they give them
-  flight: { 'Barrel roll': 12, 'Loop the loop': 20, 'Under the bridge': 25, 'Rooftop landing': 15, 'Smooth landing': 3 },
+  flight: { 'Barrel roll': 12, 'Loop the loop': 20, 'Under the bridge': 25, 'Rooftop landing': 15, 'Smooth landing': 3, '배럴 롤': 12, '공중 루프': 20, '다리 아래 통과': 25, '옥상 착륙': 15, '부드러운 착륙': 3 },
 };
 // Smashing pays this share of what the same piece earns in a demolition run
 // (a lamp post $3, a tree $5, a traffic car written off $14 to $29), before
@@ -83,7 +83,7 @@ export class StuntChain {
     if (!this.chain) return 0;
     const amount = this.pot, chain = this.chain, multiplier = this.multiplier;
     this.chain = 0; this.pot = 0; this.chainTime = 0; this.last = null; this.repeats.clear();
-    this.events.push({ kind: 'banked', amount, chain, multiplier, text: chain > 1 ? `${chain} stunt chain · +$${amount.toLocaleString('en-US')}` : `+$${amount.toLocaleString('en-US')}` });
+    this.events.push({ kind: 'banked', amount, chain, multiplier, text: chain > 1 ? `묘기 ${chain}회 연속 · +$${amount.toLocaleString('en-US')}` : `+$${amount.toLocaleString('en-US')}` });
     return amount;
   }
   // Lost, with nothing paid: a crash, a spin out, someone run over
@@ -93,7 +93,7 @@ export class StuntChain {
     if (!this.chain) return 0;
     const lost = this.pot;
     this.chain = 0; this.pot = 0; this.chainTime = 0; this.last = null; this.repeats.clear();
-    this.events.push({ kind: 'lost', lost, text: `${reason} · $${lost.toLocaleString('en-US')} chain lost` });
+    this.events.push({ kind: 'lost', lost, text: `${reason} · 연속 기록 $${lost.toLocaleString('en-US')} 상실` });
     return lost;
   }
   // A step. `active` is false while autodrive drives: nothing counts then,
@@ -110,11 +110,11 @@ export class StuntChain {
     // (a chain the crash itself began, by smashing what it hit, is kept: it
     // said "+$5" and then "Crash · $5 chain lost" for the one blow)
     if (crashed && this.chain && this.elapsed - this.began < CRASH_GRACE) this.cooldown = .8;
-    else if (crashed) this.lose('Crash');
+    else if (crashed) this.lose("충돌");
     if (!player.walker && !player.pilot && !collided && this.cooldown === 0) {
       for (const car of traffic) {
         if (passedBefore(this.passed, car) || !nearMiss(player, car)) continue;
-        this.passed.set(car, car.generation); this.add(STUNTS.nearMiss, 'Near miss', player.groundedPosition);
+        this.passed.set(car, car.generation); this.add(STUNTS.nearMiss, "아슬아슬한 추월", player.groundedPosition);
       }
     }
     // (a jump keeps the chain waiting while the car is in the air)
@@ -128,15 +128,15 @@ export class StuntChain {
   }
   // A car's jump landed (see CarAir). A spin out or the river loses the chain.
   jumped(event, at) {
-    if (event.landing === 'spun') return this.lose('Spun out');
-    if (event.landing === 'splash') return this.lose('In the river');
+    if (event.landing === 'spun') return this.lose("회전 실패");
+    if (event.landing === 'splash') return this.lose("강에 빠짐");
     const turns = Math.abs(event.turns ?? 0);
     const value = STUNTS.jump + Math.round(STUNTS.air * event.air) + turns * STUNTS.spin + (event.trick ? STUNTS.trick : 0);
-    return this.add(value, turns ? `${turns * 360} spin` : event.trick ? 'Trick' : event.air >= 1.6 ? 'Big air' : 'Air', at);
+    return this.add(value, turns ? `${turns * 360}도 회전` : event.trick ? "공중 묘기" : event.air >= 1.6 ? "대형 점프" : "공중 묘기", at);
   }
   // A flying machine's stunt or landing (see Helicopter and Plane)
   flew(event, at) {
-    if (event.kind === 'bounce') return this.lose('Hard landing');
+    if (event.kind === 'bounce') return this.lose("거친 착륙");
     return this.add(STUNTS.flight[event.text] ?? 0, event.text, at);
   }
   // Furniture knocked loose (see LooseProps.onSmash)
@@ -144,7 +144,7 @@ export class StuntChain {
     const price = (kinds ?? []).reduce((sum, kind) => sum + (PRICES[kind] ?? 0), 0);
     if (!price) return 0;
     const kind = kinds[0];
-    return this.smash(price, kinds.length > 1 && kind === 'table' ? 'Cafe terrace' : PIECE_NAMES[kind] ?? 'Smash', at, kind);
+    return this.smash(price, kinds.length > 1 && kind === 'table' ? "카페 테라스" : PIECE_NAMES[kind] ?? "파괴", at, kind);
   }
   // A blow to a traffic or parked car (see CityTraffic.onDamage), each car
   // paid for once, as in a demolition run
@@ -157,7 +157,7 @@ export class StuntChain {
     const value = Math.min(price - record.damage, carDamage(price, closing));
     if (!(value > 0)) return 0;
     record.damage += value; record.hit = this.elapsed;
-    return this.smash(value, record.damage >= price ? 'Wrecked' : 'Dent', at, record.parked ? 'parked' : 'car');
+    return this.smash(value, record.damage >= price ? "파괴됨" : "흠집", at, record.parked ? 'parked' : 'car');
   }
   // A smash worth `price` in a demolition run, less each time its kind
   // comes round again in the chain (see REPEATS)
@@ -168,6 +168,6 @@ export class StuntChain {
     return this.add(Math.max(1, Math.round(price * SMASH_SHARE * REPEATS[Math.min(seen, REPEATS.length - 1)])), label, at, 'smash');
   }
   // Someone knocked over by the player's car
-  pedestrian() { return this.lose('Pedestrian!'); }
+  pedestrian() { return this.lose("보행자!"); }
   drainEvents() { return this.events.splice(0); }
 }

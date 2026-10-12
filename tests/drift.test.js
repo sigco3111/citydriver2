@@ -272,7 +272,7 @@ test('a taxi rider tips at each spark stage, more at each, but not for a drift t
   run.onTheWay = () => true;
   const tips = [];
   for (const stage of [1, 2, 3]) { run.drifted({ stage, time: 2 }, {}); tips.push(...run.drainEvents().filter(e => e.kind === 'tip')); }
-  assert.deepEqual(tips.map(t => t.trick), ['Drift', 'Super drift', 'Ultra drift']);
+  assert.deepEqual(tips.map(t => t.trick), ["드리프트", "슈퍼 드리프트", "울트라 드리프트"]);
   assert.ok(TIPS.drift < TIPS.superDrift && TIPS.superDrift < TIPS.ultraDrift);
   assert.equal(run.drifts, 3);
   run.scrapedAt = 9;
@@ -289,13 +289,13 @@ test('the Drift button shows the charge toward the next stage, then the turbo', 
     assert.equal(model.driftState, null);
     hold(c, .2, { right: 1, handbrake: true }, 18);
     model = taxiHudModel(run, c, { free: true });
-    assert.ok(model.driftState === 'Drifting' && model.driftStage === 0 && model.driftCharge > .3 && model.driftCharge < .7);
+    assert.ok(model.driftState === "드리프트 중" && model.driftStage === 0 && model.driftCharge > .3 && model.driftCharge < .7);
     hold(c, .5, { right: 1, handbrake: true }, 18);
     model = taxiHudModel(run, c, { free: true });
-    assert.ok(model.driftState === 'Blue' && model.driftStage === 1);
+    assert.ok(model.driftState === "파랑" && model.driftStage === 1);
     hold(c, .05, {});
     model = taxiHudModel(run, c, { free: true });
-    assert.ok(model.driftState === 'Turbo' && model.turbo && model.driftStage === 1 && model.driftCharge > .8);
+    assert.ok(model.driftState === "터보" && model.turbo && model.driftStage === 1 && model.driftCharge > .8);
   } finally { c.disposeModel(); }
 });
 

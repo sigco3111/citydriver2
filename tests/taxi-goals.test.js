@@ -41,7 +41,7 @@ test('every shift draws three distinct goals, seeded by the shift number and ste
 
 test('goals track the shift, bank their bonus with the fleet once, and leave the score alone', () => {
   const disk = storage(), run = new TaxiRun(disk), car = player(); run.start(car);
-  run.goals = [{ id: 'fares', stat: 'delivered', tier: 0, target: 2, bonus: 150, text: 'Deliver 2 fares', progress: 0, done: false },
+  run.goals = [{ id: 'fares', stat: 'delivered', tier: 0, target: 2, bonus: 150, text: '운행 2회 완료', progress: 0, done: false },
     { id: 'combo', stat: 'combo', tier: 0, target: 3, bonus: 100, text: 'Chain a ×3 stunt combo', progress: 0, done: false },
     { id: 'tips', stat: 'tips', tier: 2, target: 100000, bonus: 500, text: 'Bank $100000 in tips', progress: 0, done: false }];
   deliver(run, car, solo(run)); run.drainEvents();
@@ -51,13 +51,13 @@ test('goals track the shift, bank their bonus with the fleet once, and leave the
   const events = run.drainEvents();
   assert.equal(events[0].kind, 'paid', 'the fare still announces first');
   const goal = events.find(e => e.kind === 'goal');
-  assert.equal(goal.text, 'Goal · Deliver 2 fares · +$150'); assert.equal(goal.bonus, 150);
+  assert.equal(goal.text, '목표 · 운행 2회 완료 · +$150'); assert.equal(goal.bonus, 150);
   assert.equal(run.goals[0].done, true); assert.equal(run.goalCash, 150);
   assert.equal(run.fleet.balance, run.cash + 150, 'the bonus goes to the fleet bank');
   assert.equal(run.delivered, 2);
   // Stunts count toward goals mid-fare.
   Object.assign(car, solo(run)); run.update(STOP_SECONDS, car); run.drainEvents();
-  run.reward('Drift', TIPS.drift); run.reward('Drift', TIPS.drift);
+  run.reward("드리프트", TIPS.drift); run.reward("드리프트", TIPS.drift);
   assert.equal(run.bestCombo, 3); assert.equal(run.goals[1].done, true); assert.equal(run.goalCash, 250);
   assert.deepEqual(run.drainEvents().map(e => e.kind), ['tip', 'tip', 'goal']);
   assert.equal(run.goals[2].done, false); assert.equal(run.goals[2].progress, run.tipsBanked);
@@ -84,7 +84,7 @@ test('a shift counts groups, full cabs, long rides, stunts and streaks for its g
   }
   assert.equal(run.status, 'driving'); assert.equal(run.onboard, 4);
   const band = run.fare.band;
-  run.reward('Near miss', TIPS.nearMiss); run.reward('Crazy stop', TIPS.crazyStop, false);
+  run.reward("아슬아슬한 추월", TIPS.nearMiss); run.reward("굉장한 정차", TIPS.crazyStop, false);
   assert.equal(run.nearMisses, 1); assert.equal(run.crazyStops, 1); assert.equal(run.drifts, 0);
   while (run.status === 'driving') { Object.assign(car, { s: run.target.s, u: run.target.u }); run.update(STOP_SECONDS, car); }
   assert.equal(run.groups, 1); assert.equal(run.fullCabs, 1); assert.equal(run.longRides, band === 'long' ? 1 : 0);

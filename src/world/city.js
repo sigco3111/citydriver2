@@ -1,3 +1,4 @@
+import { districtName } from '../locale-ko.js';
 import Vector from '../mapgen/vector.js';
 import { SEED } from './route.js';
 import { generateCityStages, finish, carriagewayScore, ROAD_PROFILES, SIDEWALK } from '../mapgen/generate.js';
@@ -646,9 +647,9 @@ export function cityStyleDistrict(s, u) {
 }
 // The district name for the HUD: the waterfront is named for its water
 export function cityDistrict(s, u) {
-  if (downtownDistance(s, u) < DOWNTOWN * .9) return 'Downtown';
-  if (CITY.mask.at(u + 60, s) || CITY.mask.at(u - 60, s) || CITY.mask.at(u, s + 60) || CITY.mask.at(u, s - 60)) return nearSea(s, u) ? 'Harbor' : 'Riverfront';
-  return cityStyleDistrict(s, u);
+  if (downtownDistance(s, u) < DOWNTOWN * .9) return "도심";
+  if (CITY.mask.at(u + 60, s) || CITY.mask.at(u - 60, s) || CITY.mask.at(u, s + 60) || CITY.mask.at(u, s - 60)) return nearSea(s, u) ? "항구" : "강변";
+  return districtName(cityStyleDistrict(s, u));
 }
 function nearSea(s, u) {
   for (const [du, ds] of [[60, 0], [-60, 0], [0, 60], [0, -60]]) if (CITY.mask.at(u + du, s + ds) && !CITY.inRiver({ x: u + du, y: s + ds })) return true;

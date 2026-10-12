@@ -1,3 +1,4 @@
+import { districtName } from '../locale-ko.js';
 import { CITY, cityStyleDistrict } from './city.js';
 import { ROAD_LEVEL, PAVEMENT_LEVEL, WATER_LEVEL, waterAt } from './city-route.js';
 import { navGraph } from './nav-graph.js';
@@ -83,8 +84,8 @@ function whereabouts(u, s, used) {
     const d = Math.hypot(place.u - u, place.s - s);
     if (d < nearest && !used.has(place.name)) { nearest = d; best = place; }
   }
-  let name = best ? best.name : cityStyleDistrict(s, u);
-  for (let n = 2; used.has(name); n++) name = `${best ? best.name : cityStyleDistrict(s, u)} ${n}`;
+  let name = best ? best.name : districtName(cityStyleDistrict(s, u));
+  for (let n = 2; used.has(name); n++) name = `${best ? best.name : districtName(cityStyleDistrict(s, u))} ${n}`;
   used.add(name);
   return name;
 }
@@ -127,7 +128,7 @@ function loadingRamps(nav) {
   }
   const used = new Set();
   return chosen.map(({ u, s, ju, js, keep }) => ({
-    kind: 'loading', name: 'Loading ramp', where: whereabouts(u, s, used), u, s, heading: Math.atan2(ju, js),
+    kind: 'loading', name: "상차 경사로", where: whereabouts(u, s, used), u, s, heading: Math.atan2(ju, js),
     outline: strip(u, s, ju, js, length, LOADING.width), shape: rampShape(u, s, ju, js, LOADING, ROAD_LEVEL), top: ROAD_LEVEL + LOADING.rise,
     // (a car at its top speed reaches the first, boosted the second, and a
     // cab flat out the third)
@@ -199,7 +200,7 @@ function riverJump(nav) {
     keep.push(strip(farU - ju * 3, farS - js * 3, ju, js, 14, RIVER.width + 8));
   }
   return [{
-    kind: 'river', name: 'River jump', where: 'the river', u: footU, s: footS, heading: Math.atan2(ju, js),
+    kind: 'river', name: "강 점프", where: "강", u: footU, s: footS, heading: Math.atan2(ju, js),
     outline: strip(footU, footS, ju, js, run, RIVER.width), shape: rampShape(footU, footS, ju, js, size, PAVEMENT_LEVEL), top: PAVEMENT_LEVEL + RIVER.rise,
     size, shore, gap, keep, quays: quays.map(outline => ({ outline, bounds: polygonBounds(outline) })), abutment,
     // (cleared by coming down on the far bank or the bridge's end there,
@@ -286,7 +287,7 @@ function mounds() {
       });
       // (the collider lies with z south, so the ellipse turns the other way)
       sites.push({
-        kind: 'mound', name: 'Mound', where: null, u: x, s: y, heading: angle, outline, top: base + height,
+        kind: 'mound', name: "언덕", where: null, u: x, s: y, heading: angle, outline, top: base + height,
         shape: { kind: 'mound', x, z: -y, rx, rz, cos, sin: -sin, height, base }, size: { rx, rz, height, angle },
         keep: [outline.map(p => ({ x: x + (p.x - x) * 1.25, y: y + (p.y - y) * 1.25 }))], stars: null, runup: null,
       });

@@ -117,7 +117,7 @@ test('it settles onto the ground rather than flying into it, and says how the la
     for (let i = 0; i < 120 * 20 && !p.pilot.landed; i++) { sink = -p.pilot.vy; p.update(1 / 120, { descend: 1, brake: 1 }); }
     assert.ok(p.pilot.landed && height(p) === 0, 'down');
     assert.ok(sink < 1.5, `touched down at ${sink.toFixed(2)} m/s`);
-    assert.deepEqual(p.pilot.drain().map(event => event.text), ['Smooth landing']);
+    assert.deepEqual(p.pilot.drain().map(event => event.text), ["부드러운 착륙"]);
     fly(p, 5, { brake: 1 });
     assert.ok(Math.abs(p.speed) < 4.1);
     // Stalled right down, it drops its nose and flies again before the ground
@@ -185,7 +185,7 @@ test('low over the river it goes under a bridge, a pier is solid, and a deck met
   assert.ok(under.s > 2200, `through, to s ${under.s.toFixed(0)}`);
   assert.ok(under.highest <= GROUND - 1.4 - 2.8 + 1e-6 && under.lowest >= WATER + 1.1 - 1e-6, 'under the deck, over the water');
   assert.equal(under.hits, 0, 'the railing on the deck overhead is no wall');
-  assert.ok(events.includes('Under the bridge'));
+  assert.ok(events.includes("다리 아래 통과"));
   events = [];
   const pierHit = run(1.1, 12, events);
   assert.ok(pierHit.hits > 0 && pierHit.s < 2150, 'a pier is solid');
@@ -208,7 +208,7 @@ test('a double tap on climb loops the loop, and on a steering direction rolls it
     assert.ok(Math.abs(height(p) - before) < 8, 'back down about where it began');
     assert.ok(Math.abs(p.heading - heading) < 1e-9, 'the same way on');
     assert.ok(jump < .1, `the body turns smoothly all the way round: at most ${jump.toFixed(3)} a step`);
-    assert.deepEqual(p.pilot.drain().map(event => event.text), ['Loop the loop']);
+    assert.deepEqual(p.pilot.drain().map(event => event.text), ["공중 루프"]);
     // A roll: right round, a step to the right, and the same way on
     const u = p.u;
     jump = 0;
@@ -218,7 +218,7 @@ test('a double tap on climb loops the loop, and on a steering direction rolls it
     assert.equal(p.pilot.stunt, null);
     assert.ok(p.u - u > 3, `stepped ${(p.u - u).toFixed(1)} m aside`);
     assert.ok(Math.abs(p.heading - heading) < .15 && jump < .15, 'and round smoothly');
-    assert.deepEqual(p.pilot.drain().map(event => event.text), ['Barrel roll']);
+    assert.deepEqual(p.pilot.drain().map(event => event.text), ["배럴 롤"]);
     // Held down, the controls only fly it: no stunts
     fly(p, 1, { right: 1 }); fly(p, 1, { climb: 1 });
     assert.equal(p.pilot.stunt, null);
