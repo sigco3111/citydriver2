@@ -74,5 +74,5 @@ test('the game box is fixed to the window, and the pause screen is a named modal
   const page = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
   const overlay = page.match(/<div id="pause-overlay"[^>]*>/)[0];
   for (const attribute of ['role="dialog"', 'aria-modal="true"', 'aria-labelledby="pause-heading"']) assert.ok(overlay.includes(attribute), attribute);
-  assert.match(page, /<h2 id="pause-heading">Paused<\/h2>/);
+  assert.match(page, /<h2 id="pause-heading">일시 정지<\/h2>/);
 });
