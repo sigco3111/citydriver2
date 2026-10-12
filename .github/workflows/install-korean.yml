@@ -16,7 +16,8 @@ jobs:
           p = Path('tests/free-drive.test.js')
           p.write_text(p.read_text().replace('/^Chain/', '/^연속 기록/').replace('`Clock ${SHIFT_SECONDS} s`', '`남은 시간 ${SHIFT_SECONDS}초`').replace('/clock starts/', '/시간 시작/'))
           PYTHON
-          rm 2-korean-payload.b64 .github/workflows/install-korean.yml
+          git restore .github/workflows
+          rm 2-korean-payload.b64
           git config user.name 'sigco3111'
           git config user.email 'sigco3111@users.noreply.github.com'
           git add .
