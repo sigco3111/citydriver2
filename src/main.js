@@ -394,10 +394,10 @@ async function boot() {
       for (const label of worldMap.labels) blocks.set(label.style, (blocks.get(label.style) ?? 0) + label.blocks);
       const total = [...blocks.values()].reduce((sum, n) => sum + n, 0);
       $('#world-map-legend').innerHTML = Object.keys(DISTRICT_COLORS).filter(style => blocks.has(style)).map(style =>
-        `<li><span class="world-map-swatch" style="--district-color:${DISTRICT_COLORS[style]}"></span>${style}<small>${Math.round(blocks.get(style) / total * 100)}%</small></li>`).join('')
-        + '<li id="world-map-places"><span class="world-map-place"></span>Places found<small></small></li>'
-        + '<li id="world-map-jumps"><span class="world-map-jump"></span>Jumps landed<small></small></li>'
-        + '<li id="world-map-car" hidden><span class="world-map-marker"></span>Your car<small></small></li>';
+        `<li><span class="world-map-swatch" style="--district-color:${DISTRICT_COLORS[style]}"></span>${districtName(style)}<small>${Math.round(blocks.get(style) / total * 100)}%</small></li>`).join('')
+        + '<li id="world-map-places"><span class="world-map-place"></span>발견한 장소<small></small></li>'
+        + '<li id="world-map-jumps"><span class="world-map-jump"></span>완료한 점프<small></small></li>'
+        + '<li id="world-map-car" hidden><span class="world-map-marker"></span>내 차량<small></small></li>';
       worldMapCanvas.style.aspectRatio = String(worldMap.aspect);
     }
     function openWorldMap() {
@@ -519,7 +519,7 @@ async function boot() {
       $('#scores-panel').hidden = gameMode !== 'demolition';
       $('#taxi-clock-label').textContent = "남은 시간";
       $('#taxi-clock').setAttribute('aria-label', gameMode === 'demolition' ? "남은 초" : "영업 남은 초");
-      $('#reset').title = run ? 'Reset car: −5 seconds (R)' : 'Reset car (R)';
+      $('#reset').title = run ? '차량 초기화: −5초 (R)' : '차량 초기화 (R)';
       $('#reset').setAttribute('aria-label', $('#reset').title);
       vrStatus.setAccent(gameMode);
       // Residents cost a fine in a demolition run: they glow red, through props too
@@ -690,10 +690,10 @@ async function boot() {
     // The garage's cards, under a heading for each kind (cabs, cars, specials,
     // aircraft), with the cabs' liveries under theirs
     function buildCarCards() {
-      const current = '<span class="chooser-current">CURRENT CAR</span>', sections = new Map();
+      const current = '<span class="chooser-current">현재 차량</span>', sections = new Map();
       for (const car of garageChoices(false).cars) sections.set(car.group, [...sections.get(car.group) ?? [], car]);
-      const livery = '<div class="garage-livery"><div class="garage-livery-heading"><span>Livery</span><span id="garage-livery-name" role="status"></span></div>'
-        + '<div id="garage-liveries" class="paint-swatches" role="radiogroup" aria-label="Cab livery"></div><p id="garage-career" class="garage-livery-note"></p></div>';
+      const livery = '<div class="garage-livery"><div class="garage-livery-heading"><span>차량 도장</span><span id="garage-livery-name" role="status"></span></div>'
+        + '<div id="garage-liveries" class="paint-swatches" role="radiogroup" aria-label="택시 도장"></div><p id="garage-career" class="garage-livery-note"></p></div>';
       $('#garage-sections').innerHTML = [...sections].map(([group, cars], index) => `<h3 id="garage-group-${index}" class="garage-subheading" data-group="${group}">${group}</h3>`
         + (cars.some(car => carEntry(car.id).taxi) ? livery : '')
         + `<div class="chooser-options car-options" role="group" aria-labelledby="garage-group-${index}" data-group="${group}">${cars.map(({ id, label, meters: values }) => {
@@ -1414,7 +1414,7 @@ async function boot() {
         const download = () => window.open(update.url); // the wrapper hands it to the system browser
         const notice = document.createElement('div');
         notice.className = 'update-notice';
-        notice.innerHTML = '<span role="status"></span><button type="button" title="Opens the download page">Download</button>';
+        notice.innerHTML = '<span role="status"></span><button type="button" title="다운로드 페이지 열기">다운로드</button>';
         notice.firstChild.textContent = `새 버전 ${update.version} 사용 가능`;
         notice.lastChild.addEventListener('click', download);
         $('#welcome').insertBefore(notice, $('#welcome > .controller-hint'));
