@@ -7,3 +7,5 @@ html[lang=ko] .taxi-clock-box { min-width: 84px; }
 html[lang=ko] #taxi-clock-label { letter-spacing: 0; font-size: 12px; }
 html[lang=ko] .controller-hint { letter-spacing: 0; line-height: 1.6; }
 html[lang=ko] .graphics-levels button { padding-inline: 7px; }
+html[lang=ko] #taxi-buttons > button, html[lang=ko] .taxi-boost-control > button { min-width: 90px; }
+html[lang=ko] #taxi-buttons button > span:first-of-type { white-space: nowrap; }
