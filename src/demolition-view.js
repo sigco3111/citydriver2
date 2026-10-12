@@ -61,7 +61,7 @@ export class DemolitionView {
   }
   // The table as a list: place, damage, rating and day, `current` marked
   scoreList(scores, current = -1) {
-    if (!scores.length) return '<li class="demolition-score-empty">No runs yet. Every smash counts.</li>';
+    if (!scores.length) return '<li class="demolition-score-empty">아직 기록이 없습니다. 모든 파괴가 점수로 쌓입니다.</li>';
     return scores.map((entry, index) => `<li data-current="${index === current}"><span>${index + 1}</span><strong>${money(entry.score)}</strong>`
       + `<span class="demolition-score-rank">${demolitionRank(entry.score).badge}</span><small>${day(entry.date)}</small></li>`).join('');
   }
