@@ -2,6 +2,10 @@
 
 Three.js로 만든 절차 생성 도시의 3D 택시 운전 게임입니다. 원작은 [jarvisar/citydriver2](https://github.com/jarvisar/citydriver2)입니다. 매번 새로 만든 섬 도시에서 택시 영업, 철거, 자유 주행을 즐길 수 있습니다. 차고에서 자동차, 항공기, 제트팩을 구매하고 도색과 등급을 해제합니다.
 
+## 📸 실제 실행 화면
+
+![시티드라이버 2 실제 화면](14-citydriver2.jpg)
+
 ## 실행
 
 GitHub Pages 배포는 저장소의 Actions에서 확인합니다. Node.js 24를 권장합니다.
